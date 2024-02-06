@@ -8,7 +8,7 @@
 ## Configuring App SDK Versions
 1. Minimum SDK: the minimum Android API level on which your app can run.
 2. Target SDK: is the SDK version that your app was created to run on. It is used to indicate awareness of specific behaviour changes introduced in newer Android versions. You make sure that your app behaves fine at this SDK level, considering its particular behaviour.
-3. Compile SDK: determines which API level your app will be compiled with. Using the latest API allows us developers to levarege the latest features.
+3. Compile SDK: determines which API level your app will be compiled with. Using the latest API allows us developers to leverage the latest features.
 
 ### Bonus:
 1. The compileSDK can not me lower than the targetSDK.
@@ -30,8 +30,10 @@ The main advantage of MVVM is its ease to preserve states, which is perfect for 
 It makes use of the ViewModel which is lifecycle aware, meaning it responds to changes in Views lifecycle states, making it easier to preserve its state.
 
 ### Clean Architecture
-I will also follow the Clean Architecture principles, in order to showcase its power, even though it wouldnt be needed in an app so small that has no intent on growing to a giant. Clean Architecture is most useful on applications that intend to last many many years and be really really big, it has the trade off of making the development process slower at first, to make it faster to make change to the code base later on. If your app is small and it wont be maintained for long, you may go without using it. If your app is intended to be a big and long project, you will need to use it, or some other architecture with a similar goal. For Android apps the standard is MVVM + Clean, and that is what I will showcase.
+I will also follow the Clean Architecture principles, in order to showcase its power, even though it wouldn't be needed in an app so small that has no intent on growing to a giant. Clean Architecture is most useful on applications that intend to last many many years and be really really big, it has the trade off of making the development process slower at first, to make it faster to make change to the code base later on. If your app is small and it wont be maintained for long, you may go without using it. If your app is intended to be a big and long project, you will need to use it, or some other architecture with a similar goal. For Android apps the standard is MVVM + Clean, and that is what I will showcase.
 
+### Common Library
+I created an Android Library called common in which I will place extension functions and other code that can be reused across projects. It could even be a module in a different repository, but for the sake of simplicity I will leave inside this one.
 
 ## Dependency Injection
 ### Koin
@@ -46,7 +48,7 @@ OkHttp is another standard for Android, it is a HTTP client that is efficient by
 Gson is a Java serialization and deserialization library. It converts objects into JSON and converts JSON into objects.
 
 ## UI
-### Structure
-I decided to use the single activity architecture, using Fragments for each screen, and Jetpack Navigation to navigate between them. It is a simple and powerful way to reuse code. Since I will be able to access the Characters screen from the Home screen and from the Favorites screen. Everything done in a very standard way, and using one of the most used Android libraries.
+### Structure and Jetpack Navigation
+I decided to use the single activity architecture, using Fragments for each screen. Jetpack Navigation will be used to navigate between Fragments. It is a simple and powerful way to reuse code. Since I will be able to access the Characters screen from the Home screen and from the Favorites screen. Everything done in a very standard way, and using one of the most used Android libraries.
 ### ViewBinding
 I'm going to use ViewBinding in this project so I have minimum boilerplate code, and a very easy way to access View declared on my XML files.
