@@ -18,8 +18,8 @@
 
 ### What did I do?
 - Chose to set Minimum SDK to API 27, Oreo, Android 8.1, because its the most recent API that will run on more than 90% of devices.
-- Chose the Target SDK to be 33, since its the last one required by Google, since August 31, 2023.
-- Chose to use compile SDK 33 also, so it would be the same as the target SDK.
+- Chose the Target SDK to be 34, since its the last one available.
+- Chose to use compile SDK 34 also, so it would be the same as the target SDK.
 
 ## Project Architecture
 ### MVVM
