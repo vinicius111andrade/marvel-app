@@ -12,16 +12,11 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setViewBinding()
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
         setupNavigation(
             navHostFragmentId = binding.navHostFragment.id,
             graphResId = R.navigation.nav_graph
         )
     }
-
-    private fun setViewBinding() {
-        binding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-    }
-
 }

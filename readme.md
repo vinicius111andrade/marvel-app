@@ -1,3 +1,13 @@
+# How to run the project
+## API Keys
+### Public API Key
+You will need to configure your local.properties file with a valid API Key. It is easy to get one, just request it here: https://developer.marvel.com/
+
+Then, on your local.properties file you need to add this line, where abcde is your Public Api Key:
+PUBLIC_API_KEY=abcde
+
+Afterwards just rebuild your project.
+
 # Marvel App Decisions
 
 ## Creating App Project
@@ -34,6 +44,9 @@ I will also follow the Clean Architecture principles, in order to showcase its p
 
 ### Common Library
 I created an Android Library called common in which I will place extension functions and other code that can be reused across projects. It could even be a module in a different repository, but for the sake of simplicity I will leave inside this one.
+
+### Modularization
+Why I did not create different modules for features? Because I have only 3 screens. I did create modules for code that don't have any buissiness logic, one for Commons, and one for Network //TODO
 
 ## Dependency Injection
 ### Koin

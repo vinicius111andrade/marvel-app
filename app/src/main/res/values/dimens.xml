@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Spacing -->
+    <dimen name="spacing_8dp">8dp</dimen>
+    <dimen name="spacing_16dp">16dp</dimen>
+    <dimen name="spacing_24dp">24dp</dimen>
+    <dimen name="spacing_32dp">32dp</dimen>
+
+    <!-- Size -->
+    <dimen name="size_item_image">64dp</dimen>
+    <dimen name="size_item_fav_button">64dp</dimen>
+
+</resources>

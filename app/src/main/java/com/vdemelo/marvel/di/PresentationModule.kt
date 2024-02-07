@@ -9,5 +9,5 @@ import org.koin.dsl.module
 val presentationModule = module {
     viewModel { CharacterViewModel() }
     viewModel { FavoritesViewModel() }
-    viewModel { HomeViewModel() }
+    viewModel { HomeViewModel(get()) }
 }
