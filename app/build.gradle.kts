@@ -27,9 +27,13 @@ android {
 
             val publicApiKey: String? = localProperties.getProperty("PUBLIC_API_KEY")
             buildConfigField("String", "publicApiKey", "\"$publicApiKey\"")
+
+            val privateApiKey: String? = localProperties.getProperty("PRIVATE_API_KEY")
+            buildConfigField("String", "privateApiKey", "\"$privateApiKey\"")
         } catch (e: Exception) {
-            println("Failed to load local.properties file or to read PUBLIC_API_KEY variable: ${e.message}")
+            println("Failed to load local.properties file or to read variables: ${e.message}")
             buildConfigField("String", "publicApiKey", "")
+            buildConfigField("String", "privateApiKey", "")
         }
     }
 
@@ -84,7 +88,7 @@ dependencies {
     implementation("com.squareup.okhttp3:logging-interceptor:4.10.0")
 
     //Picasso
-    implementation("com.squareup.picasso:picasso:2.8")
+    implementation("com.squareup.picasso:picasso:2.71828")
 
     // My Personal Libs
     implementation(project(":common"))
