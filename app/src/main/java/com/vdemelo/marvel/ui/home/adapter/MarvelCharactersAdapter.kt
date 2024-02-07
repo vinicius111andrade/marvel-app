@@ -20,7 +20,7 @@ class MarvelCharactersAdapter(
     }
 
     //TODO fun to clear list? set empty and notify
-    //TODO how to notify a favorited item?
+    //TODO how to notify a favorited item? reload the list everytime I go to the list
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MarvelCharactersViewHolder {
         val binding =

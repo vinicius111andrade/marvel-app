@@ -1,6 +1,6 @@
 package com.vdemelo.marvel.domain.usecase
 
-import com.vdemelo.marvel.domain.entity.RequestStatus
+import com.vdemelo.marvel.domain.entity.RequestState
 import com.vdemelo.marvel.domain.entity.model.CharacterDataWrapper
 import com.vdemelo.marvel.domain.repository.MarvelRemoteRepository
 
@@ -12,7 +12,7 @@ class CharactersUseCase(
         searchName: String?,
         pageSize: Int,
         offset: Int
-    ): RequestStatus<CharacterDataWrapper> {
+    ): RequestState<CharacterDataWrapper> {
         val model = try {
             remoteRepository.fetchCharacters(
                 searchName = searchName,
@@ -20,10 +20,11 @@ class CharactersUseCase(
                 offset = offset
             )
         } catch (e: Exception) {
-            return RequestStatus.Error()
+            return RequestState.Error()
         }
+        //TODO antes de retornar preciso checar do BD local se o item é fav ou n
         //TODO treat different status codes, status code 409 is an error and has msgs
-        return RequestStatus.Success(data = model)
+        return RequestState.Success(data = model)
     }
 
 }

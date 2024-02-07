@@ -35,6 +35,9 @@ I will also follow the Clean Architecture principles, in order to showcase its p
 ### Common Library
 I created an Android Library called common in which I will place extension functions and other code that can be reused across projects. It could even be a module in a different repository, but for the sake of simplicity I will leave inside this one.
 
+### Modularization
+Why I did not create different modules for features? Because I have only 3 screens. I did create modules for code that don't have any buissiness logic, one for Commons, and one for Network //TODO
+
 ## Dependency Injection
 ### Koin
 I chose to use Koin because it is the tool I have used the most, another possible choice would be Hilt. Koin is very easy to use and implement. The attention point is that if you mess up and do not inject a module correctly you will only discover it while running the application, and it will crash. That is one of the reasons it is a good idea to implement Koin Modules tests. If you use Hilt you won't have this problem, you will get an error during compilation time. But Hilt is more complex, I have less experience with it, and there's simply no good reason to use it in this project. 
