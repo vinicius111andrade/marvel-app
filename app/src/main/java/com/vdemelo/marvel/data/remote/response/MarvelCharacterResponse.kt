@@ -1,8 +1,12 @@
 package com.vdemelo.marvel.data.remote.response
 
 import com.google.gson.annotations.SerializedName
+import com.vdemelo.common.extensions.nonNullOrEmpty
+import com.vdemelo.marvel.domain.entity.model.Image
+import com.vdemelo.marvel.domain.entity.model.MarvelCharacter
+import com.vdemelo.marvel.domain.entity.model.Url
 
-class CharacterResponse(
+class MarvelCharacterResponse(
     @SerializedName("id ") val id  : Int?,
     @SerializedName("name") val name : String?,
     @SerializedName("description") val description : String?,
@@ -14,4 +18,16 @@ class CharacterResponse(
 //    @SerializedName("stories") val stories : String?,
 //    @SerializedName("events") val events : String?,
 //    @SerializedName("series") val series : String?,
-)
+) {
+
+    fun toModel(): MarvelCharacter {
+        return MarvelCharacter(
+            id = id,
+            name = name,
+            description = description,
+            modified = modified,
+            urls = urls.nonNullOrEmpty().map { it.toModel() },
+            thumbnail = thumbnail?.toModel()
+        )
+    }
+}

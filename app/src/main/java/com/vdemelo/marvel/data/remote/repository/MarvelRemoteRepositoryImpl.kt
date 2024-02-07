@@ -1,7 +1,7 @@
 package com.vdemelo.marvel.data.remote.repository
 
 import com.vdemelo.marvel.data.remote.api.MarvelApi
-import com.vdemelo.marvel.data.remote.response.CharacterDataWrapperResponse
+import com.vdemelo.marvel.domain.entity.model.CharacterDataWrapper
 import com.vdemelo.marvel.domain.repository.MarvelRemoteRepository
 
 class MarvelRemoteRepositoryImpl(
@@ -12,12 +12,11 @@ class MarvelRemoteRepositoryImpl(
         searchName: String?,
         pageSize: Int,
         offset: Int
-    ): CharacterDataWrapperResponse {
+    ): CharacterDataWrapper {
         return api.getCharacters(
             nameStartsWith = searchName,
             limit = pageSize,
             offset = offset
-        )
+        ).toModel()
     }
-
 }

@@ -1,6 +1,7 @@
 package com.vdemelo.marvel.data.remote.response
 
 import com.google.gson.annotations.SerializedName
+import com.vdemelo.marvel.domain.entity.model.CharacterDataWrapper
 
 class CharacterDataWrapperResponse(
     @SerializedName("code") val code : Int?,
@@ -10,4 +11,17 @@ class CharacterDataWrapperResponse(
     @SerializedName("attributionHTML") val attributionHTML : String?,
     @SerializedName("data") val data : CharactersDataContainerResponse?,
     @SerializedName("etag") val etag : String?,
-)
+) {
+
+    fun toModel(): CharacterDataWrapper {
+        return CharacterDataWrapper(
+            code = code,
+            status = status,
+            copyright = copyright,
+            attributionText = attributionText,
+            attributionHTML = attributionHTML,
+            data = data?.toModel(),
+            etag = etag
+        )
+    }
+}
