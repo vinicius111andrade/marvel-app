@@ -1,7 +1,7 @@
 package com.vdemelo.marvel.domain.usecase
 
-import com.vdemelo.marvel.data.remote.response.CharacterDataWrapperResponse
-import com.vdemelo.marvel.domain.entity.RequestResponse
+import com.vdemelo.marvel.domain.entity.RequestStatus
+import com.vdemelo.marvel.domain.entity.model.CharacterDataWrapper
 import com.vdemelo.marvel.domain.repository.MarvelRemoteRepository
 
 class CharactersUseCase(
@@ -12,19 +12,18 @@ class CharactersUseCase(
         searchName: String?,
         pageSize: Int,
         offset: Int
-    ): RequestResponse<CharacterDataWrapperResponse> {
-        val response = try {
+    ): RequestStatus<CharacterDataWrapper> {
+        val model = try {
             remoteRepository.fetchCharacters(
                 searchName = searchName,
                 pageSize = pageSize,
                 offset = offset
             )
         } catch (e: Exception) {
-            return RequestResponse.Error()
+            return RequestStatus.Error()
         }
         //TODO treat different status codes, status code 409 is an error and has msgs
-//        val model = convert to model TODO AAAA
-        return RequestResponse.Success(data = response)
+        return RequestStatus.Success(data = model)
     }
 
 }

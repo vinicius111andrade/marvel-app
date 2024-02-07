@@ -2,9 +2,7 @@ package com.vdemelo.marvel.data.remote.response
 
 import com.google.gson.annotations.SerializedName
 import com.vdemelo.common.extensions.nonNullOrEmpty
-import com.vdemelo.marvel.domain.entity.model.Image
 import com.vdemelo.marvel.domain.entity.model.MarvelCharacter
-import com.vdemelo.marvel.domain.entity.model.Url
 
 class MarvelCharacterResponse(
     @SerializedName("id ") val id  : Int?,

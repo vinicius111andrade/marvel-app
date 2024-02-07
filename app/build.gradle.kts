@@ -66,6 +66,9 @@ dependencies {
     // OkHttp 3
     implementation("com.squareup.okhttp3:logging-interceptor:4.10.0")
 
+    //Picasso
+    implementation("com.squareup.picasso:picasso:2.8")
+
     // My Personal Libs
     implementation(project(":common"))
 

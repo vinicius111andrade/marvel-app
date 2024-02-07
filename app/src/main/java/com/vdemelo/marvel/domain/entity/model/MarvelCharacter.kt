@@ -7,4 +7,5 @@ class MarvelCharacter(
     val modified : String?,
     val urls : List<Url>,
     val thumbnail : Image?,
+    val isFavorite: Boolean = false
 )
