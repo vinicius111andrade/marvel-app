@@ -1,3 +1,6 @@
+import java.io.FileInputStream
+import java.util.Properties
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
@@ -15,6 +18,19 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        try {
+            val localProperties = Properties()
+            FileInputStream("local.properties").use { inputStream ->
+                localProperties.load(inputStream)
+            }
+
+            val publicApiKey: String? = localProperties.getProperty("PUBLIC_API_KEY")
+            buildConfigField("String", "publicApiKey", "\"$publicApiKey\"")
+        } catch (e: Exception) {
+            println("Failed to load local.properties file or to read PUBLIC_API_KEY variable: ${e.message}")
+            buildConfigField("String", "publicApiKey", "")
+        }
     }
 
     buildTypes {
@@ -35,6 +51,7 @@ android {
     }
     buildFeatures {
         viewBinding = true
+        buildConfig = true
     }
 }
 
