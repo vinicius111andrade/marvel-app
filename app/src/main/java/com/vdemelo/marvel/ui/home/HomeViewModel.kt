@@ -13,7 +13,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-private const val PAGE_SIZE = 30
+private const val PAGE_SIZE = 5
 private const val INITIAL_PAGE = 0
 
 class HomeViewModel(

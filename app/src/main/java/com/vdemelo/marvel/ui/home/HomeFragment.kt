@@ -4,9 +4,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import com.vdemelo.marvel.R
 import com.vdemelo.marvel.databinding.FragmentHomeBinding
+import com.vdemelo.marvel.ui.home.adapter.MarvelCharactersAdapter
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class HomeFragment : Fragment(R.layout.fragment_home) {
@@ -30,7 +32,9 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        //TODO
+//        setupAdapter()
+        observeMarvelCharactersList()
+        requestList()
     }
 
     override fun onDestroyView() {
@@ -38,13 +42,28 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         _binding = null
     }
 
-    fun requestList() {
+//    private fun setupAdapter() {
+//        val adapter = MarvelCharactersAdapter(
+//            openCardAction = {}, //TODO
+//            favoriteAction = {} //TODO
+//        )
+//        binding.recycler.adapter = adapter
+//    }
+
+    private fun requestList() {
+        binding.mainProgress.isVisible = true
         viewModel.request()
     }
 
-    fun observeMarvelCharactersList() {
+    private fun observeMarvelCharactersList() {
         viewModel.list.observe(viewLifecycleOwner) {
-            //TODO
+            binding.mainProgress.isVisible = false
+            val adapter = MarvelCharactersAdapter(
+                openCardAction = {}, //TODO
+                favoriteAction = {} //TODO
+            )
+            adapter.addItems(it)
+            binding.recycler.adapter = adapter
         }
     }
 
