@@ -6,6 +6,13 @@
     android:layout_height="match_parent"
     tools:context=".ui.home.HomeFragment">
 
+    <TextView
+        android:layout_width="match_parent"
+        android:text="PELO AMOR DE DEUS CADEEEE"
+        android:textSize="60sp"
+        android:layout_gravity="center"
+        android:layout_height="match_parent"/>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler"
         android:layout_width="match_parent"
