@@ -1,4 +1,4 @@
-package com.vdemelo.marvel.ui.favorites
+package com.vdemelo.marvel.ui.screens.favorites
 
 import androidx.lifecycle.ViewModel
 

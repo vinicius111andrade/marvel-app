@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/home"
-        android:name="com.vdemelo.marvel.ui.home.HomeFragment"
+        android:name="com.vdemelo.marvel.ui.screens.home.HomeFragment"
         tools:layout="@layout/fragment_home" >
 
         <action
@@ -26,7 +26,7 @@
 
     <fragment
         android:id="@+id/favorites"
-        android:name="com.vdemelo.marvel.ui.favorites.FavoritesFragment"
+        android:name="com.vdemelo.marvel.ui.screens.favorites.FavoritesFragment"
         tools:layout="@layout/fragment_favorites" />
 
 </navigation>

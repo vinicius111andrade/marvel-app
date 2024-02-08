@@ -1,4 +1,4 @@
-package com.vdemelo.marvel.ui.home
+package com.vdemelo.marvel.ui.screens.home
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

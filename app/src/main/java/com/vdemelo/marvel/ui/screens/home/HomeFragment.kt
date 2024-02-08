@@ -1,4 +1,4 @@
-package com.vdemelo.marvel.ui.home
+package com.vdemelo.marvel.ui.screens.home
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -8,7 +8,7 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import com.vdemelo.marvel.R
 import com.vdemelo.marvel.databinding.FragmentHomeBinding
-import com.vdemelo.marvel.ui.home.adapter.MarvelCharactersAdapter
+import com.vdemelo.marvel.ui.screens.home.adapter.MarvelCharactersAdapter
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class HomeFragment : Fragment(R.layout.fragment_home) {

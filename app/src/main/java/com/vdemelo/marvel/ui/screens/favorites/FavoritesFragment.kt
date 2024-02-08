@@ -1,4 +1,4 @@
-package com.vdemelo.marvel.ui.favorites
+package com.vdemelo.marvel.ui.screens.favorites
 
 import android.os.Bundle
 import android.view.LayoutInflater
