@@ -64,7 +64,7 @@ fun CharacterItem(
                     modifier = Modifier.size(60.dp),
                     url = marvelCharacter.thumbnail?.getUrl(),
                     contentDescription = marvelCharacter.name?.simpleCapitalize()
-                        ?: stringResource(id = R.string.details_screen_image_content_description),
+                        ?: stringResource(id = R.string.content_description_character_image),
                     placeholderRes = R.drawable.ic_person
                 )
                 Spacer(modifier = Modifier.width(16.dp))

@@ -6,12 +6,12 @@
 
     <string name="list_screen_title">Marvel Characters</string>
 
+    //Character
+    <string name="character_bio_label">Character Biography</string>
+    <string name="character_bio_unknown">This character has an unknown story</string>
 
-    // Details Screen
-    <string name="details_screen_image_content_description">Image for this item</string>
-
-<!--    //Labels-->
-<!--    <string name="label_name">Name</string>-->
+    // Content Description
+    <string name="content_description_character_image">Image for the selected character</string>
 
     //Unknown Values
     <string name="unknown_name">Unknown Name</string>
@@ -20,6 +20,7 @@
     <string name="button_favorite">Favorite Button</string>
 
     //Common
+    <string name="common_share">Share</string>
     <string name="common_retry">Retry</string>
     <string name="common_back">Go Back</string>
     <string name="common_unknown">Unknown</string>

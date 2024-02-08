@@ -5,6 +5,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.vdemelo.marvel.ui.screens.character.details.CharacterDetailsScreen
 import com.vdemelo.marvel.ui.screens.home.HomeScreen
 
 @Composable
@@ -23,7 +24,7 @@ fun AppNavHost(
         }
 
         composable(route = NavItem.MarvelCharacter.route) {
-            //SpeciesListScreen(navController = navController)
+            CharacterDetailsScreen(navController = navController)
         }
 
         composable(route = NavItem.Favorites.route) {
