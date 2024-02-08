@@ -25,6 +25,16 @@ import com.vdemelo.marvel.ui.screens.home.HomeViewModel
 import com.vdemelo.marvel.ui.components.RetrySection
 import org.koin.androidx.compose.getViewModel
 
+//TODO
+//Home - Characters
+//• Listagem dos personagens.
+//
+//• Botão para favoritar nas células.
+//
+//• Barra de busca para filtrar lista de personagens por nome.
+//
+//• Interface de lista vazia, erro ou sem internet.
+
 @Composable
 fun CharactersList(
     navController: NavController,

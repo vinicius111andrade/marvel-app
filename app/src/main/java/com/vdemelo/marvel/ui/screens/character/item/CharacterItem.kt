@@ -1,13 +1,10 @@
 package com.vdemelo.marvel.ui.screens.character.item
 
-import android.content.Context
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -20,18 +17,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import coil.request.ImageRequest
-import coil.size.Size
 import com.vdemelo.common.extensions.simpleCapitalize
 import com.vdemelo.marvel.R
 import com.vdemelo.marvel.domain.entity.model.MarvelCharacter
+import com.vdemelo.marvel.ui.components.FavoriteButton
 import com.vdemelo.marvel.ui.components.ImageLoader
+import com.vdemelo.marvel.ui.navigation.NavItem
 
 @Composable
 fun CharacterItem(
@@ -39,7 +35,6 @@ fun CharacterItem(
     navController: NavController,
     marvelCharacter: MarvelCharacter
 ) {
-
     Box(
         contentAlignment = Alignment.Center,
         modifier = modifier
@@ -58,7 +53,10 @@ fun CharacterItem(
                 modifier = modifier
                     .weight(0.7F)
                     .clickable {
-                        //TODO click de abrir o card
+                        //TODO save the selected char, so I can retrieve it on the other screen
+                        //this viewmodel call a usecase, it saves on DB
+                        //other viewmodel call same usecase, it retrieves from DB
+                        navController.navigate(NavItem.MarvelCharacter.route)
                     },
                 verticalAlignment = Alignment.CenterVertically
             ) {
@@ -73,30 +71,17 @@ fun CharacterItem(
                 Text(text = marvelCharacter.name ?: stringResource(id = R.string.unknown_name))
             }
             //TODO tem como fazer isso aqui atualizar dinamicamente aqui no composable mesmo
-            val favImageRes =
-                if (marvelCharacter.isFavorite) R.drawable.ic_favorite_selected
-                else R.drawable.ic_favorite_unselected
-            Image(
+            FavoriteButton(
                 modifier = Modifier
                     .weight(0.3F)
-                    .size(32.dp)
-                    .clickable {
-                        //TODO click de favoritar/desfavoritar
-                    },
-                painter = painterResource(id = favImageRes),
-                contentDescription = stringResource(id = R.string.button_favorite)
+                    .size(32.dp),
+                isFavorite = marvelCharacter.isFavorite,
+                selectAction = { /*TODO*/ },
+                unselectAction = { /*TODO*/ }
             )
         }
     }
 }
-
-fun loadImageData(context: Context, url: String): ImageRequest = ImageRequest
-    .Builder(context)
-    .data(url)
-    .crossfade(true)
-    .size(Size.ORIGINAL)
-    .build()
-
 
 @Preview
 @Composable
