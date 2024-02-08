@@ -11,12 +11,14 @@ fun ImageLoader(
     modifier: Modifier = Modifier,
     url: String?,
     contentDescription: String,
-    placeholderRes: Int = R.drawable.ic_image_placeholder
+    placeholderRes: Int = R.drawable.ic_image_placeholder,
+    errorRes: Int = R.drawable.ic_image_error
 ) {
     AsyncImage(
         modifier = modifier,
         model = url,
         contentDescription = contentDescription,
-        error = painterResource(id = placeholderRes)
+        placeholder = painterResource(id = placeholderRes),
+        error = painterResource(id = errorRes)
     )
 }

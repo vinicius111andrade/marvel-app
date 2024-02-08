@@ -10,6 +10,12 @@
     // Details Screen
     <string name="details_screen_image_content_description">Image for this item</string>
 
+<!--    //Labels-->
+<!--    <string name="label_name">Name</string>-->
+
+    //Unknown Values
+    <string name="unknown_name">Unknown Name</string>
+
     //Common
     <string name="common_retry">Retry</string>
     <string name="common_back">Go Back</string>
