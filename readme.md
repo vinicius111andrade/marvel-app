@@ -1,12 +1,13 @@
 # How to run the project
 ## API Keys
 ### Public API Key
-You will need to configure your local.properties file with a valid API Key. It is easy to get one, just request it here: https://developer.marvel.com/
+You will need to configure your local.properties file with a valid pair of API Keys. It is easy to get one, just request it here: https://developer.marvel.com/
 
-Then, on your local.properties file you need to add this line, where abcde is your Public Api Key:
-PUBLIC_API_KEY=abcde
+Then, on your local.properties file you need to add these lines, where abcde is your Public Api Key and xyz is your Private Key:
+PUBLIC_API_KEY="abcde"
+PRIVATE_API_KEY="xyz"
 
-Afterwards just rebuild your project.
+Afterwards just rebuild your project. You might need to resync, but probably not.
 
 # Marvel App Decisions
 

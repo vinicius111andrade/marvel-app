@@ -1,5 +1,4 @@
-import java.io.FileInputStream
-import java.util.Properties
+import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
 
 plugins {
     id("com.android.application")
@@ -20,29 +19,16 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
-        //TODO tentar isso aqui depois
-//        buildConfigField(
-//            "String",
-//            "PUBLIC_KEY",
-//            com.android.build.gradle.internal.cxx.configure.gradleLocalProperties(rootDir).getProperty("PUBLIC_KEY")
-//        )
-
-        try {
-            val localProperties = Properties()
-            FileInputStream("local.properties").use { inputStream ->
-                localProperties.load(inputStream)
-            }
-
-            val publicApiKey: String? = localProperties.getProperty("PUBLIC_API_KEY")
-            buildConfigField("String", "publicApiKey", "\"$publicApiKey\"")
-
-            val privateApiKey: String? = localProperties.getProperty("PRIVATE_API_KEY")
-            buildConfigField("String", "privateApiKey", "\"$privateApiKey\"")
-        } catch (e: Exception) {
-            println("Failed to load local.properties file or to read variables: ${e.message}")
-            buildConfigField("String", "publicApiKey", "")
-            buildConfigField("String", "privateApiKey", "")
-        }
+        buildConfigField(
+            "String",
+            "PUBLIC_API_KEY",
+            gradleLocalProperties(rootDir).getProperty("PUBLIC_API_KEY")
+        )
+        buildConfigField(
+            "String",
+            "PRIVATE_API_KEY",
+            gradleLocalProperties(rootDir).getProperty("PRIVATE_API_KEY")
+        )
     }
 
     buildTypes {
