@@ -1,7 +1,6 @@
 package com.vdemelo.marvel.ui.screens.home
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.vdemelo.common.extensions.nonNullOrEmpty
@@ -26,15 +25,21 @@ class HomeViewModel(
 
     private fun offset() = currentPage * PAGE_SIZE //TODO ver se é isso msm
 
-    private val _list = MutableLiveData<List<MarvelCharacter>>()
-    val list: LiveData<List<MarvelCharacter>> = _list
+    var list = mutableStateOf<List<MarvelCharacter>>(listOf())
+    var loadError = mutableStateOf("")
+    var isLoading = mutableStateOf(false)
+    var endReached = mutableStateOf(false)
 
-    fun request(searchName: String? = null) {
+    init {
+        requestCharactersList()
+    }
+
+    fun requestCharactersList(searchName: String? = null) {
         lastJob?.cancel()
         if (searchName != null && searchName != currentSearch) {
             currentSearch = searchName
             resetPage()
-            _list.value = listOf()
+            list.value = listOf()
         }
         lastJob = viewModelScope.launch {
             delay(500L)
@@ -46,11 +51,16 @@ class HomeViewModel(
                 )
             ) {
                 is RequestState.Success -> {
-                    _list.postValue(requestState.data?.data?.charactersList.nonNullOrEmpty())
+                    val results = requestState.data?.data?.charactersList.nonNullOrEmpty()
+                    endReached.value = results.isEmpty()
                     currentPage++
+                    loadError.value = ""
+                    isLoading.value = false
+                    this@HomeViewModel.list.value += results
                 }
                 is RequestState.Error -> {
-                    //TODO talver usar um view state
+                    loadError.value = requestState.message!!
+                    isLoading.value = false
                 }
             }
         }
