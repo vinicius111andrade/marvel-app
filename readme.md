@@ -62,7 +62,4 @@ OkHttp is another standard for Android, it is a HTTP client that is efficient by
 Gson is a Java serialization and deserialization library. It converts objects into JSON and converts JSON into objects.
 
 ## UI
-### Structure and Jetpack Navigation
-I decided to use the single activity architecture, using Fragments for each screen. Jetpack Navigation will be used to navigate between Fragments. It is a simple and powerful way to reuse code. Since I will be able to access the Characters screen from the Home screen and from the Favorites screen. Everything done in a very standard way, and using one of the most used Android libraries.
-### ViewBinding
-I'm going to use ViewBinding in this project so I have minimum boilerplate code, and a very easy way to access View declared on my XML files.
+### Why use compose?
