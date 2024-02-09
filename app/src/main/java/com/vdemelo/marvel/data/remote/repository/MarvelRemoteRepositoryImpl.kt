@@ -1,7 +1,7 @@
 package com.vdemelo.marvel.data.remote.repository
 
 import com.vdemelo.marvel.data.remote.api.MarvelApi
-import com.vdemelo.marvel.domain.entity.model.CharacterDataWrapper
+import com.vdemelo.marvel.domain.model.CharacterDataWrapper
 import com.vdemelo.marvel.domain.repository.MarvelRemoteRepository
 
 class MarvelRemoteRepositoryImpl(

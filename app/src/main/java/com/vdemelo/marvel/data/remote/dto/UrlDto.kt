@@ -1,7 +1,7 @@
 package com.vdemelo.marvel.data.remote.dto
 
 import com.google.gson.annotations.SerializedName
-import com.vdemelo.marvel.domain.entity.model.Url
+import com.vdemelo.marvel.domain.model.Url
 
 class UrlDto(
     @SerializedName("type") val type : String?,

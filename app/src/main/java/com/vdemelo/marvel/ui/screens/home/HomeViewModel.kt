@@ -4,9 +4,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.vdemelo.common.extensions.nonNullOrEmpty
-import com.vdemelo.marvel.domain.entity.RequestState
-import com.vdemelo.marvel.domain.entity.model.CharacterDataWrapper
-import com.vdemelo.marvel.domain.entity.model.MarvelCharacter
+import com.vdemelo.marvel.domain.request.RequestState
+import com.vdemelo.marvel.domain.model.CharacterDataWrapper
+import com.vdemelo.marvel.domain.model.MarvelCharacter
 import com.vdemelo.marvel.domain.usecase.CharactersUseCase
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay

@@ -1,6 +1,6 @@
 package com.vdemelo.marvel.domain.repository
 
-import com.vdemelo.marvel.domain.entity.model.CharacterDataWrapper
+import com.vdemelo.marvel.domain.model.CharacterDataWrapper
 
 interface MarvelRemoteRepository {
 

@@ -1,7 +1,7 @@
 package com.vdemelo.marvel.data.remote.dto
 
 import com.google.gson.annotations.SerializedName
-import com.vdemelo.marvel.domain.entity.model.CharacterDataWrapper
+import com.vdemelo.marvel.domain.model.CharacterDataWrapper
 
 class CharacterDataWrapperDto(
     @SerializedName("code") val code : Int?,

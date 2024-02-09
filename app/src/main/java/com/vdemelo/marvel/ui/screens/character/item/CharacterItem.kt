@@ -24,7 +24,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.vdemelo.common.extensions.simpleCapitalize
 import com.vdemelo.marvel.R
-import com.vdemelo.marvel.domain.entity.model.MarvelCharacter
+import com.vdemelo.marvel.domain.model.MarvelCharacter
 import com.vdemelo.marvel.ui.components.FavoriteButton
 import com.vdemelo.marvel.ui.components.ImageLoader
 import com.vdemelo.marvel.ui.navigation.NavItem

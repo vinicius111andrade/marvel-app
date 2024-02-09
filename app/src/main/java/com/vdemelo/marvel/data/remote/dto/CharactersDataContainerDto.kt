@@ -2,7 +2,7 @@ package com.vdemelo.marvel.data.remote.dto
 
 import com.google.gson.annotations.SerializedName
 import com.vdemelo.common.extensions.nonNullOrEmpty
-import com.vdemelo.marvel.domain.entity.model.CharactersDataContainer
+import com.vdemelo.marvel.domain.model.CharactersDataContainer
 
 class CharactersDataContainerDto(
     @SerializedName("offset") val offset : Int?,

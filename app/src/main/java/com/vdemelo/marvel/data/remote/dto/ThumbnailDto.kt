@@ -1,7 +1,7 @@
 package com.vdemelo.marvel.data.remote.dto
 
 import com.google.gson.annotations.SerializedName
-import com.vdemelo.marvel.domain.entity.model.Image
+import com.vdemelo.marvel.domain.model.Image
 
 class ThumbnailDto(
     @SerializedName("path") val path : String?,

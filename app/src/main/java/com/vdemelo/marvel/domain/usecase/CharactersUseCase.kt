@@ -1,7 +1,7 @@
 package com.vdemelo.marvel.domain.usecase
 
-import com.vdemelo.marvel.domain.entity.RequestState
-import com.vdemelo.marvel.domain.entity.model.CharacterDataWrapper
+import com.vdemelo.marvel.domain.request.RequestState
+import com.vdemelo.marvel.domain.model.CharacterDataWrapper
 import com.vdemelo.marvel.domain.repository.MarvelRemoteRepository
 
 class CharactersUseCase(

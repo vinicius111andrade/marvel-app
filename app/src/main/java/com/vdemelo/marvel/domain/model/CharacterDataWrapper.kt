@@ -1,4 +1,4 @@
-package com.vdemelo.marvel.domain.entity.model
+package com.vdemelo.marvel.domain.model
 
 class CharacterDataWrapper(
     val code : Int?,
