@@ -46,3 +46,13 @@ fun MarvelCharacterEntity.toDomainModel(): MarvelCharacter {
         isFavorite = isFavorite
     )
 }
+
+fun MarvelCharacter.toEntity(): MarvelCharacterEntity {
+    return MarvelCharacterEntity(
+        id = id,
+        name = name,
+        description = description,
+        thumbnailUrl = thumbnailUrl,
+        isFavorite = isFavorite
+    )
+}

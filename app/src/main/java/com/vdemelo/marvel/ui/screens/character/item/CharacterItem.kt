@@ -56,7 +56,7 @@ fun CharacterItem(
                         //TODO save the selected char, so I can retrieve it on the other screen
                         //this viewmodel call a usecase, it saves on DB
                         //other viewmodel call same usecase, it retrieves from DB
-                        navController.navigate(NavItem.MarvelCharacter.route)
+                        navController.navigate(NavItem.CharacterDetails.route)
                     },
                 verticalAlignment = Alignment.CenterVertically
             ) {

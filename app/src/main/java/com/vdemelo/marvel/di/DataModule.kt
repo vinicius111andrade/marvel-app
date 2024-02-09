@@ -1,9 +1,12 @@
 package com.vdemelo.marvel.di
 
+import androidx.room.Room
+import com.vdemelo.marvel.data.local.db.MarvelFavoritesDataBase
 import com.vdemelo.marvel.data.remote.api.MarvelApi
 import com.vdemelo.marvel.data.remote.network.interceptor.AuthInterceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
+import org.koin.android.ext.koin.androidApplication
 import org.koin.dsl.module
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -30,5 +33,11 @@ val dataModule = module {
             .addConverterFactory(GsonConverterFactory.create())
             .build()
             .create(MarvelApi::class.java)
+    }
+    single {
+        Room.databaseBuilder(
+            androidApplication().baseContext,
+            MarvelFavoritesDataBase::class.java, "db-marvel-favorites"
+        ).build()
     }
 }

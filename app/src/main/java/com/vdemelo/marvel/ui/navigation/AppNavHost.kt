@@ -23,7 +23,7 @@ fun AppNavHost(
             HomeScreen(navController = navController)
         }
 
-        composable(route = NavItem.MarvelCharacter.route) {
+        composable(route = NavItem.CharacterDetails.route) {
             CharacterDetailsScreen(navController = navController)
         }
 

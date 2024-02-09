@@ -8,8 +8,6 @@ import com.vdemelo.marvel.data.local.entity.MarvelCharacterEntity
     entities = [MarvelCharacterEntity::class],
     version = 1
 )
-abstract class MarvelCharacterDataBase: RoomDatabase() {
-
-    abstract val dao: MarvelCharacterDao
-
+abstract class MarvelFavoritesDataBase: RoomDatabase() {
+    abstract val dao: MarvelFavoritesDao
 }

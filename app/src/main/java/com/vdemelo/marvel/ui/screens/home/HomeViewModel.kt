@@ -7,7 +7,7 @@ import com.vdemelo.common.extensions.nonNullOrEmpty
 import com.vdemelo.marvel.domain.request.RequestState
 import com.vdemelo.marvel.domain.model.CharacterDataWrapper
 import com.vdemelo.marvel.domain.model.MarvelCharacter
-import com.vdemelo.marvel.domain.usecase.CharactersUseCase
+import com.vdemelo.marvel.domain.usecase.MarvelCharactersUseCase
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -16,7 +16,7 @@ private const val PAGE_SIZE = 5
 private const val INITIAL_PAGE = 0
 
 class HomeViewModel(
-    private val charactersUseCase: CharactersUseCase
+    private val marvelCharactersUseCase: MarvelCharactersUseCase
 ) : ViewModel() {
 
     private var currentPage: Int = INITIAL_PAGE
@@ -44,7 +44,7 @@ class HomeViewModel(
         lastJob = viewModelScope.launch {
             delay(500L)
             when(
-                val requestState: RequestState<CharacterDataWrapper> = charactersUseCase.fetchCharacters(
+                val requestState: RequestState<CharacterDataWrapper> = marvelCharactersUseCase.fetchCharacters(
                     searchName = searchName,
                     pageSize = PAGE_SIZE,
                     offset = offset()

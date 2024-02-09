@@ -9,7 +9,7 @@ enum class Screen {
 sealed class NavItem(val route: String) {
 
     object Home : NavItem(route = Screen.HOME.name)
-    object MarvelCharacter : NavItem(route = Screen.CHARACTER.name)
+    object CharacterDetails : NavItem(route = Screen.CHARACTER.name)
     object Favorites : NavItem(route = Screen.FAVORITES.name)
 
 }
