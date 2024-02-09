@@ -14,6 +14,6 @@ interface MarvelFavoritesDao {
     @Upsert
     suspend fun upsert(marvelCharacterEntity: MarvelCharacterEntity)
 
-    @Query("DELETE FROM marvelcharacterentity WHERE id = :marvelCharacterId")
-    suspend fun deleteById(marvelCharacterId: Int)
+    @Query("DELETE FROM marvelcharacterentity WHERE charSum = :charSum")
+    suspend fun deleteByCharSum(charSum: Long)
 }

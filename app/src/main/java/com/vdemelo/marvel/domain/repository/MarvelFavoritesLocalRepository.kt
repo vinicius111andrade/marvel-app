@@ -8,5 +8,5 @@ interface MarvelFavoritesLocalRepository {
 
     suspend fun upsert(marvelCharacter: MarvelCharacter)
 
-    suspend fun deleteById(id: Int)
+    suspend fun deleteByCharSum(charSum: Long)
 }

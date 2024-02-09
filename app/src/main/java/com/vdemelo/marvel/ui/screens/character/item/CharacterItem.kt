@@ -1,5 +1,6 @@
 package com.vdemelo.marvel.ui.screens.character.item
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -35,6 +36,7 @@ fun CharacterItem(
     navController: NavController,
     marvelCharacter: MarvelCharacterUi
 ) {
+    Log.d("vini", "id: ${marvelCharacter.id} || url: ${marvelCharacter.thumbnailUrl}")
     Box(
         contentAlignment = Alignment.Center,
         modifier = modifier

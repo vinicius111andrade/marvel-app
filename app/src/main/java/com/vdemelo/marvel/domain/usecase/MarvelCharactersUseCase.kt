@@ -1,6 +1,7 @@
 package com.vdemelo.marvel.domain.usecase
 
-import com.vdemelo.marvel.domain.model.CharacterDataWrapper
+import android.util.Log
+import com.vdemelo.marvel.data.local.entity.MarvelCharacterEntity
 import com.vdemelo.marvel.domain.model.MarvelCharacter
 import com.vdemelo.marvel.domain.repository.MarvelFavoritesLocalRepository
 import com.vdemelo.marvel.domain.repository.MarvelRemoteRepository
@@ -21,20 +22,20 @@ class MarvelCharactersUseCase(
     }
 
     suspend fun deleteFavorite(marvelCharacter: MarvelCharacter) {
-        favoriteCharactersLocalRepository.deleteById(marvelCharacter.id)
+        favoriteCharactersLocalRepository.deleteByCharSum(marvelCharacter.charSum)
     }
 
     suspend fun fetchCharacters(
         searchName: String?,
         pageSize: Int,
         offset: Int
-    ): RequestState<CharacterDataWrapper> {
+    ): RequestState<List<MarvelCharacter>> {
 
 //        if (offset == 0) {
 //            updateFavoritesCache()
 //        }
 
-        val domainModel = try {
+        val remoteEntities: List<MarvelCharacterEntity> = try {
             remoteRepository.fetchCharacters(
                 searchName = searchName,
                 pageSize = pageSize,
@@ -44,12 +45,16 @@ class MarvelCharactersUseCase(
             return RequestState.Error()
         }
 
+        Log.d("lista inteira vini", "lista aqui: $remoteEntities")
+
+        val marvelCharacters: List<MarvelCharacter> = remoteEntities.map { MarvelCharacter(it) }
+
         //TODO erro por acessar DB na main thread
         //favoriteCharactersLocalRepository.selectAll()
 
         //TODO antes de retornar preciso checar do BD local se o item é fav ou n
         //TODO treat different status codes, status code 409 is an error and has msgs
-        return RequestState.Success(data = domainModel)
+        return RequestState.Success(data = marvelCharacters)
     }
 
 //    private suspend fun updateFavoritesCache() {

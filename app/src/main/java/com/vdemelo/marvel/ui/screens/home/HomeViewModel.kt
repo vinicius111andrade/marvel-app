@@ -4,7 +4,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.vdemelo.common.extensions.nonNullOrEmpty
-import com.vdemelo.marvel.domain.model.CharacterDataWrapper
+import com.vdemelo.marvel.domain.model.MarvelCharacter
 import com.vdemelo.marvel.domain.request.RequestState
 import com.vdemelo.marvel.domain.usecase.MarvelCharactersUseCase
 import com.vdemelo.marvel.ui.model.MarvelCharacterUi
@@ -43,29 +43,34 @@ class HomeViewModel(
         }
         lastJob = viewModelScope.launch {
             delay(500L)
-            when(
-                val requestState: RequestState<CharacterDataWrapper> = marvelCharactersUseCase.fetchCharacters(
-                    searchName = searchName,
-                    pageSize = PAGE_SIZE,
-                    offset = offset()
-                )
+            when (
+                val requestState: RequestState<List<MarvelCharacter>> =
+                    marvelCharactersUseCase.fetchCharacters(
+                        searchName = searchName,
+                        pageSize = PAGE_SIZE,
+                        offset = offset()
+                    )
             ) {
                 is RequestState.Success -> {
-                    val results = requestState.data?.data?.charactersList.nonNullOrEmpty()
+                    val results = requestState.data.nonNullOrEmpty()
                     endReached.value = results.isEmpty()
                     currentPage++
                     loadError.value = ""
                     isLoading.value = false
                     this@HomeViewModel.list.value += results.map { MarvelCharacterUi(it) }
                 }
+
                 is RequestState.Error -> {
-                    loadError.value = requestState.message!!
+                    loadError.value =
+                        requestState.message ?: "" //TODO na view se for "" ai eu boto msg padrao
                     isLoading.value = false
                 }
             }
         }
     }
 
-    private fun resetPage() { currentPage = INITIAL_PAGE }
+    private fun resetPage() {
+        currentPage = INITIAL_PAGE
+    }
 
 }

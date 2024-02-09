@@ -1,6 +1,7 @@
 package com.vdemelo.marvel.data.mappers
 
 import com.vdemelo.common.extensions.isNotNullOrBlank
+import com.vdemelo.common.extensions.toCharSum
 import com.vdemelo.marvel.data.local.entity.MarvelCharacterEntity
 import com.vdemelo.marvel.data.remote.dto.MarvelCharacterDto
 import com.vdemelo.marvel.data.remote.dto.ThumbnailDto
@@ -10,21 +11,21 @@ private const val HTTPS = "https"
 private const val DOT = "."
 private const val COLON_CHAR = ':'
 
-fun List<MarvelCharacterDto>.toEntityList(): List<MarvelCharacterEntity> {
-    val cleanList: MutableList<MarvelCharacterEntity> = mutableListOf()
-    this.forEach { dto ->
-        if (dto.id != null) {
-            val entity = MarvelCharacterEntity(
-                id = dto.id,
-                name = dto.name,
-                description = dto.description,
-                thumbnailUrl = dto.thumbnail?.toUrl(),
-                isFavorite = false //TODO
-            )
-            cleanList.add(entity)
-        }
-    }
-    return cleanList
+fun MarvelCharacterDto.dtoToEntity(): MarvelCharacterEntity {
+    val thumbnailUrl = thumbnail?.toUrl()
+    val charSum = listOf<String?>(
+        id.toString(),
+        name,
+        thumbnailUrl
+    ).toCharSum()
+    return MarvelCharacterEntity(
+        charSum = charSum,
+        id = id,
+        name = name,
+        description = description,
+        thumbnailUrl = thumbnailUrl,
+        isFavorite = false
+    )
 }
 
 private fun ThumbnailDto.toUrl(): String? {
@@ -39,6 +40,7 @@ private fun ThumbnailDto.toUrl(): String? {
 
 fun MarvelCharacterEntity.toDomainModel(): MarvelCharacter {
     return MarvelCharacter(
+        charSum = charSum,
         id = id,
         name = name,
         description = description,
@@ -47,8 +49,9 @@ fun MarvelCharacterEntity.toDomainModel(): MarvelCharacter {
     )
 }
 
-fun MarvelCharacter.toEntity(): MarvelCharacterEntity {
+fun MarvelCharacter.domainModelToEntity(): MarvelCharacterEntity {
     return MarvelCharacterEntity(
+        charSum = charSum,
         id = id,
         name = name,
         description = description,

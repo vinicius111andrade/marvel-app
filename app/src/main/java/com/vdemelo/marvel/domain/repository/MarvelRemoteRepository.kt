@@ -1,6 +1,6 @@
 package com.vdemelo.marvel.domain.repository
 
-import com.vdemelo.marvel.domain.model.CharacterDataWrapper
+import com.vdemelo.marvel.data.local.entity.MarvelCharacterEntity
 
 interface MarvelRemoteRepository {
 
@@ -8,5 +8,5 @@ interface MarvelRemoteRepository {
         searchName: String?,
         pageSize: Int,
         offset: Int
-    ): CharacterDataWrapper
+    ): List<MarvelCharacterEntity>
 }
