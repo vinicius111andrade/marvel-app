@@ -1,9 +1,9 @@
-package com.vdemelo.marvel.data.remote.response
+package com.vdemelo.marvel.data.remote.dto
 
 import com.google.gson.annotations.SerializedName
 import com.vdemelo.marvel.domain.entity.model.Url
 
-class UrlResponse(
+class UrlDto(
     @SerializedName("type") val type : String?,
     @SerializedName("url") val url : String?
 ) {

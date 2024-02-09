@@ -1,6 +1,6 @@
 package com.vdemelo.marvel.data.remote.api
 
-import com.vdemelo.marvel.data.remote.response.CharacterDataWrapperResponse
+import com.vdemelo.marvel.data.remote.dto.CharacterDataWrapperDto
 import retrofit2.http.GET
 import retrofit2.http.Query
 
@@ -11,6 +11,6 @@ interface MarvelApi {
         @Query("nameStartsWith") nameStartsWith: String? = null,
         @Query("limit") limit: Int? = null,
         @Query("offset") offset: Int? = null,
-    ): CharacterDataWrapperResponse
+    ): CharacterDataWrapperDto
 
 }
