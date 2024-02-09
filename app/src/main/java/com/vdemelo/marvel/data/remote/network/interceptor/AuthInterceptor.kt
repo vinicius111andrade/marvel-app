@@ -10,8 +10,8 @@ import java.security.MessageDigest
 class AuthInterceptor: Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
         val ts = "${System.currentTimeMillis() / 1000}"
-        val privateKey = BuildConfig.privateApiKey
-        val publicKey = BuildConfig.publicApiKey
+        val privateKey = BuildConfig.PRIVATE_API_KEY
+        val publicKey = BuildConfig.PUBLIC_API_KEY
         val url = chain.request().url
             .newBuilder()
             .addQueryParameter("ts", ts)
