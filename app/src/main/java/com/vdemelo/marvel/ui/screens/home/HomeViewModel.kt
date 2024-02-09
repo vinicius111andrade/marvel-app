@@ -25,7 +25,7 @@ class HomeViewModel(
 
     private fun offset() = currentPage * PAGE_SIZE //TODO ver se é isso msm
 
-    var list = mutableStateOf<List<MarvelCharacter>>(listOf())
+    var list = mutableStateOf<List<MarvelCharacter>>(listOf()) //TODO aqui é pra ser MarvelCharUi
     var loadError = mutableStateOf("")
     var isLoading = mutableStateOf(false)
     var endReached = mutableStateOf(false)

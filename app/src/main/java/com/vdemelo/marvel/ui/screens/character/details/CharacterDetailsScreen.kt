@@ -27,9 +27,9 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.vdemelo.marvel.R
-import com.vdemelo.marvel.domain.model.MarvelCharacter
 import com.vdemelo.marvel.ui.components.FavoriteButton
 import com.vdemelo.marvel.ui.components.ImageLoader
+import com.vdemelo.marvel.ui.model.MarvelCharacterUi
 
 //TODO
 //Detalhes do personagem
@@ -46,8 +46,8 @@ fun CharacterDetailsScreen(
     modifier: Modifier = Modifier,
     navController: NavController
 ) {
-    val marvelCharacter: MarvelCharacter = MarvelCharacter(
-        null, null, null, null, listOf(), null, false
+    val marvelCharacter: MarvelCharacterUi = MarvelCharacterUi(
+        0, null, null, null, false
     )
 
     Surface(
@@ -69,7 +69,7 @@ fun CharacterDetailsScreen(
                         minWidth = 280.dp,
                         maxWidth = 480.dp,
                     ),
-                url = marvelCharacter.thumbnail?.getUrl(),
+                url = marvelCharacter.thumbnailUrl,
                 contentDescription = stringResource(
                     id = R.string.content_description_character_image
                 )

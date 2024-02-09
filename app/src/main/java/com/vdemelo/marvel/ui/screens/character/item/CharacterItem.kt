@@ -24,16 +24,16 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.vdemelo.common.extensions.simpleCapitalize
 import com.vdemelo.marvel.R
-import com.vdemelo.marvel.domain.model.MarvelCharacter
 import com.vdemelo.marvel.ui.components.FavoriteButton
 import com.vdemelo.marvel.ui.components.ImageLoader
+import com.vdemelo.marvel.ui.model.MarvelCharacterUi
 import com.vdemelo.marvel.ui.navigation.NavItem
 
 @Composable
 fun CharacterItem(
     modifier: Modifier = Modifier,
     navController: NavController,
-    marvelCharacter: MarvelCharacter
+    marvelCharacter: MarvelCharacterUi
 ) {
     Box(
         contentAlignment = Alignment.Center,
@@ -62,7 +62,7 @@ fun CharacterItem(
             ) {
                 ImageLoader(
                     modifier = Modifier.size(60.dp),
-                    url = marvelCharacter.thumbnail?.getUrl(),
+                    url = marvelCharacter.thumbnailUrl,
                     contentDescription = marvelCharacter.name?.simpleCapitalize()
                         ?: stringResource(id = R.string.content_description_character_image),
                     placeholderRes = R.drawable.ic_person
@@ -87,13 +87,11 @@ fun CharacterItem(
 @Composable
 fun PreviewCharItem() {
     CharacterItem(
-        marvelCharacter = MarvelCharacter(
-            id = null,
+        marvelCharacter = MarvelCharacterUi(
+            id = 0,
             name = "Spider Man",
             description = null,
-            modified = null,
-            urls = listOf(),
-            thumbnail = null,
+            thumbnailUrl = null,
             isFavorite = false
         ),
         navController = rememberNavController()
@@ -104,13 +102,11 @@ fun PreviewCharItem() {
 @Composable
 fun PreviewCharItemUnknown() {
     CharacterItem(
-        marvelCharacter = MarvelCharacter(
-            id = null,
+        marvelCharacter = MarvelCharacterUi(
+            id = 0,
             name = null,
             description = null,
-            modified = null,
-            urls = listOf(),
-            thumbnail = null,
+            thumbnailUrl = null,
             isFavorite = false
         ),
         navController = rememberNavController()

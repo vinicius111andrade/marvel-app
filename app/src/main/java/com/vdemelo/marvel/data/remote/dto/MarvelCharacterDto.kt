@@ -1,7 +1,6 @@
 package com.vdemelo.marvel.data.remote.dto
 
 import com.google.gson.annotations.SerializedName
-import com.vdemelo.common.extensions.nonNullOrEmpty
 import com.vdemelo.marvel.domain.model.MarvelCharacter
 
 class MarvelCharacterDto(
@@ -15,12 +14,11 @@ class MarvelCharacterDto(
 
     fun toModel(): MarvelCharacter {
         return MarvelCharacter(
-            id = id,
+            id = id ?: 0, //TODO
             name = name,
             description = description,
-            modified = modified,
-            urls = urls.nonNullOrEmpty().map { it.toModel() },
-            thumbnail = thumbnail?.toModel()
+            thumbnailUrl = null, //TODO
+            isFavorite = false //TODO
         )
     }
 }

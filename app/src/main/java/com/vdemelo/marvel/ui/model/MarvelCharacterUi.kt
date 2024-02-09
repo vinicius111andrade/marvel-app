@@ -1,6 +1,6 @@
-package com.vdemelo.marvel.domain.model
+package com.vdemelo.marvel.ui.model
 
-class MarvelCharacter(
+class MarvelCharacterUi(
     val id  : Int,
     val name : String?,
     val description : String?,

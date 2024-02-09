@@ -4,6 +4,7 @@ import com.vdemelo.common.extensions.isNotNullOrBlank
 import com.vdemelo.marvel.data.local.entity.MarvelCharacterEntity
 import com.vdemelo.marvel.data.remote.dto.MarvelCharacterDto
 import com.vdemelo.marvel.data.remote.dto.ThumbnailDto
+import com.vdemelo.marvel.domain.model.MarvelCharacter
 
 private const val HTTPS = "https"
 private const val DOT = "."
@@ -17,7 +18,8 @@ fun List<MarvelCharacterDto>.toEntityList(): List<MarvelCharacterEntity> {
                 id = dto.id,
                 name = dto.name,
                 description = dto.description,
-                thumbnailUrl = dto.thumbnail?.toUrl()
+                thumbnailUrl = dto.thumbnail?.toUrl(),
+                isFavorite = false //TODO
             )
             cleanList.add(entity)
         }
@@ -27,10 +29,20 @@ fun List<MarvelCharacterDto>.toEntityList(): List<MarvelCharacterEntity> {
 
 private fun ThumbnailDto.toUrl(): String? {
     return if (path.isNotNullOrBlank() && extension.isNotNullOrBlank()) {
-        val pathWithoutHttp = path?.dropWhile { it != COLON_CHAR }
-        val pathWithHttps = HTTPS + pathWithoutHttp
+        val pathWithoutHttp: String? = path?.dropWhile { it != COLON_CHAR }
+        val pathWithHttps: String = HTTPS + pathWithoutHttp
         pathWithHttps + DOT + extension
     } else {
         null
     }
+}
+
+fun MarvelCharacterEntity.toDomainModel(): MarvelCharacter {
+    return MarvelCharacter(
+        id = id,
+        name = name,
+        description = description,
+        thumbnailUrl = thumbnailUrl,
+        isFavorite = isFavorite
+    )
 }
