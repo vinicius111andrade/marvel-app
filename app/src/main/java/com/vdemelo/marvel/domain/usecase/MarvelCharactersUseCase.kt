@@ -44,7 +44,8 @@ class MarvelCharactersUseCase(
             return RequestState.Error()
         }
 
-        favoriteCharactersLocalRepository.selectAll()
+        //TODO erro por acessar DB na main thread
+        //favoriteCharactersLocalRepository.selectAll()
 
         //TODO antes de retornar preciso checar do BD local se o item é fav ou n
         //TODO treat different status codes, status code 409 is an error and has msgs

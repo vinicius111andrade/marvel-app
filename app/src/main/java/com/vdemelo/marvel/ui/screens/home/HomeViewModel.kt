@@ -4,10 +4,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.vdemelo.common.extensions.nonNullOrEmpty
-import com.vdemelo.marvel.domain.request.RequestState
 import com.vdemelo.marvel.domain.model.CharacterDataWrapper
-import com.vdemelo.marvel.domain.model.MarvelCharacter
+import com.vdemelo.marvel.domain.request.RequestState
 import com.vdemelo.marvel.domain.usecase.MarvelCharactersUseCase
+import com.vdemelo.marvel.ui.model.MarvelCharacterUi
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -25,7 +25,7 @@ class HomeViewModel(
 
     private fun offset() = currentPage * PAGE_SIZE //TODO ver se é isso msm
 
-    var list = mutableStateOf<List<MarvelCharacter>>(listOf()) //TODO aqui é pra ser MarvelCharUi
+    var list = mutableStateOf<List<MarvelCharacterUi>>(listOf())
     var loadError = mutableStateOf("")
     var isLoading = mutableStateOf(false)
     var endReached = mutableStateOf(false)
@@ -56,7 +56,7 @@ class HomeViewModel(
                     currentPage++
                     loadError.value = ""
                     isLoading.value = false
-                    this@HomeViewModel.list.value += results
+                    this@HomeViewModel.list.value += results.map { MarvelCharacterUi(it) }
                 }
                 is RequestState.Error -> {
                     loadError.value = requestState.message!!
