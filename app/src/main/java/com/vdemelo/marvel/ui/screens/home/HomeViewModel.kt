@@ -5,8 +5,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.vdemelo.common.extensions.nonNullOrEmpty
 import com.vdemelo.marvel.domain.model.MarvelCharacter
-import com.vdemelo.marvel.domain.request.RequestState
-import com.vdemelo.marvel.domain.usecase.MarvelCharactersRemoteListingUseCase
+import com.vdemelo.marvel.domain.orchestrator.MarvelCharactersOrchestrator
+import com.vdemelo.marvel.domain.request.AsyncState
 import com.vdemelo.marvel.ui.model.MarvelCharacterUi
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -16,14 +16,12 @@ private const val PAGE_SIZE = 5
 private const val INITIAL_PAGE = 0
 
 class HomeViewModel(
-    private val marvelCharactersUseCase: MarvelCharactersRemoteListingUseCase
+    private val orchestrator: MarvelCharactersOrchestrator
 ) : ViewModel() {
 
-    private var currentPage: Int = INITIAL_PAGE
+    private var nextPage: Int = INITIAL_PAGE
     private var currentSearch: String? = null
     private var lastJob: Job? = null
-
-    private fun offset() = currentPage * PAGE_SIZE //TODO ver se é isso msm
 
     var list = mutableStateOf<List<MarvelCharacterUi>>(listOf())
     var loadError = mutableStateOf("")
@@ -44,25 +42,25 @@ class HomeViewModel(
         lastJob = viewModelScope.launch {
             delay(500L)
             when (
-                val requestState: RequestState<List<MarvelCharacter>> =
-                    marvelCharactersUseCase.fetchCharacters(
+                val asyncState: AsyncState<List<MarvelCharacter>> =
+                    orchestrator.requestCharactersPage(
                         searchName = searchName,
                         pageSize = PAGE_SIZE,
-                        offset = offset()
+                        pageNumber = nextPage
                     )
             ) {
-                is RequestState.Success -> {
-                    val results = requestState.data.nonNullOrEmpty()
+                is AsyncState.Success -> {
+                    val results = asyncState.data.nonNullOrEmpty()
                     endReached.value = results.isEmpty()
-                    currentPage++
-                    loadError.value = ""
+                    nextPage++
+                    loadError.value = "" //TODO melhorar logica de erro, talvez deixar só uma msg padrao na view
                     isLoading.value = false
                     this@HomeViewModel.list.value += results.map { MarvelCharacterUi(it) }
                 }
 
-                is RequestState.Error -> {
+                is AsyncState.Error -> {
                     loadError.value =
-                        requestState.message ?: "" //TODO na view se for "" ai eu boto msg padrao
+                        asyncState.message ?: "" //TODO na view se for "" ai eu boto msg padrao
                     isLoading.value = false
                 }
             }
@@ -70,7 +68,7 @@ class HomeViewModel(
     }
 
     private fun resetPage() {
-        currentPage = INITIAL_PAGE
+        nextPage = INITIAL_PAGE
     }
 
 }

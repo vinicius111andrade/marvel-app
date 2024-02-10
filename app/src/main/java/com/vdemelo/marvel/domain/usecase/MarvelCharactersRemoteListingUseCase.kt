@@ -3,7 +3,7 @@ package com.vdemelo.marvel.domain.usecase
 import com.vdemelo.marvel.data.local.entity.MarvelCharacterEntity
 import com.vdemelo.marvel.domain.model.MarvelCharacter
 import com.vdemelo.marvel.domain.repository.MarvelRemoteRepository
-import com.vdemelo.marvel.domain.request.RequestState
+import com.vdemelo.marvel.domain.request.AsyncState
 
 class MarvelCharactersRemoteListingUseCase(
     private val remoteRepository: MarvelRemoteRepository
@@ -11,19 +11,19 @@ class MarvelCharactersRemoteListingUseCase(
     suspend fun fetchCharacters(
         searchName: String?,
         pageSize: Int,
-        offset: Int
-    ): RequestState<List<MarvelCharacter>> {
+        pageNumber: Int
+    ): AsyncState<List<MarvelCharacter>> {
         val remoteEntities: List<MarvelCharacterEntity> = try {
             remoteRepository.fetchCharacters(
                 searchName = searchName,
                 pageSize = pageSize,
-                offset = offset
+                offset = pageNumber * pageSize
             )
         } catch (e: Exception) {
-            return RequestState.Error()
+            return AsyncState.Error()
         }
         val marvelCharacters: List<MarvelCharacter> = remoteEntities.map { MarvelCharacter(it) }
-        return RequestState.Success(data = marvelCharacters)
+        return AsyncState.Success(data = marvelCharacters)
     }
 
 }
