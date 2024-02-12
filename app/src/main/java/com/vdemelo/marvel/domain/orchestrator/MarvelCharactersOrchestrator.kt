@@ -1,7 +1,7 @@
 package com.vdemelo.marvel.domain.orchestrator
 
 import com.vdemelo.marvel.domain.model.MarvelCharacter
-import com.vdemelo.marvel.domain.request.AsyncState
+import com.vdemelo.marvel.domain.model.AsyncState
 import com.vdemelo.marvel.domain.usecase.MarvelCharactersRemoteListingUseCase
 import com.vdemelo.marvel.domain.usecase.MarvelFavoritesUseCase
 

@@ -1,6 +1,7 @@
-package com.vdemelo.marvel.domain.request
+package com.vdemelo.marvel.domain.model
 
-//TODO remove this
+private const val UNKNOWN_ERROR = "An unknown error occurred."
+
 sealed class AsyncState<T>(
     val data: T? = null,
     val message: String? = null
@@ -9,6 +10,6 @@ sealed class AsyncState<T>(
 
     class Error<T>(
         data: T? = null,
-        message: String = DefaultErrors.UNKNOWN_ERROR.message
+        message: String = UNKNOWN_ERROR
     ) : AsyncState<T>(data, message)
 }

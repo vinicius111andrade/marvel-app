@@ -3,7 +3,7 @@ package com.vdemelo.marvel.domain.usecase
 import com.vdemelo.marvel.data.local.entity.MarvelCharacterEntity
 import com.vdemelo.marvel.domain.model.MarvelCharacter
 import com.vdemelo.marvel.domain.repository.MarvelRemoteRepository
-import com.vdemelo.marvel.domain.request.AsyncState
+import com.vdemelo.marvel.domain.model.AsyncState
 
 class MarvelCharactersRemoteListingUseCase(
     private val remoteRepository: MarvelRemoteRepository

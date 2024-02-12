@@ -6,7 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.vdemelo.common.extensions.nonNullOrEmpty
 import com.vdemelo.marvel.domain.model.MarvelCharacter
 import com.vdemelo.marvel.domain.orchestrator.MarvelCharactersOrchestrator
-import com.vdemelo.marvel.domain.request.AsyncState
+import com.vdemelo.marvel.domain.model.AsyncState
 import com.vdemelo.marvel.ui.model.MarvelCharacterUi
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
