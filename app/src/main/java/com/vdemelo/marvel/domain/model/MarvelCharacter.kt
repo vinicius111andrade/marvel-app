@@ -19,3 +19,14 @@ class MarvelCharacter(
         isFavorite = entity.isFavorite
     )
 }
+
+fun MarvelCharacter.toFavorite(): MarvelCharacter {
+    return MarvelCharacter(
+        charSum = charSum,
+        id = id,
+        name = name,
+        description = description,
+        thumbnailUrl = thumbnailUrl,
+        isFavorite = true
+    )
+}

@@ -28,12 +28,15 @@ import com.vdemelo.marvel.ui.components.FavoriteButton
 import com.vdemelo.marvel.ui.components.ImageLoader
 import com.vdemelo.marvel.ui.model.MarvelCharacterUi
 import com.vdemelo.marvel.ui.navigation.NavItem
+import com.vdemelo.marvel.ui.screens.favorites.FavoritesViewModel
+import org.koin.androidx.compose.getViewModel
 
 @Composable
 fun CharacterItem(
     modifier: Modifier = Modifier,
     navController: NavController,
-    marvelCharacter: MarvelCharacterUi
+    marvelCharacter: MarvelCharacterUi,
+    favoritesViewModel: FavoritesViewModel = getViewModel() //TODO - isso parece ruim, ver se funciona
 ) {
     Box(
         contentAlignment = Alignment.Center,
@@ -75,9 +78,11 @@ fun CharacterItem(
                 modifier = Modifier
                     .weight(0.3F)
                     .size(32.dp),
-                isFavorite = marvelCharacter.isFavorite,
-                selectAction = { /*TODO*/ },
-                unselectAction = { /*TODO*/ }
+                characterUi = marvelCharacter,
+                initialIsFavorite = marvelCharacter.isFavorite,
+                onFavoriteChange = { marvelCharacterUi, isFavorite ->
+                    favoritesViewModel.updateFavorite(marvelCharacterUi, isFavorite)
+                }
             )
         }
     }
@@ -88,6 +93,7 @@ fun CharacterItem(
 fun PreviewCharItem() {
     CharacterItem(
         marvelCharacter = MarvelCharacterUi(
+            charSum = 0,
             id = 0,
             name = "Spider Man",
             description = null,
@@ -103,6 +109,7 @@ fun PreviewCharItem() {
 fun PreviewCharItemUnknown() {
     CharacterItem(
         marvelCharacter = MarvelCharacterUi(
+            charSum = 0,
             id = 0,
             name = null,
             description = null,

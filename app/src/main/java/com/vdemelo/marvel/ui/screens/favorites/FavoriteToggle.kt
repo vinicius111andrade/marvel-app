@@ -1,4 +1,4 @@
-package com.vdemelo.marvel.ui.components
+package com.vdemelo.marvel.ui.screens.favorites
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -14,23 +14,36 @@ import com.vdemelo.marvel.R
 import com.vdemelo.marvel.ui.model.MarvelCharacterUi
 
 @Composable
-fun FavoriteButton(
-    modifier: Modifier = Modifier,
+fun FavoriteToggle(
     characterUi: MarvelCharacterUi,
     initialIsFavorite: Boolean,
-    onFavoriteChange: (MarvelCharacterUi, Boolean) -> Unit
+    favoritesViewModel: FavoritesViewModel,
+    onFavoriteChange: (Boolean) -> Unit
 ) {
-    //TODO ver se vai dar problema de trocar estado do botao sem finalizar troca no BD
     var isFavorite by remember { mutableStateOf(initialIsFavorite) }
 
+    FavoriteHeart(
+        isFavorite = isFavorite,
+        onFavoriteChange = { newIsFavorite ->
+            favoritesViewModel.updateFavorite(
+                characterUi = characterUi,
+                isFavorite = isFavorite
+            )
+            isFavorite = newIsFavorite
+        }
+    )
+}
+
+@Composable
+fun FavoriteHeart(
+    isFavorite: Boolean,
+    onFavoriteChange: (Boolean) -> Unit
+) {
     val favImageRes =
         if (isFavorite) R.drawable.ic_favorite_selected
         else R.drawable.ic_favorite_unselected
     Image(
-        modifier = modifier.clickable {
-            onFavoriteChange(characterUi, !isFavorite)
-            isFavorite = !isFavorite
-        },
+        modifier = Modifier.clickable { onFavoriteChange(!isFavorite) },
         painter = painterResource(id = favImageRes),
         contentDescription = stringResource(id = R.string.button_favorite)
     )

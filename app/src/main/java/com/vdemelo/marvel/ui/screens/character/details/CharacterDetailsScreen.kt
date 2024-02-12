@@ -30,6 +30,8 @@ import com.vdemelo.marvel.R
 import com.vdemelo.marvel.ui.components.FavoriteButton
 import com.vdemelo.marvel.ui.components.ImageLoader
 import com.vdemelo.marvel.ui.model.MarvelCharacterUi
+import com.vdemelo.marvel.ui.screens.favorites.FavoritesViewModel
+import org.koin.androidx.compose.getViewModel
 
 //TODO
 //Detalhes do personagem
@@ -44,10 +46,11 @@ import com.vdemelo.marvel.ui.model.MarvelCharacterUi
 @Composable
 fun CharacterDetailsScreen(
     modifier: Modifier = Modifier,
-    navController: NavController
+    navController: NavController,
+    favoritesViewModel: FavoritesViewModel = getViewModel()
 ) {
-    val marvelCharacter: MarvelCharacterUi = MarvelCharacterUi(
-        0, null, null, null, false
+    val marvelCharacter: MarvelCharacterUi = MarvelCharacterUi( //TODO - tem q pegar o valor certo
+        0, 0, null, null, null, false
     )
 
     Surface(
@@ -82,9 +85,11 @@ fun CharacterDetailsScreen(
                 val iconsSize = 60.dp
                 FavoriteButton(
                     modifier = Modifier.size(iconsSize),
-                    isFavorite = marvelCharacter.isFavorite,
-                    selectAction = { /*TODO*/ },
-                    unselectAction = { /*TODO*/ }
+                    characterUi = marvelCharacter,
+                    initialIsFavorite = marvelCharacter.isFavorite,
+                    onFavoriteChange = { marvelCharacterUi, isFavorite ->
+                        favoritesViewModel.updateFavorite(marvelCharacterUi, isFavorite)
+                    }
                 )
                 Image(
                     modifier = Modifier.size(iconsSize),

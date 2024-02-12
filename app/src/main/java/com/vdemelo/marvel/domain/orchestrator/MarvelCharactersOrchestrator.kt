@@ -1,7 +1,8 @@
 package com.vdemelo.marvel.domain.orchestrator
 
-import com.vdemelo.marvel.domain.model.MarvelCharacter
 import com.vdemelo.marvel.domain.model.AsyncState
+import com.vdemelo.marvel.domain.model.MarvelCharacter
+import com.vdemelo.marvel.domain.model.toFavorite
 import com.vdemelo.marvel.domain.usecase.MarvelCharactersRemoteListingUseCase
 import com.vdemelo.marvel.domain.usecase.MarvelFavoritesUseCase
 
@@ -40,15 +41,7 @@ class MarvelCharactersOrchestrator(
 
     suspend fun updateFavorite(character: MarvelCharacter, isFavorite: Boolean) {
         if (isFavorite) {
-            val favorite = MarvelCharacter(
-                charSum = character.charSum,
-                id = character.id,
-                name = character.name,
-                description = character.description,
-                thumbnailUrl = character.thumbnailUrl,
-                isFavorite = true
-            )
-            favoritesUseCase.upsertFavorite(favorite)
+            favoritesUseCase.upsertFavorite(character.toFavorite())
         } else {
             favoritesUseCase.deleteFavorite(character)
         }
