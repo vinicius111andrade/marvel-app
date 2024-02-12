@@ -1,4 +1,4 @@
-package com.vdemelo.marvel.ui.screens.character.list
+package com.vdemelo.marvel.ui.screens.home
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -18,11 +18,13 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.vdemelo.marvel.ui.screens.character.item.CharacterItem
-import com.vdemelo.marvel.ui.screens.home.HomeViewModel
+import com.vdemelo.marvel.R
 import com.vdemelo.marvel.ui.components.RetrySection
+import com.vdemelo.marvel.ui.components.SearchBar
+import com.vdemelo.marvel.ui.screens.character.item.CharacterItem
 import org.koin.androidx.compose.getViewModel
 
 //TODO
@@ -36,7 +38,7 @@ import org.koin.androidx.compose.getViewModel
 //• Interface de lista vazia, erro ou sem internet.
 
 @Composable
-fun CharactersList(
+fun HomeCharactersList(
     navController: NavController,
     viewModel: HomeViewModel = getViewModel()
 ) {
@@ -45,6 +47,14 @@ fun CharactersList(
     val loadError by remember { viewModel.loadError }
     val isLoading by remember { viewModel.isLoading }
 
+    SearchBar(
+        hint = stringResource(id = R.string.list_screen_search_hint),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp),
+        onSearch = { viewModel.requestCharactersList(searchName = it) }
+    )
+    Spacer(modifier = Modifier.height(16.dp))
     Column(
         modifier = Modifier.fillMaxSize()
     ) {

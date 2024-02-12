@@ -6,8 +6,8 @@ import com.vdemelo.marvel.domain.usecase.MarvelCharactersRemoteListingUseCase
 import com.vdemelo.marvel.domain.usecase.MarvelFavoritesUseCase
 
 class MarvelCharactersOrchestrator(
-    val remoteListingUseCase: MarvelCharactersRemoteListingUseCase,
-    val favoritesUseCase: MarvelFavoritesUseCase
+    private val remoteListingUseCase: MarvelCharactersRemoteListingUseCase,
+    private val favoritesUseCase: MarvelFavoritesUseCase
 ) {
 
     suspend fun requestCharactersPage(

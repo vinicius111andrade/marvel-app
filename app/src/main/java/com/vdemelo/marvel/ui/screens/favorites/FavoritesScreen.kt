@@ -1,9 +1,11 @@
-package com.vdemelo.marvel.ui.screens.home
+package com.vdemelo.marvel.ui.screens.favorites
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -20,9 +22,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.vdemelo.marvel.R
+import com.vdemelo.marvel.ui.screens.home.HomeCharactersList
 
 @Composable
-fun HomeScreen(navController: NavController) {
+fun FavoritesScreen(navController: NavController) {
     Surface(
         color = MaterialTheme.colorScheme.background,
         modifier = Modifier.fillMaxSize()
@@ -45,11 +48,12 @@ fun HomeScreen(navController: NavController) {
                 )
             }
             Text(
-                text = stringResource(id = R.string.list_screen_home_title),
+                text = stringResource(id = R.string.list_screen_favorites_title),
                 fontSize = 48.sp,
                 textAlign = TextAlign.Center,
                 fontWeight = FontWeight.Bold
             )
+            Spacer(modifier = Modifier.height(16.dp))
             HomeCharactersList(navController = navController)
         }
     }
