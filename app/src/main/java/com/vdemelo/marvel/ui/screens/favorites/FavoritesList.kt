@@ -30,62 +30,62 @@ fun FavoritesList(
     navController: NavController,
     viewModel: FavoritesViewModel = getViewModel()
 ) {
-    val list by remember { viewModel.list }
-    val endReached by remember { viewModel.endReached }
-    val loadError by remember { viewModel.loadError }
-    val isLoading by remember { viewModel.isLoading }
-
-    Column(
-        modifier = Modifier.fillMaxSize()
-    ) {
-        if (list.isNotEmpty()) {
-            LazyColumn(contentPadding = PaddingValues(16.dp)) {
-                val itemCount = list.size
-
-                items(itemCount) { i ->
-                    val hasScrolledDown = i >= itemCount - 2
-                    if (hasScrolledDown && !endReached && !isLoading) {
-                        viewModel.requestCharactersList()
-                    }
-                    CharacterItem(
-                        marvelCharacter = list[i],
-                        navController = navController
-                    )
-                    Spacer(modifier = Modifier.height(24.dp))
-                }
-
-                item {
-                    if (isLoading) {
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(8.dp),
-                            horizontalArrangement = Arrangement.Center
-                        ) {
-                            CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
-                        }
-                    } else if (loadError.isNotEmpty()) {
-                        RetrySection(
-                            error = loadError,
-                            onRetry = { viewModel.requestCharactersList() }
-                        )
-                    }
-                }
-            }
-        } else {
-            Box(
-                contentAlignment = Alignment.Center,
-                modifier = Modifier.fillMaxSize()
-            ) {
-                if (isLoading) {
-                    CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
-                } else if (loadError.isNotEmpty()) {
-                    RetrySection(
-                        error = loadError,
-                        onRetry = { viewModel.requestCharactersList() }
-                    )
-                }
-            }
-        }
-    }
+//    val list by remember { viewModel.list }
+//    val endReached by remember { viewModel.endReached }
+//    val loadError by remember { viewModel.loadError }
+//    val isLoading by remember { viewModel.isLoading }
+//
+//    Column(
+//        modifier = Modifier.fillMaxSize()
+//    ) {
+//        if (list.isNotEmpty()) {
+//            LazyColumn(contentPadding = PaddingValues(16.dp)) {
+//                val itemCount = list.size
+//
+//                items(itemCount) { i ->
+//                    val hasScrolledDown = i >= itemCount - 2
+//                    if (hasScrolledDown && !endReached && !isLoading) {
+//                        viewModel.requestCharactersList()
+//                    }
+//                    CharacterItem(
+//                        marvelCharacter = list[i],
+//                        navController = navController
+//                    )
+//                    Spacer(modifier = Modifier.height(24.dp))
+//                }
+//
+//                item {
+//                    if (isLoading) {
+//                        Row(
+//                            modifier = Modifier
+//                                .fillMaxWidth()
+//                                .padding(8.dp),
+//                            horizontalArrangement = Arrangement.Center
+//                        ) {
+//                            CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
+//                        }
+//                    } else if (loadError.isNotEmpty()) {
+//                        RetrySection(
+//                            error = loadError,
+//                            onRetry = { viewModel.requestCharactersList() }
+//                        )
+//                    }
+//                }
+//            }
+//        } else {
+//            Box(
+//                contentAlignment = Alignment.Center,
+//                modifier = Modifier.fillMaxSize()
+//            ) {
+//                if (isLoading) {
+//                    CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
+//                } else if (loadError.isNotEmpty()) {
+//                    RetrySection(
+//                        error = loadError,
+//                        onRetry = { viewModel.requestCharactersList() }
+//                    )
+//                }
+//            }
+//        }
+//    }
 }
