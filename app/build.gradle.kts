@@ -58,6 +58,7 @@ android {
 }
 
 val composeUiVersion: String by rootProject.extra
+val pagingVersion: String by rootProject.extra
 
 dependencies {
 
@@ -108,9 +109,9 @@ dependencies {
     // https://github.com/coil-kt/coil#jetpack-compose
     implementation("io.coil-kt:coil-compose:2.5.0")
 
-    // Paging
-    implementation("androidx.paging:paging-runtime-ktx:3.2.1")
-    implementation("androidx.paging:paging-compose:3.3.0-alpha03")
+    // Paging 3
+    implementation("androidx.paging:paging-runtime-ktx:$pagingVersion")
+    testImplementation("androidx.paging:paging-common-ktx:$pagingVersion")
 
     // Room
     implementation("androidx.room:room-ktx:2.6.1")

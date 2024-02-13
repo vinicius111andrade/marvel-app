@@ -38,16 +38,27 @@ private fun ThumbnailDto.toUrl(): String? {
     }
 }
 
-fun MarvelCharacterEntity.toDomainModel(favoriteEntity: FavoriteEntity?): MarvelCharacter {
+fun MarvelCharacterEntity.toDomainModel(isFavorite: Boolean): MarvelCharacter {
     return MarvelCharacter(
         charSum = charSum,
         id = id,
         name = name,
         description = description,
         thumbnailUrl = thumbnailUrl,
-        isFavorite = (favoriteEntity?.charSum == charSum)
+        isFavorite = isFavorite
     )
 }
+
+//fun MarvelCharacterEntity.toDomainModel(favoriteEntity: FavoriteEntity?): MarvelCharacter {
+//    return MarvelCharacter(
+//        charSum = charSum,
+//        id = id,
+//        name = name,
+//        description = description,
+//        thumbnailUrl = thumbnailUrl,
+//        isFavorite = (favoriteEntity?.charSum == charSum)
+//    )
+//}
 
 //TODO remove?
 fun MarvelCharacterEntity.toFavorite(): FavoriteEntity = FavoriteEntity(charSum = charSum)

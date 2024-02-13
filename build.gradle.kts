@@ -6,3 +6,4 @@ plugins {
 }
 
 val composeUiVersion by extra { "1.6.1" }
+val pagingVersion by extra { "3.2.1" }
