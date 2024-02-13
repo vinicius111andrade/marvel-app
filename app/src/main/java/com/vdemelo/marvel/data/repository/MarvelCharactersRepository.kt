@@ -1,11 +1,13 @@
 package com.vdemelo.marvel.data.repository
 
 import com.vdemelo.common.extensions.nonNullOrEmpty
-import com.vdemelo.marvel.data.local.db.MarvelFavoritesDataBase
+import com.vdemelo.marvel.data.local.db.characters.MarvelCharactersDataBase
+import com.vdemelo.marvel.data.local.db.favorites.FavoritesDataBase
 import com.vdemelo.marvel.data.local.entity.MarvelCharacterEntity
 import com.vdemelo.marvel.data.mappers.domainModelToEntity
 import com.vdemelo.marvel.data.mappers.dtoToEntity
 import com.vdemelo.marvel.data.mappers.toDomainModel
+import com.vdemelo.marvel.data.mappers.toFavorite
 import com.vdemelo.marvel.data.remote.api.MarvelApi
 import com.vdemelo.marvel.data.remote.dto.CharacterDataWrapperDto
 import com.vdemelo.marvel.data.remote.dto.MarvelCharacterDto
@@ -15,14 +17,15 @@ import kotlinx.coroutines.flow.Flow
 
 class MarvelCharactersRepositoryImpl(
     private val api: MarvelApi,
-    private val favoritesDb: MarvelFavoritesDataBase
+    private val charactersDb: MarvelCharactersDataBase,
+    private val favoritesDb: FavoritesDataBase
 ): MarvelCharactersRepository {
 
     override suspend fun fetchCharacters(
         searchName: String?,
         pageSize: Int,
         offset: Int
-    ): List<MarvelCharacterEntity> {
+    ): Flow<List<MarvelCharacter>> {
         val wrapper: CharacterDataWrapperDto = api.getCharacters(
             nameStartsWith = searchName,
             limit = pageSize,
@@ -39,7 +42,7 @@ class MarvelCharactersRepositoryImpl(
     }
 
     override suspend fun upsert(marvelCharacter: MarvelCharacter) {
-        favoritesDb.dao.upsert(marvelCharacter.domainModelToEntity())
+        favoritesDb.dao.upsert(marvelCharacter.toFavorite())
     }
 
     override suspend fun deleteByCharSum(charSum: Long) {

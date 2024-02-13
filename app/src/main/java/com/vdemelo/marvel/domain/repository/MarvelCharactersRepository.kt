@@ -1,6 +1,5 @@
 package com.vdemelo.marvel.domain.repository
 
-import com.vdemelo.marvel.data.local.entity.MarvelCharacterEntity
 import com.vdemelo.marvel.domain.model.MarvelCharacter
 import kotlinx.coroutines.flow.Flow
 
@@ -10,9 +9,9 @@ interface MarvelCharactersRepository {
         searchName: String?,
         pageSize: Int,
         offset: Int
-    ): Flow<List<MarvelCharacterEntity>>
+    ): Flow<List<MarvelCharacter>>
 
-    suspend fun fetchFavorites(): Flow<List<MarvelCharacterEntity>>
+    suspend fun fetchFavorites(): Flow<List<MarvelCharacter>>
 
     suspend fun upsert(marvelCharacter: MarvelCharacter)
 
