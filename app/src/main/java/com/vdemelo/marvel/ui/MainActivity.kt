@@ -13,6 +13,7 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        binding.toolbar //TODO setup toolbar
 //        setupNavigation(
 //            navHostFragmentId = binding.navHostFragment.id,
 //            graphResId = R.navigation.nav_graph
