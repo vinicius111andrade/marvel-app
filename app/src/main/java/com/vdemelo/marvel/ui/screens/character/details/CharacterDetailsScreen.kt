@@ -83,17 +83,17 @@ fun CharacterDetailsScreen(
                 horizontalArrangement = Arrangement.Center
             ) {
                 val iconsSize = 60.dp
-                FavoriteButton(
-                    modifier = Modifier.size(iconsSize),
-                    characterUi = marvelCharacter,
-                    initialIsFavorite = marvelCharacter.isFavorite,
-                    onFavoriteChange = { marvelCharacterUi, isFavorite ->
-                        favoritesViewModel.updateFavorite(marvelCharacterUi, isFavorite)
-                    }
-                //TODO quando reiniciar a tela eu preciso que o estado seja preservado,
-                // se ele pegar dos parametros da funcao pode estar diferente,
-                // tem q ter um remember
-                )
+//                FavoriteButton(
+//                    modifier = Modifier.size(iconsSize),
+//                    characterUi = marvelCharacter,
+//                    initialIsFavorite = marvelCharacter.isFavorite,
+//                    onFavoriteChange = { marvelCharacterUi, isFavorite ->
+//                        favoritesViewModel.updateFavorite(marvelCharacterUi, isFavorite)
+//                    }
+//                //TODO quando reiniciar a tela eu preciso que o estado seja preservado,
+//                // se ele pegar dos parametros da funcao pode estar diferente,
+//                // tem q ter um remember
+//                )
                 Image(
                     modifier = Modifier.size(iconsSize),
                     painter = painterResource(id = R.drawable.ic_share),

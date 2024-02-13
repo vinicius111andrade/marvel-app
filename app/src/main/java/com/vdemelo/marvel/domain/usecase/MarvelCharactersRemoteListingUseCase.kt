@@ -25,5 +25,4 @@ class MarvelCharactersRemoteListingUseCase(
         val marvelCharacters: List<MarvelCharacter> = remoteEntities.map { MarvelCharacter(it) }
         return AsyncState.Success(data = marvelCharacters)
     }
-
 }
