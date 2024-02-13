@@ -66,4 +66,4 @@ Gson is a Java serialization and deserialization library. It converts objects in
 I was looking for a pattern and a name for a class that would receive data from two use cases and have some business logic in it to decide how the data should be delivered to the ViewModel, I didn't want to use another use case, just due to the naming differentiation. After some research found this Orchestrator Pattern usually used in the backend, but I found it fit quite well in this case. Article: https://medium.com/gbtech/orchestration-pattern-3d8f5abc3be3
 
 ## UI
-### Why use compose?
+### Why not use compose?
