@@ -2,7 +2,7 @@ package com.vdemelo.marvel.domain.orchestrator
 
 import com.vdemelo.marvel.domain.model.AsyncState
 import com.vdemelo.marvel.domain.model.MarvelCharacter
-import com.vdemelo.marvel.domain.model.toFavorite
+import com.vdemelo.marvel.domain.model.copy
 import com.vdemelo.marvel.domain.usecase.MarvelCharactersRemoteListingUseCase
 import com.vdemelo.marvel.domain.usecase.MarvelFavoritesUseCase
 
@@ -39,12 +39,14 @@ class MarvelCharactersOrchestrator(
         return AsyncState.Success(data = jointList)
     }
 
-    suspend fun updateFavorite(character: MarvelCharacter, isFavorite: Boolean) {
+    suspend fun updateFavorite(character: MarvelCharacter, isFavorite: Boolean): MarvelCharacter {
+        val characterCopy = character.copy(isFavorite = isFavorite)
         if (isFavorite) {
-            favoritesUseCase.upsertFavorite(character.toFavorite())
+            favoritesUseCase.upsertFavorite(characterCopy)
         } else {
-            favoritesUseCase.deleteFavorite(character)
+            favoritesUseCase.deleteFavorite(characterCopy)
         }
+        return characterCopy
     }
 
     suspend fun getFavorites(): List<MarvelCharacter> {

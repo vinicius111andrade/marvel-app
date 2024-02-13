@@ -13,6 +13,10 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -38,6 +42,9 @@ fun CharacterItem(
     marvelCharacter: MarvelCharacterUi,
     favoritesViewModel: FavoritesViewModel = getViewModel() //TODO - isso parece ruim, ver se funciona
 ) {
+
+    var characterState: MarvelCharacterUi by remember { mutableStateOf(marvelCharacter) }
+
     Box(
         contentAlignment = Alignment.Center,
         modifier = modifier
@@ -78,10 +85,9 @@ fun CharacterItem(
                 modifier = Modifier
                     .weight(0.3F)
                     .size(32.dp),
-                characterUi = marvelCharacter,
-                initialIsFavorite = marvelCharacter.isFavorite,
+                characterUi = characterState,
                 onFavoriteChange = { marvelCharacterUi, isFavorite ->
-                    favoritesViewModel.updateFavorite(marvelCharacterUi, isFavorite)
+                    characterState = favoritesViewModel.updateFavorite(marvelCharacterUi, isFavorite)
                 }
             )
         }

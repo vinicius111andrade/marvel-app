@@ -17,11 +17,10 @@ import com.vdemelo.marvel.ui.model.MarvelCharacterUi
 fun FavoriteButton(
     modifier: Modifier = Modifier,
     characterUi: MarvelCharacterUi,
-    initialIsFavorite: Boolean,
     onFavoriteChange: (MarvelCharacterUi, Boolean) -> Unit
 ) {
     //TODO ver se vai dar problema de trocar estado do botao sem finalizar troca no BD
-    var isFavorite by remember { mutableStateOf(initialIsFavorite) }
+    var isFavorite by remember { mutableStateOf(characterUi.isFavorite) }
 
     val favImageRes =
         if (isFavorite) R.drawable.ic_favorite_selected

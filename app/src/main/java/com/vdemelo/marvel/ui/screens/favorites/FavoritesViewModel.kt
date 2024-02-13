@@ -31,14 +31,15 @@ class FavoritesViewModel(
         }
     }
 
-    fun updateFavorite(characterUi: MarvelCharacterUi, isFavorite: Boolean) {
+    fun updateFavorite(characterUi: MarvelCharacterUi, isFavorite: Boolean): MarvelCharacterUi {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
-                orchestrator.updateFavorite(
+                val updatedModel = orchestrator.updateFavorite(
                     character = characterUi.toDomainModel(),
                     isFavorite = isFavorite
                 )
             }
         }
+        return MarvelCharacterUi(updatedModel)
     }
 }

@@ -6,7 +6,6 @@ import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
 val presentationModule = module {
-//    viewModel { CharacterViewModel() }
     viewModel { FavoritesViewModel(get()) }
     viewModel { HomeViewModel(get()) }
 }

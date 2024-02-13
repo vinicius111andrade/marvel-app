@@ -90,6 +90,9 @@ fun CharacterDetailsScreen(
                     onFavoriteChange = { marvelCharacterUi, isFavorite ->
                         favoritesViewModel.updateFavorite(marvelCharacterUi, isFavorite)
                     }
+                //TODO quando reiniciar a tela eu preciso que o estado seja preservado,
+                // se ele pegar dos parametros da funcao pode estar diferente,
+                // tem q ter um remember
                 )
                 Image(
                     modifier = Modifier.size(iconsSize),

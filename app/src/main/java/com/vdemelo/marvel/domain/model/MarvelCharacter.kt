@@ -20,13 +20,13 @@ class MarvelCharacter(
     )
 }
 
-fun MarvelCharacter.toFavorite(): MarvelCharacter {
+fun MarvelCharacter.copy(isFavorite: Boolean): MarvelCharacter {
     return MarvelCharacter(
         charSum = charSum,
         id = id,
         name = name,
         description = description,
         thumbnailUrl = thumbnailUrl,
-        isFavorite = true
+        isFavorite = isFavorite
     )
 }
