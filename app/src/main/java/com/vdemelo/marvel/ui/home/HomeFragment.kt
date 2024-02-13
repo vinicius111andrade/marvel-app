@@ -60,7 +60,8 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             binding.mainProgress.isVisible = false
             val adapter = MarvelCharactersAdapter(
                 openCardAction = {}, //TODO
-                favoriteAction = {} //TODO
+                favoriteAction = { character, isFavorite ->
+                } //TODO
             )
             adapter.addItems(it)
             binding.recycler.adapter = adapter

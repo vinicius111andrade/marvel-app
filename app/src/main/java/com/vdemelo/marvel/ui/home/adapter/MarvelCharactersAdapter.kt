@@ -4,7 +4,6 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.vdemelo.marvel.databinding.ItemMarvelCharacterBinding
-import com.vdemelo.marvel.domain.entity.model.MarvelCharacter
 import com.vdemelo.marvel.ui.model.MarvelCharacterUi
 
 class MarvelCharactersAdapter(

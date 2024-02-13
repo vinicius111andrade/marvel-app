@@ -9,6 +9,7 @@ import com.vdemelo.marvel.domain.entity.RequestState
 import com.vdemelo.marvel.domain.entity.model.CharacterDataWrapper
 import com.vdemelo.marvel.domain.entity.model.MarvelCharacter
 import com.vdemelo.marvel.domain.usecase.CharactersUseCase
+import com.vdemelo.marvel.ui.model.MarvelCharacterUi
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -26,8 +27,8 @@ class HomeViewModel(
 
     private fun offset() = currentPage * PAGE_SIZE //TODO ver se é isso msm
 
-    private val _list = MutableLiveData<List<MarvelCharacter>>()
-    val list: LiveData<List<MarvelCharacter>> = _list
+    private val _list = MutableLiveData<List<MarvelCharacterUi>>()
+    val list: LiveData<List<MarvelCharacterUi>> = _list
 
     fun request(searchName: String? = null) {
         lastJob?.cancel()
