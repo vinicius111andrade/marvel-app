@@ -4,6 +4,8 @@ import androidx.room.Room
 import com.vdemelo.marvel.data.local.db.MarvelCharactersDataBase
 import com.vdemelo.marvel.data.remote.api.MarvelApi
 import com.vdemelo.marvel.data.remote.interceptor.AuthInterceptor
+import com.vdemelo.marvel.data.repository.MarvelCharactersRepositoryImpl
+import com.vdemelo.marvel.domain.repository.MarvelCharactersRepository
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import org.koin.android.ext.koin.androidApplication
@@ -40,4 +42,5 @@ val dataModule = module {
             MarvelCharactersDataBase::class.java, "db-marvel-characters"
         ).build()
     }
+    single<MarvelCharactersRepository> { MarvelCharactersRepositoryImpl(get(), get()) }
 }
