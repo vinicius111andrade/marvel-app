@@ -2,7 +2,7 @@ package com.vdemelo.marvel.ui.model
 
 import com.vdemelo.marvel.domain.model.MarvelCharacter
 
-class MarvelCharacterUi(
+data class MarvelCharacterUi(
     val charSum: Long,
     val id: Int?,
     val name: String?,
@@ -20,6 +20,7 @@ class MarvelCharacterUi(
     )
 }
 
+//TODO preciso disso?
 fun MarvelCharacterUi.toDomainModel(): MarvelCharacter {
     return MarvelCharacter(
         charSum = charSum,
