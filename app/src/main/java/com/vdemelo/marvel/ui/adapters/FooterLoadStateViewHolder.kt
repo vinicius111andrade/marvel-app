@@ -1,4 +1,4 @@
-package com.vdemelo.marvel.ui.home.adapter
+package com.vdemelo.marvel.ui.adapters
 
 import android.view.LayoutInflater
 import android.view.ViewGroup

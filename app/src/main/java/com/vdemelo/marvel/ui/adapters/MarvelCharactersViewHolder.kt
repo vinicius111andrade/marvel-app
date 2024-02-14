@@ -1,4 +1,4 @@
-package com.vdemelo.marvel.ui.home.adapter
+package com.vdemelo.marvel.ui.adapters
 
 import android.graphics.drawable.Drawable
 import androidx.appcompat.content.res.AppCompatResources
@@ -22,7 +22,7 @@ class MarvelCharactersViewHolder(
         //TODO see if i should add a loading animation or if it exists by default
         Picasso.get()
             .load(character.thumbnailUrl)
-            .placeholder(R.drawable.ic_person)
+            .placeholder(R.drawable.ic_person) //TODO ver se: se eu n setar, ele mostra loading?
             .error(R.drawable.ic_image_error)
             .into(characterImage)
 
