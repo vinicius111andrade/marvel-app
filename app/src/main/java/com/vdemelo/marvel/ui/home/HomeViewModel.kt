@@ -1,62 +1,103 @@
 package com.vdemelo.marvel.ui.home
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.vdemelo.common.extensions.nonNullOrEmpty
-import com.vdemelo.marvel.domain.entity.RequestState
-import com.vdemelo.marvel.domain.entity.model.CharacterDataWrapper
-import com.vdemelo.marvel.domain.entity.model.MarvelCharacter
-import com.vdemelo.marvel.domain.usecase.CharactersUseCase
+import androidx.paging.PagingData
+import androidx.paging.cachedIn
+import androidx.paging.map
+import com.vdemelo.marvel.domain.repository.MarvelCharactersRepository
 import com.vdemelo.marvel.ui.model.MarvelCharacterUi
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.filterIsInstance
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.flow.shareIn
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
-private const val PAGE_SIZE = 5
-private const val INITIAL_PAGE = 0
+private const val DEFAULT_QUERY = ""
 
 class HomeViewModel(
-    private val charactersUseCase: CharactersUseCase
+    private val repository: MarvelCharactersRepository
 ) : ViewModel() {
 
-    private var currentPage: Int = INITIAL_PAGE
-    private var currentSearch: String? = null
-    private var lastJob: Job? = null
+    val state: StateFlow<UiState>
+    val action: (UiAction) -> Unit
 
-    private fun offset() = currentPage * PAGE_SIZE //TODO ver se é isso msm
+    val pagingDataFlow: Flow<PagingData<MarvelCharacterUi>>
 
-    private val _list = MutableLiveData<List<MarvelCharacterUi>>()
-    val list: LiveData<List<MarvelCharacterUi>> = _list
+    init {
+        val actionStateFlow = MutableSharedFlow<UiAction>()
 
-    fun request(searchName: String? = null) {
-        lastJob?.cancel()
-        if (searchName != null && searchName != currentSearch) {
-            currentSearch = searchName
-            resetPage()
-            _list.value = listOf()
+        val searches = actionStateFlow
+            .filterIsInstance<UiAction.Search>()
+            .distinctUntilChanged()
+            .onStart { emit(UiAction.Search(query = DEFAULT_QUERY)) }
+
+        val queriesScrolled = actionStateFlow
+            .filterIsInstance<UiAction.Scroll>()
+            .distinctUntilChanged()
+            .shareIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(stopTimeoutMillis = 5000),
+                replay = 1
+            )
+            .onStart { emit(UiAction.Scroll(currentQuery = DEFAULT_QUERY)) }
+
+        pagingDataFlow = searches
+            .flatMapLatest { searchMarvelCharacters(queryString = it.query) }
+            .cachedIn(viewModelScope)
+
+        state = combine(
+            searches,
+            queriesScrolled,
+            ::Pair
+        ).map { (search, scroll) ->
+            UiState(
+                query = search.query,
+                lastQueryScrolled = scroll.currentQuery,
+                hasNotScrolledForCurrentSearch = search.query != scroll.currentQuery
+            )
         }
-        lastJob = viewModelScope.launch {
-            delay(500L)
-            when(
-                val requestState: RequestState<CharacterDataWrapper> = charactersUseCase.fetchCharacters(
-                    searchName = searchName,
-                    pageSize = PAGE_SIZE,
-                    offset = offset()
-                )
-            ) {
-                is RequestState.Success -> {
-                    _list.postValue(requestState.data?.data?.charactersList.nonNullOrEmpty())
-                    currentPage++
-                }
-                is RequestState.Error -> {
-                    //TODO talver usar um view state
-                }
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(stopTimeoutMillis = 5000),
+                initialValue = UiState()
+            )
+
+        action = { uiAction ->
+            viewModelScope.launch { actionStateFlow.emit(uiAction) }
+        }
+    }
+
+    private fun searchMarvelCharacters(queryString: String): Flow<PagingData<MarvelCharacterUi>> {
+        return repository.getMarvelCharactersPager(queryString).map { pager ->
+            pager.map { marvelCharacter ->
+                MarvelCharacterUi(marvelCharacter)
             }
         }
     }
 
-    private fun resetPage() { currentPage = INITIAL_PAGE }
-
 }
+
+sealed class UiAction {
+    class Search(val query: String) : UiAction()
+    class Scroll(
+        val currentQuery: String
+//        val visibleItemCount: Int,
+//        val lastVisibleItemPosition: Int,
+//        val totalItemCount: Int
+    ) : UiAction()
+}
+
+class UiState(
+    val query: String = DEFAULT_QUERY,
+    val lastQueryScrolled: String = DEFAULT_QUERY,
+    val hasNotScrolledForCurrentSearch: Boolean = false
+)

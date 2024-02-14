@@ -33,7 +33,7 @@ class MarvelCharactersRepositoryImpl(
 //        return characterDtos.map { it.dtoToEntity() }
 //    }
 
-    override suspend fun getMarvelCharactersPager(
+    override fun getMarvelCharactersPager(
         searchName: String
     ): Flow<PagingData<MarvelCharacter>> = Pager(
         config = PagingConfig(

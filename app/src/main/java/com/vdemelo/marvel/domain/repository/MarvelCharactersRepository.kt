@@ -12,7 +12,7 @@ interface MarvelCharactersRepository {
 //        offset: Int
 //    ): Flow<List<MarvelCharacter>>
 
-    suspend fun getMarvelCharactersPager(searchName: String): Flow<PagingData<MarvelCharacter>>
+    fun getMarvelCharactersPager(searchName: String): Flow<PagingData<MarvelCharacter>>
 
 //    suspend fun fetchFavorites(): Flow<List<MarvelCharacter>>
 
