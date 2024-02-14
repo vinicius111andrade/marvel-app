@@ -7,6 +7,8 @@ import androidx.paging.cachedIn
 import androidx.paging.map
 import com.vdemelo.marvel.domain.usecase.MarvelCharactersUseCase
 import com.vdemelo.marvel.ui.model.MarvelCharacterUi
+import com.vdemelo.marvel.ui.state.UiAction
+import com.vdemelo.marvel.ui.state.UiState
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -85,21 +87,4 @@ class HomeViewModel(
             }
         }
     }
-
 }
-
-sealed class UiAction {
-    class Search(val query: String) : UiAction()
-    class Scroll(
-        val currentQuery: String
-//        val visibleItemCount: Int,
-//        val lastVisibleItemPosition: Int,
-//        val totalItemCount: Int
-    ) : UiAction()
-}
-
-class UiState(
-    val query: String = DEFAULT_QUERY,
-    val lastQueryScrolled: String = DEFAULT_QUERY,
-    val hasNotScrolledForCurrentSearch: Boolean = false
-)
