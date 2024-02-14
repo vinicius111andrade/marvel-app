@@ -1,15 +1,37 @@
 package com.vdemelo.marvel.ui.home
 
 import android.os.Bundle
+import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.EditorInfo
+import android.widget.Toast
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
+import androidx.paging.LoadState
+import androidx.paging.PagingData
+import androidx.recyclerview.widget.RecyclerView
 import com.vdemelo.marvel.R
 import com.vdemelo.marvel.databinding.FragmentHomeBinding
+import com.vdemelo.marvel.ui.adapters.FooterLoadStateAdapter
+import com.vdemelo.marvel.ui.adapters.MarvelCharactersAdapter
+import com.vdemelo.marvel.ui.model.MarvelCharacterUi
+import com.vdemelo.marvel.ui.state.RemotePresentationState
+import com.vdemelo.marvel.ui.state.UiAction
+import com.vdemelo.marvel.ui.state.UiState
+import com.vdemelo.marvel.ui.state.asRemotePresentationState
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class HomeFragment : Fragment(R.layout.fragment_home) {
+class HomeFragment : Fragment() {
 
     private var _binding: FragmentHomeBinding? = null
     private val binding: FragmentHomeBinding get() = _binding!!
@@ -26,9 +48,11 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-//        setupAdapter()
-        observeMarvelCharactersList()
-        requestList()
+        binding.bindState(
+            uiState = viewModel.state,
+            pagingData = viewModel.pagingDataFlow,
+            uiActions = viewModel.action
+        )
     }
 
     override fun onDestroyView() {
@@ -36,30 +60,162 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         _binding = null
     }
 
-//    private fun setupAdapter() {
-//        val adapter = MarvelCharactersAdapter(
-//            openCardAction = {}, //TODO
-//            favoriteAction = {} //TODO
-//        )
-//        binding.recycler.adapter = adapter
-//    }
-
-    private fun requestList() {
-//        binding.mainProgress.isVisible = true
-//        viewModel.request()
+    private fun openCharacterCard(characterUi: MarvelCharacterUi) {
+        //TODO navegar para tela de detalhes
     }
 
-    private fun observeMarvelCharactersList() {
-//        viewModel.list.observe(viewLifecycleOwner) {
-//            binding.mainProgress.isVisible = false
-//            val adapter = MarvelCharactersAdapter(
-//                openCardAction = {}, //TODO
-//                favoriteAction = { character, isFavorite ->
-//                } //TODO
-//            )
-//            adapter.addItems(it)
-//            binding.recycler.adapter = adapter
-//        }
+    private fun favoriteCharacter(characterUi: MarvelCharacterUi, isFavorite: Boolean) {
+        viewModel.favoriteCharacter(characterUi, isFavorite)
+    }
+
+    /**
+     * Binds the [UiState] provided  by the [SearchRepositoriesViewModel] to the UI,
+     * and allows the UI to feed back user actions to it.
+     */
+    private fun FragmentHomeBinding.bindState(
+        uiState: StateFlow<UiState>,
+        pagingData: Flow<PagingData<MarvelCharacterUi>>,
+        uiActions: (UiAction) -> Unit
+    ) {
+        val adapter = MarvelCharactersAdapter(
+            openCardAction = ::openCharacterCard,
+            favoriteAction = ::favoriteCharacter
+        )
+        val header = FooterLoadStateAdapter { adapter.retry() }
+        list.adapter = adapter.withLoadStateHeaderAndFooter(
+            header = header,
+            footer = FooterLoadStateAdapter { adapter.retry() }
+        )
+        bindSearch(
+            uiState = uiState,
+            onQueryChanged = uiActions
+        )
+        bindList(
+            header = header,
+            itemsAdapter = adapter,
+            uiState = uiState,
+            pagingData = pagingData,
+            onScrollChanged = uiActions
+        )
+    }
+
+    private fun FragmentHomeBinding.bindSearch(
+        uiState: StateFlow<UiState>,
+        onQueryChanged: (UiAction.Search) -> Unit
+    ) {
+        searchRepo.setOnEditorActionListener { _, actionId, _ ->
+            if (actionId == EditorInfo.IME_ACTION_GO) {
+                updateRepoListFromInput(onQueryChanged)
+                true
+            } else {
+                false
+            }
+        }
+        searchRepo.setOnKeyListener { _, keyCode, event ->
+            if (event.action == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
+                updateRepoListFromInput(onQueryChanged)
+                true
+            } else {
+                false
+            }
+        }
+
+        lifecycleScope.launch {
+            uiState
+                .map { it.query }
+                .distinctUntilChanged()
+                .collect(searchRepo::setText)
+        }
+    }
+
+    private fun FragmentHomeBinding.updateRepoListFromInput(onQueryChanged: (UiAction.Search) -> Unit) {
+        searchRepo.text.trim().let {
+            if (it.isNotEmpty()) {
+                list.scrollToPosition(0)
+                onQueryChanged(UiAction.Search(query = it.toString()))
+            }
+        }
+    }
+
+    private fun FragmentHomeBinding.bindList(
+        header: FooterLoadStateAdapter,
+        itemsAdapter: MarvelCharactersAdapter,
+        uiState: StateFlow<UiState>,
+        pagingData: Flow<PagingData<MarvelCharacterUi>>,
+        onScrollChanged: (UiAction.Scroll) -> Unit
+    ) {
+        retryButton.setOnClickListener { itemsAdapter.retry() }
+        list.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                if (dy != 0) onScrollChanged(UiAction.Scroll(currentQuery = uiState.value.query))
+            }
+        })
+        val notLoading = itemsAdapter.loadStateFlow
+            .asRemotePresentationState()
+            .map { it == RemotePresentationState.PRESENTED }
+
+        val hasNotScrolledForCurrentSearch = uiState
+            .map { it.hasNotScrolledForCurrentSearch }
+            .distinctUntilChanged()
+
+        val shouldScrollToTop = combine(
+            notLoading,
+            hasNotScrolledForCurrentSearch,
+            Boolean::and
+        )
+            .distinctUntilChanged()
+
+        lifecycleScope.launch {
+            pagingData.collectLatest(itemsAdapter::submitData)
+        }
+
+        lifecycleScope.launch {
+            shouldScrollToTop.collect { shouldScroll ->
+                if (shouldScroll) list.scrollToPosition(0)
+            }
+        }
+
+        lifecycleScope.launch {
+            itemsAdapter.loadStateFlow.collect { loadState ->
+                // Show a retry header if there was an error refreshing, and items were previously
+                // cached OR default to the default prepend state
+                header.loadState = loadState.mediator
+                    ?.refresh
+                    ?.takeIf { it is LoadState.Error && itemsAdapter.itemCount > 0 }
+                    ?: loadState.prepend
+
+                val isListEmpty = loadState.refresh is LoadState.NotLoading &&
+                        itemsAdapter.itemCount == 0
+                // show empty list
+                emptyList.isVisible = isListEmpty
+                // Only show the list if refresh succeeds, either from the the local db or
+                // the remote.
+                list.isVisible = loadState.source.refresh is LoadState.NotLoading ||
+                        loadState.mediator?.refresh is LoadState.NotLoading
+                // Show loading spinner during initial load or refresh.
+                progressBar.isVisible = loadState.mediator?.refresh is LoadState.Loading
+                // Show the retry state if initial load or refresh fails.
+                retryButton.isVisible = loadState.mediator?.refresh is LoadState.Error &&
+                        itemsAdapter.itemCount == 0
+                // Toast on any error, regardless of whether it came from RemoteMediator
+                // or PagingSource
+                val errorState = loadState.source.append as? LoadState.Error
+                    ?: loadState.source.prepend as? LoadState.Error
+                    ?: loadState.append as? LoadState.Error
+                    ?: loadState.prepend as? LoadState.Error
+                errorState?.let {
+                    showErrorToast(loadStateError = it) //TODO preciso de uma tela de erro? ou toast ta com ja?
+                }
+            }
+        }
+    }
+
+    private fun showErrorToast(loadStateError: LoadState.Error) {
+        Toast.makeText(
+            this@HomeFragment.context,
+            "\uD83D\uDE28 Wooops ${loadStateError.error}",
+            Toast.LENGTH_LONG
+        ).show()
     }
 
 }

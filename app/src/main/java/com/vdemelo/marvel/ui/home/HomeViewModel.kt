@@ -7,6 +7,7 @@ import androidx.paging.cachedIn
 import androidx.paging.map
 import com.vdemelo.marvel.domain.usecase.MarvelCharactersUseCase
 import com.vdemelo.marvel.ui.model.MarvelCharacterUi
+import com.vdemelo.marvel.ui.model.toDomainModel
 import com.vdemelo.marvel.ui.state.UiAction
 import com.vdemelo.marvel.ui.state.UiState
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -77,6 +78,16 @@ class HomeViewModel(
 
         action = { uiAction ->
             viewModelScope.launch { actionStateFlow.emit(uiAction) }
+        }
+    }
+
+    fun favoriteCharacter(marvelCharacterUi: MarvelCharacterUi, isFavorite: Boolean) {
+        viewModelScope.launch {
+            if (isFavorite) {
+                useCase.addFavorite(marvelCharacterUi.toDomainModel())
+            } else {
+                useCase.removeFavorite(marvelCharacterUi.toDomainModel())
+            }
         }
     }
 
