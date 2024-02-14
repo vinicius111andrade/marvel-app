@@ -7,6 +7,7 @@ import androidx.paging.cachedIn
 import androidx.paging.map
 import com.vdemelo.marvel.domain.usecase.MarvelCharactersUseCase
 import com.vdemelo.marvel.ui.model.MarvelCharacterUi
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -23,6 +24,7 @@ import kotlinx.coroutines.launch
 
 private const val DEFAULT_QUERY = ""
 
+@OptIn(ExperimentalCoroutinesApi::class)
 class HomeViewModel(
     private val useCase: MarvelCharactersUseCase
 ) : ViewModel() {
