@@ -3,7 +3,6 @@ package com.vdemelo.marvel.data.remote.pagingsource
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.vdemelo.common.extensions.nonNullOrEmpty
-import com.vdemelo.marvel.data.local.entity.MarvelCharacterEntity
 import com.vdemelo.marvel.data.mappers.dtoToEntity
 import com.vdemelo.marvel.data.mappers.toDomainModel
 import com.vdemelo.marvel.data.remote.PagingConstants
@@ -47,7 +46,7 @@ class MarvelCharactersPagingSource(
                 response.data?.charactersList.nonNullOrEmpty()
 
             LoadResult.Page( //TODO ver se isso aqui funciona bem, passar false no fav
-                data = characterDtos.map { it.dtoToEntity().toDomainModel(isFavorite = false) },
+                data = characterDtos.map { it.dtoToEntity().toDomainModel() },
                 prevKey = if (position == PagingConstants.STARTING_PAGE) null else position - 1,
                 nextKey = if (characterDtos.isEmpty()) null else position + 1
             )

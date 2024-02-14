@@ -5,5 +5,4 @@ plugins {
     id("com.android.library") version "8.1.2" apply false
 }
 
-val composeUiVersion by extra { "1.6.1" }
 val pagingVersion by extra { "3.2.1" }

@@ -1,10 +1,9 @@
 package com.vdemelo.marvel.di
 
 import androidx.room.Room
-import com.vdemelo.marvel.data.local.db.characters.MarvelCharactersDataBase
-import com.vdemelo.marvel.data.local.db.favorites.FavoritesDataBase
+import com.vdemelo.marvel.data.local.db.MarvelCharactersDataBase
 import com.vdemelo.marvel.data.remote.api.MarvelApi
-import com.vdemelo.marvel.data.remote.network.interceptor.AuthInterceptor
+import com.vdemelo.marvel.data.remote.interceptor.AuthInterceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import org.koin.android.ext.koin.androidApplication
@@ -39,12 +38,6 @@ val dataModule = module {
         Room.databaseBuilder(
             androidApplication().baseContext,
             MarvelCharactersDataBase::class.java, "db-marvel-characters"
-        ).build()
-    }
-    single {
-        Room.databaseBuilder(
-            androidApplication().baseContext,
-            FavoritesDataBase::class.java, "db-marvel-favorites"
         ).build()
     }
 }

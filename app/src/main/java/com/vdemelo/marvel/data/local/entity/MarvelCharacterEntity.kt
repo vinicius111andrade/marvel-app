@@ -10,5 +10,6 @@ class MarvelCharacterEntity(
     val id  : Int?,
     val name : String?,
     val description : String?,
-    val thumbnailUrl : String?
+    val thumbnailUrl : String?,
+    var isFavorite: Boolean
 )

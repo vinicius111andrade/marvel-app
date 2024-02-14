@@ -39,12 +39,7 @@ class MarvelCharactersViewHolder(
                 )
             }
         favoriteButton.setImageDrawable(favDrawable)
-        //TODO
-        //favoriteButton.setOnClickListener { favoriteAction(character) }
-        //TODO como fazer? guardo ref pra viewmodel dentro do item? ou crio uma var?
-        // e quando o estado atualizar, como atualizo? o q dispara a atualizacao? como tornar o item responsivo?
-        // atualizo o item na lista e dou um itemChanged() ?
+        favoriteButton.setOnClickListener { favoriteAction(character, !character.isFavorite) }
         openCardClickableArea.setOnClickListener { openCardAction(character) }
-
     }
 }

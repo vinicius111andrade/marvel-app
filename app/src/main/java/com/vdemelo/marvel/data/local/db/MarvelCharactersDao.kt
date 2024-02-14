@@ -6,7 +6,7 @@ import androidx.room.Upsert
 import com.vdemelo.marvel.data.local.entity.MarvelCharacterEntity
 
 @Dao
-interface MarvelFavoritesDao {
+interface MarvelCharactersDao {
 
     @Query("SELECT * FROM marvelcharacterentity")
     fun selectAll(): List<MarvelCharacterEntity>
@@ -15,5 +15,5 @@ interface MarvelFavoritesDao {
     suspend fun upsert(marvelCharacterEntity: MarvelCharacterEntity)
 
     @Query("DELETE FROM marvelcharacterentity WHERE charSum = :charSum")
-    suspend fun deleteByCharSum(charSum: Long)
+    suspend fun deleteByCharSum(charSum: Long) //TODO acho q nem vou usar isso
 }

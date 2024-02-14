@@ -1,4 +1,4 @@
-package com.vdemelo.marvel.data.remote.network.interceptor
+package com.vdemelo.marvel.data.remote.interceptor
 
 import com.vdemelo.marvel.BuildConfig
 import okhttp3.Interceptor

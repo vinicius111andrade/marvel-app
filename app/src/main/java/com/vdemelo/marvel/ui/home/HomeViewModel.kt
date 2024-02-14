@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import androidx.paging.map
-import com.vdemelo.marvel.domain.repository.MarvelCharactersRepository
+import com.vdemelo.marvel.domain.usecase.MarvelCharactersUseCase
 import com.vdemelo.marvel.ui.model.MarvelCharacterUi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -24,7 +24,7 @@ import kotlinx.coroutines.launch
 private const val DEFAULT_QUERY = ""
 
 class HomeViewModel(
-    private val repository: MarvelCharactersRepository
+    private val useCase: MarvelCharactersUseCase
 ) : ViewModel() {
 
     val state: StateFlow<UiState>
@@ -77,7 +77,7 @@ class HomeViewModel(
     }
 
     private fun searchMarvelCharacters(queryString: String): Flow<PagingData<MarvelCharacterUi>> {
-        return repository.getMarvelCharactersPager(queryString).map { pager ->
+        return useCase.getMarvelCharactersPager(queryString).map { pager ->
             pager.map { marvelCharacter ->
                 MarvelCharacterUi(marvelCharacter)
             }
