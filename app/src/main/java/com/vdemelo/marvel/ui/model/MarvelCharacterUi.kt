@@ -1,7 +1,10 @@
 package com.vdemelo.marvel.ui.model
 
+import android.os.Parcelable
 import com.vdemelo.marvel.domain.model.MarvelCharacter
+import kotlinx.parcelize.Parcelize
 
+@Parcelize
 data class MarvelCharacterUi(
     val charSum: Long,
     val id: Int?,
@@ -9,7 +12,7 @@ data class MarvelCharacterUi(
     val description: String?,
     val thumbnailUrl: String?,
     val isFavorite: Boolean
-) {
+): Parcelable {
     constructor(domainModel: MarvelCharacter) : this(
         charSum = domainModel.charSum,
         id = domainModel.id,
@@ -20,7 +23,6 @@ data class MarvelCharacterUi(
     )
 }
 
-//TODO preciso disso?
 fun MarvelCharacterUi.toDomainModel(): MarvelCharacter {
     return MarvelCharacter(
         charSum = charSum,

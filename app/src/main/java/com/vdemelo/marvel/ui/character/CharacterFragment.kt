@@ -1,32 +1,43 @@
 package com.vdemelo.marvel.ui.character
 
-import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.vdemelo.marvel.R
+import androidx.fragment.app.Fragment
+import com.vdemelo.marvel.databinding.FragmentCharacterBinding
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class CharacterFragment : Fragment() {
 
-    companion object {
-        fun newInstance() = CharacterFragment()
-    }
+    private var _binding: FragmentCharacterBinding? = null
+    private val binding: FragmentCharacterBinding get() = _binding!!
 
-    private lateinit var viewModel: CharacterViewModel
+    private val viewModel: CharacterViewModel by viewModel() //TODO vou usar? injetar no modulo
+
+    //TODO compartilhar imagem do personagem
+    //TODO foto em tamanho maior?
+
+//    Detalhes do personagem
+//    • Botão de favorito.
+//    • Botão para compartilhar a imagem do personagem.
+//    • Foto em tamanho maior
+//    • Descrição (se houver).
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.fragment_character, container, false)
+    ): View {
+        _binding = FragmentCharacterBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProvider(this).get(CharacterViewModel::class.java)
-        // TODO: Use the ViewModel
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
 }

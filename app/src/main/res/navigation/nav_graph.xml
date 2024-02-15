@@ -8,16 +8,40 @@
     <fragment
         android:id="@+id/home"
         android:name="com.vdemelo.marvel.ui.home.HomeFragment"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_home_to_character"
+            app:destination="@id/character" />
+        <action
+            android:id="@+id/action_home_to_favorites"
+            app:destination="@id/favorites" />
+    </fragment>
 
     <fragment
         android:id="@+id/character"
         android:name="com.vdemelo.marvel.ui.character.CharacterFragment"
-        tools:layout="@layout/fragment_character" />
+        tools:layout="@layout/fragment_character" >
+        <argument
+            android:name="character"
+            app:argType="marvel.ui.model." />
+        <action
+            android:id="@+id/action_character_to_home"
+            app:destination="@id/home" />
+        <action
+            android:id="@+id/action_character_to_favorites"
+            app:destination="@id/favorites" />
+    </fragment>
 
     <fragment
         android:id="@+id/favorites"
         android:name="com.vdemelo.marvel.ui.favorites.FavoritesFragment"
-        tools:layout="@layout/fragment_favorites" />
+        tools:layout="@layout/fragment_favorites" >
+        <action
+            android:id="@+id/action_favorites_to_character"
+            app:destination="@id/character" />
+        <action
+            android:id="@+id/action_favorites_to_home"
+            app:destination="@id/home" />
+    </fragment>
 
 </navigation>
