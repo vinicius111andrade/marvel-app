@@ -91,7 +91,8 @@ class HomeViewModel(
     }
 
     private fun searchMarvelCharacters(queryString: String?): Flow<PagingData<MarvelCharacterUi>> {
-        return useCase.getMarvelCharactersPager(queryString).map { pager ->
+        val newQuery = if (queryString == "") null else queryString //TODO quando apago o texto e dou pesquisar ele n retorna nada
+        return useCase.getMarvelCharactersPager(newQuery).map { pager ->
             pager.map { marvelCharacter ->
                 MarvelCharacterUi(marvelCharacter)
             }
