@@ -23,7 +23,7 @@
         tools:layout="@layout/fragment_character" >
         <argument
             android:name="character"
-            app:argType="marvel.ui.model." />
+            app:argType="com.vdemelo.marvel.ui.model.MarvelCharacterUi" />
         <action
             android:id="@+id/action_character_to_home"
             app:destination="@id/home" />
