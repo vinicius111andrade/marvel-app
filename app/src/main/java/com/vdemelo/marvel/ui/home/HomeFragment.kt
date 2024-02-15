@@ -10,6 +10,7 @@ import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
 import androidx.paging.PagingData
 import androidx.recyclerview.widget.RecyclerView
@@ -61,7 +62,8 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     }
 
     private fun openCharacterCard(characterUi: MarvelCharacterUi) {
-        //TODO navegar para tela de detalhes
+        val action = HomeFragmentDirections.actionHomeToCharacter(characterUi)
+        findNavController().navigate(action)
     }
 
     private fun favoriteCharacter(characterUi: MarvelCharacterUi, isFavorite: Boolean) {
