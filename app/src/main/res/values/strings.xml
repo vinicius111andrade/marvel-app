@@ -7,11 +7,14 @@
     <string name="list_screen_home_title">Marvel Characters</string>
     <string name="list_screen_favorites_title">Marvel Favorites</string>
     <string name="list_empty_list">No results</string>
+    <string name="list_error_toast">An error occurred: </string>
 
     //Character
     <string name="character_name">Character Name:</string>
     <string name="character_bio_label">Character Biography</string>
     <string name="character_bio_unknown">This character has an unknown story</string>
+    <string name="character_share_image">Share Image</string>
+    <string name="character_share_image_error">Image not available</string>
 
     // Content Description
     <string name="content_description_character_image">Image for the selected character</string>

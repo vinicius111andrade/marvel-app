@@ -1,9 +1,15 @@
 package com.vdemelo.marvel.ui.character
 
+import android.content.Intent
+import android.graphics.BitmapFactory
+import android.graphics.drawable.BitmapDrawable
+import android.net.Uri
 import android.os.Bundle
+import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.navArgs
 import com.squareup.picasso.Picasso
@@ -11,6 +17,11 @@ import com.vdemelo.marvel.R
 import com.vdemelo.marvel.databinding.FragmentCharacterBinding
 import com.vdemelo.marvel.ui.model.MarvelCharacterUi
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import java.io.IOException
+import java.io.InputStream
+import java.net.HttpURLConnection
+import kotlin.concurrent.thread
+import kotlin.random.Random
 
 class CharacterFragment : Fragment() {
 
@@ -19,15 +30,6 @@ class CharacterFragment : Fragment() {
 
     private val viewModel: CharacterViewModel by viewModel()
     private val args: CharacterFragmentArgs by navArgs()
-
-    //TODO compartilhar imagem do personagem
-    //TODO foto em tamanho maior?
-
-//    Detalhes do personagem
-//    • Botão de favorito.
-//    • Botão para compartilhar a imagem do personagem.
-//    • Foto em tamanho maior
-//    • Descrição (se houver).
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -48,6 +50,7 @@ class CharacterFragment : Fragment() {
             characterBio.text = characterUi.description ?: getString(R.string.character_bio_unknown)
             setupCharacterImage(characterUi.thumbnailUrl)
         }
+        setupShareImageButton()
     }
 
     override fun onDestroyView() {
@@ -79,6 +82,32 @@ class CharacterFragment : Fragment() {
                 R.drawable.ic_favorite_unselected
             }
             binding.favoriteButton.setImageResource(imageRes)
+        }
+    }
+
+    private fun setupShareImageButton() {
+        binding.shareButton.setOnClickListener {
+            val name: String = binding.characterName.text.toString()
+            activity?.contentResolver?.let { contentResolver ->
+                val bitmapDrawable = binding.characterImage.drawable as BitmapDrawable
+                val bitmap = bitmapDrawable.bitmap
+                val bitmapPath = MediaStore.Images.Media.insertImage(
+                    contentResolver,
+                    bitmap,
+                    name,
+                    null
+                )
+                val bitmapUri = Uri.parse(bitmapPath)
+                val intent = Intent(Intent.ACTION_SEND)
+                intent.type = "image/"
+                intent.putExtra(Intent.EXTRA_STREAM, bitmapUri)
+                startActivity(
+                    Intent.createChooser(
+                        intent,
+                        getString(R.string.character_share_image)
+                    )
+                )
+            }
         }
     }
 }

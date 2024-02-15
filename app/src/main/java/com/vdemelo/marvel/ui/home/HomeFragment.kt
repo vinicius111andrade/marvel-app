@@ -213,9 +213,10 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     }
 
     private fun showErrorToast(loadStateError: LoadState.Error) {
+        val errorMessage: String = getString(R.string.list_error_toast) + loadStateError.error
         Toast.makeText(
             this@HomeFragment.context,
-            "\uD83D\uDE28 Wooops ${loadStateError.error}",
+            errorMessage,
             Toast.LENGTH_LONG
         ).show()
     }

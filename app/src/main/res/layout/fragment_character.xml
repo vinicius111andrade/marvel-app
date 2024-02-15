@@ -19,6 +19,7 @@
             android:layout_marginVertical="@dimen/spacing_8dp"
             android:gravity="center"
             android:textSize="@dimen/text_size_char_name_title"
+            android:textStyle="bold"
             tools:text="Spider Man" />
 
         <androidx.appcompat.widget.AppCompatImageView
@@ -27,6 +28,12 @@
             android:layout_height="@dimen/size_details_image"
             android:layout_marginVertical="@dimen/spacing_8dp"
             android:src="@drawable/ic_person" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/share_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/character_share_image" />
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/favorite_button"
@@ -44,7 +51,8 @@
             android:layout_marginVertical="@dimen/spacing_8dp"
             android:gravity="center"
             android:text="@string/character_bio_label"
-            android:textSize="@dimen/text_size_char_bio_label" />
+            android:textSize="@dimen/text_size_char_bio_label"
+            android:textStyle="bold" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/character_bio"
