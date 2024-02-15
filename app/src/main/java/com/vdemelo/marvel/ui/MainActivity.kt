@@ -5,7 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.vdemelo.marvel.R
 import com.vdemelo.marvel.databinding.ActivityMainBinding
 
-class MainActivity : AppCompatActivity(R.layout.activity_main) {
+class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
 

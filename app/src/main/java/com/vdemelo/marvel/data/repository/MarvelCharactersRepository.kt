@@ -17,7 +17,7 @@ class MarvelCharactersRepositoryImpl(
     private val db: MarvelCharactersDataBase
 ) : MarvelCharactersRepository {
     override fun getMarvelCharactersPager(
-        searchName: String
+        searchName: String?
     ): Flow<PagingData<MarvelCharacter>> = Pager(
         config = PagingConfig(
             pageSize = PagingConstants.PAGE_SIZE,

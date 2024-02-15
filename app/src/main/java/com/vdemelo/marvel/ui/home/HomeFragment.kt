@@ -31,7 +31,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class HomeFragment : Fragment() {
+class HomeFragment : Fragment(R.layout.fragment_home) {
 
     private var _binding: FragmentHomeBinding? = null
     private val binding: FragmentHomeBinding get() = _binding!!
@@ -103,17 +103,17 @@ class HomeFragment : Fragment() {
         uiState: StateFlow<UiState>,
         onQueryChanged: (UiAction.Search) -> Unit
     ) {
-        searchRepo.setOnEditorActionListener { _, actionId, _ ->
+        searchField.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_GO) {
-                updateRepoListFromInput(onQueryChanged)
+                updateListWithNewInput(onQueryChanged)
                 true
             } else {
                 false
             }
         }
-        searchRepo.setOnKeyListener { _, keyCode, event ->
+        searchField.setOnKeyListener { _, keyCode, event ->
             if (event.action == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
-                updateRepoListFromInput(onQueryChanged)
+                updateListWithNewInput(onQueryChanged)
                 true
             } else {
                 false
@@ -124,12 +124,12 @@ class HomeFragment : Fragment() {
             uiState
                 .map { it.query }
                 .distinctUntilChanged()
-                .collect(searchRepo::setText)
+                .collect(searchField::setText)
         }
     }
 
-    private fun FragmentHomeBinding.updateRepoListFromInput(onQueryChanged: (UiAction.Search) -> Unit) {
-        searchRepo.text.trim().let {
+    private fun FragmentHomeBinding.updateListWithNewInput(onQueryChanged: (UiAction.Search) -> Unit) {
+        searchField.text.trim().let {
             if (it.isNotEmpty()) {
                 list.scrollToPosition(0)
                 onQueryChanged(UiAction.Search(query = it.toString()))

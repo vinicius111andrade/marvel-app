@@ -5,7 +5,7 @@ import com.vdemelo.marvel.domain.model.MarvelCharacter
 import kotlinx.coroutines.flow.Flow
 
 interface MarvelCharactersRepository {
-    fun getMarvelCharactersPager(searchName: String): Flow<PagingData<MarvelCharacter>>
+    fun getMarvelCharactersPager(searchName: String?): Flow<PagingData<MarvelCharacter>>
 
     suspend fun upsert(marvelCharacter: MarvelCharacter)
 }

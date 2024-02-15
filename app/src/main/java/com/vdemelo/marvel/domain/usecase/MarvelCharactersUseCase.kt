@@ -11,7 +11,7 @@ class MarvelCharactersUseCase(
     private val repository: MarvelCharactersRepository
 ) {
     fun getMarvelCharactersPager(
-        searchName: String
+        searchName: String?
     ): Flow<PagingData<MarvelCharacter>> {
         return repository.getMarvelCharactersPager(searchName)
     }

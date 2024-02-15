@@ -14,7 +14,7 @@ import com.vdemelo.marvel.domain.model.MarvelCharacter
 
 class MarvelCharactersPagingSource(
     private val api: MarvelApi,
-    private val query: String
+    private val query: String?
 ) : PagingSource<Int, MarvelCharacter>() {
     override fun getRefreshKey(state: PagingState<Int, MarvelCharacter>): Int? {
         val anchorPosition: Int? = state.anchorPosition

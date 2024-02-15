@@ -25,8 +25,6 @@ import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
-private const val DEFAULT_QUERY = ""
-
 @OptIn(ExperimentalCoroutinesApi::class)
 class HomeViewModel(
     private val useCase: MarvelCharactersUseCase
@@ -38,12 +36,13 @@ class HomeViewModel(
     val pagingDataFlow: Flow<PagingData<MarvelCharacterUi>>
 
     init {
+        val defaultQuery = null
         val actionStateFlow = MutableSharedFlow<UiAction>()
 
         val searches = actionStateFlow
             .filterIsInstance<UiAction.Search>()
             .distinctUntilChanged()
-            .onStart { emit(UiAction.Search(query = DEFAULT_QUERY)) }
+            .onStart { emit(UiAction.Search(query = defaultQuery)) }
 
         val queriesScrolled = actionStateFlow
             .filterIsInstance<UiAction.Scroll>()
@@ -53,7 +52,7 @@ class HomeViewModel(
                 started = SharingStarted.WhileSubscribed(stopTimeoutMillis = 5000),
                 replay = 1
             )
-            .onStart { emit(UiAction.Scroll(currentQuery = DEFAULT_QUERY)) }
+            .onStart { emit(UiAction.Scroll(currentQuery = defaultQuery)) }
 
         pagingDataFlow = searches
             .flatMapLatest { searchMarvelCharacters(queryString = it.query) }
@@ -91,7 +90,7 @@ class HomeViewModel(
         }
     }
 
-    private fun searchMarvelCharacters(queryString: String): Flow<PagingData<MarvelCharacterUi>> {
+    private fun searchMarvelCharacters(queryString: String?): Flow<PagingData<MarvelCharacterUi>> {
         return useCase.getMarvelCharactersPager(queryString).map { pager ->
             pager.map { marvelCharacter ->
                 MarvelCharacterUi(marvelCharacter)
