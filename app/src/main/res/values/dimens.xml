@@ -10,10 +10,13 @@
 
     <!-- Size -->
     <dimen name="size_item_image">64dp</dimen>
+    <dimen name="size_details_image">160dp</dimen>
     <dimen name="size_item_fav_button">64dp</dimen>
 
     <!-- Text Size-->
     <dimen name="text_size_error">24sp</dimen>
     <dimen name="text_size_empty_list">24sp</dimen>
+    <dimen name="text_size_char_name_title">32sp</dimen>
+    <dimen name="text_size_char_bio_label">24sp</dimen>
 
 </resources>

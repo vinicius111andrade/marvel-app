@@ -1,13 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".ui.character.CharacterFragment">
+    android:layout_height="wrap_content">
 
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="Hello" />
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:padding="@dimen/spacing_16dp"
+        tools:context=".ui.character.CharacterFragment">
 
-</FrameLayout>
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/character_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="@dimen/spacing_8dp"
+            android:gravity="center"
+            android:textSize="@dimen/text_size_char_name_title"
+            tools:text="Spider Man" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/character_image"
+            android:layout_width="@dimen/size_details_image"
+            android:layout_height="@dimen/size_details_image"
+            android:layout_marginVertical="@dimen/spacing_8dp"
+            android:src="@drawable/ic_person" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/favorite_button"
+            android:layout_width="@dimen/size_item_fav_button"
+            android:layout_height="@dimen/size_item_fav_button"
+            android:layout_marginVertical="@dimen/spacing_8dp"
+            android:checkable="true"
+            android:clickable="true"
+            android:focusable="true"
+            android:src="@drawable/ic_favorite_unselected" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="@dimen/spacing_8dp"
+            android:gravity="center"
+            android:text="@string/character_bio_label"
+            android:textSize="@dimen/text_size_char_bio_label" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/character_bio"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="@dimen/spacing_8dp"
+            android:gravity="center"
+            android:textSize="@dimen/text_size_char_bio_label"
+            tools:text="Bla blabla bla bla bla bla bal blaablaabl balablabla balablabl ablablabl albalab labalba lbaalb balabl blaabl lbabalabl labb" />
+    </LinearLayout>
+</ScrollView>

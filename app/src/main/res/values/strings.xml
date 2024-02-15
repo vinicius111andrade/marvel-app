@@ -9,6 +9,7 @@
     <string name="list_empty_list">No results</string>
 
     //Character
+    <string name="character_name">Character Name:</string>
     <string name="character_bio_label">Character Biography</string>
     <string name="character_bio_unknown">This character has an unknown story</string>
 
