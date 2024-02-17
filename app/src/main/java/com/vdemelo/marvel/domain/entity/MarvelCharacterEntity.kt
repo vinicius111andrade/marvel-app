@@ -1,4 +1,4 @@
-package com.vdemelo.marvel.data.local.entity
+package com.vdemelo.marvel.domain.entity
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

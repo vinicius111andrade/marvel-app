@@ -7,15 +7,14 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import com.vdemelo.marvel.data.local.db.MarvelCharactersDataBase
 import com.vdemelo.marvel.data.local.db.MarvelFavoritesDataBase
-import com.vdemelo.marvel.data.mappers.domainModelToEntity
-import com.vdemelo.marvel.data.mappers.toDomainModel
+import com.vdemelo.marvel.domain.entity.MarvelCharacterEntity
 import com.vdemelo.marvel.data.mediator.MarvelCharactersRemoteMediator
 import com.vdemelo.marvel.data.remote.PagingConstants
 import com.vdemelo.marvel.data.remote.api.MarvelApi
-import com.vdemelo.marvel.data.remote.pagingsource.MarvelCharactersPagingSource
-import com.vdemelo.marvel.domain.model.MarvelCharacter
 import com.vdemelo.marvel.domain.repository.MarvelCharactersRepository
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.withContext
 
 class MarvelCharactersRepositoryImpl(
     private val api: MarvelApi,
@@ -25,8 +24,20 @@ class MarvelCharactersRepositoryImpl(
     @OptIn(ExperimentalPagingApi::class)
     override fun getMarvelCharactersPager(
         searchName: String?
-    ): Flow<PagingData<MarvelCharacter>> {
+    ): Flow<PagingData<MarvelCharacterEntity>> {
         Log.d("MarvelRepository", "New query: $searchName")
+
+        // appending '%' so we can allow other characters to be before and after the query string
+        val dbQuery = searchName?.let {
+            "%${it.replace(' ', '%')}%"
+        }
+        val pagingSourceFactory = {
+            if (dbQuery != null) {
+                pagingDb.itemsDao.pageByName(dbQuery)
+            } else {
+                pagingDb.itemsDao.pageAll()
+            }
+        }
 
         return Pager(
             config = PagingConfig(
@@ -40,31 +51,29 @@ class MarvelCharactersRepositoryImpl(
                 pagingDb = pagingDb,
                 favoritesDb = favoritesDb
             ),
-            pagingSourceFactory = {
-                MarvelCharactersPagingSource(api, query = searchName)
-            }
+            pagingSourceFactory = pagingSourceFactory
         ).flow
     }
 
-    override suspend fun upsert(marvelCharacter: MarvelCharacter) {
-        pagingDb.itemsDao.upsert(marvelCharacter.domainModelToEntity())
+    override suspend fun addFavorite(marvelCharacter: MarvelCharacterEntity) {
+        withContext(Dispatchers.IO) {
+            marvelCharacter.isFavorite = true
+            favoritesDb.favoritesDao.upsert(marvelCharacter)
+            pagingDb.itemsDao.insert(marvelCharacter)
+        }
     }
 
-    override suspend fun addFavorite(marvelCharacter: MarvelCharacter) {
-        val entity = marvelCharacter.domainModelToEntity()
-        entity.isFavorite = true
-        favoritesDb.favoritesDao.upsert(entity)
-        pagingDb.itemsDao.upsert(entity)
+    override suspend fun removeFavorite(marvelCharacter: MarvelCharacterEntity) {
+        withContext(Dispatchers.IO) {
+            marvelCharacter.isFavorite = false
+            favoritesDb.favoritesDao.deleteByCharSum(marvelCharacter.charSum)
+            pagingDb.itemsDao.insert(marvelCharacter)
+        }
     }
 
-    override suspend fun removeFavorite(marvelCharacter: MarvelCharacter) {
-        val entity = marvelCharacter.domainModelToEntity()
-        entity.isFavorite = false
-        favoritesDb.favoritesDao.deleteByCharSum(entity.charSum)
-        pagingDb.itemsDao.upsert(entity)
-    }
-
-    override suspend fun getAllFavorites(): List<MarvelCharacter> {
-        return favoritesDb.favoritesDao.selectAll().map { it.toDomainModel() }
+    override suspend fun getAllFavorites(): List<MarvelCharacterEntity> {
+        return withContext(Dispatchers.IO) {
+            favoritesDb.favoritesDao.selectAll()
+        }
     }
 }

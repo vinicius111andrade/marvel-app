@@ -1,10 +1,10 @@
-package com.vdemelo.marvel.data.local.db
+package com.vdemelo.marvel.data.local.dao
 
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.vdemelo.marvel.data.local.entity.RemoteKeys
+import com.vdemelo.marvel.data.local.paging.RemoteKeys
 
 @Dao
 interface RemoteKeysDao {

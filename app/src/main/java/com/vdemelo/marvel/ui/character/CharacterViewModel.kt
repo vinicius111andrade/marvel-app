@@ -4,13 +4,13 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.vdemelo.marvel.domain.usecase.MarvelCharactersUseCase
+import com.vdemelo.marvel.domain.repository.MarvelCharactersRepository
 import com.vdemelo.marvel.ui.model.MarvelCharacterUi
-import com.vdemelo.marvel.ui.model.toDomainModel
+import com.vdemelo.marvel.ui.model.toEntity
 import kotlinx.coroutines.launch
 
 class CharacterViewModel(
-    private val useCase: MarvelCharactersUseCase
+    private val repository: MarvelCharactersRepository
 ) : ViewModel() {
 
     private var _isFavorite = MutableLiveData<Boolean>()
@@ -23,9 +23,9 @@ class CharacterViewModel(
     fun favoriteCharacter(marvelCharacterUi: MarvelCharacterUi, isFavorite: Boolean) {
         viewModelScope.launch {
             if (isFavorite) {
-                useCase.addFavorite(marvelCharacterUi.toDomainModel())
+                repository.addFavorite(marvelCharacterUi.toEntity())
             } else {
-                useCase.removeFavorite(marvelCharacterUi.toDomainModel())
+                repository.removeFavorite(marvelCharacterUi.toEntity())
             }
             _isFavorite.postValue(isFavorite)
         }

@@ -2,8 +2,10 @@ package com.vdemelo.marvel.data.local.db
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
-import com.vdemelo.marvel.data.local.entity.MarvelCharacterEntity
-import com.vdemelo.marvel.data.local.entity.RemoteKeys
+import com.vdemelo.marvel.data.local.dao.MarvelCharactersDao
+import com.vdemelo.marvel.data.local.dao.RemoteKeysDao
+import com.vdemelo.marvel.data.local.paging.RemoteKeys
+import com.vdemelo.marvel.domain.entity.MarvelCharacterEntity
 
 @Database(
     entities = [MarvelCharacterEntity::class, RemoteKeys::class],

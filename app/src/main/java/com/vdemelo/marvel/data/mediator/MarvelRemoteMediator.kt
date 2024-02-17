@@ -8,13 +8,12 @@ import androidx.room.withTransaction
 import com.vdemelo.common.extensions.nonNullOrEmpty
 import com.vdemelo.marvel.data.local.db.MarvelCharactersDataBase
 import com.vdemelo.marvel.data.local.db.MarvelFavoritesDataBase
-import com.vdemelo.marvel.data.local.entity.MarvelCharacterEntity
-import com.vdemelo.marvel.data.local.entity.RemoteKeys
+import com.vdemelo.marvel.domain.entity.MarvelCharacterEntity
+import com.vdemelo.marvel.data.local.paging.RemoteKeys
 import com.vdemelo.marvel.data.mappers.dtoToEntity
 import com.vdemelo.marvel.data.remote.PagingConstants
 import com.vdemelo.marvel.data.remote.api.MarvelApi
 import com.vdemelo.marvel.data.remote.dto.MarvelCharacterDto
-import com.vdemelo.marvel.domain.model.MarvelCharacter
 import retrofit2.HttpException
 import java.io.IOException
 
@@ -24,7 +23,7 @@ class MarvelCharactersRemoteMediator(
     private val api: MarvelApi,
     private val pagingDb: MarvelCharactersDataBase,
     private val favoritesDb: MarvelFavoritesDataBase,
-) : RemoteMediator<Int, MarvelCharacter>() {
+) : RemoteMediator<Int, MarvelCharacterEntity>() {
 
     override suspend fun initialize(): InitializeAction {
         // Launch remote refresh as soon as paging starts and do not trigger remote prepend or
@@ -36,7 +35,7 @@ class MarvelCharactersRemoteMediator(
 
     override suspend fun load(
         loadType: LoadType,
-        state: PagingState<Int, MarvelCharacter>
+        state: PagingState<Int, MarvelCharacterEntity>
     ): MediatorResult {
         val page = when (loadType) {
             LoadType.REFRESH -> {
@@ -125,7 +124,7 @@ class MarvelCharactersRemoteMediator(
     }
 
     private suspend fun getFirstRemoteKey(
-        state: PagingState<Int, MarvelCharacter>
+        state: PagingState<Int, MarvelCharacterEntity>
     ): RemoteKeys? {
         return state.pages
             .firstOrNull { it.data.isNotEmpty() }?.data?.firstOrNull()
@@ -133,7 +132,7 @@ class MarvelCharactersRemoteMediator(
     }
 
     private suspend fun getLastRemoteKey(
-        state: PagingState<Int, MarvelCharacter>
+        state: PagingState<Int, MarvelCharacterEntity>
     ): RemoteKeys? {
         return state.pages
             .lastOrNull { it.data.isNotEmpty() }?.data?.lastOrNull()
@@ -141,7 +140,7 @@ class MarvelCharactersRemoteMediator(
     }
 
     private suspend fun getClosestRemoteKey(
-        state: PagingState<Int, MarvelCharacter>
+        state: PagingState<Int, MarvelCharacterEntity>
     ): RemoteKeys? {
         return state.anchorPosition?.let { position ->
             state.closestItemToPosition(position)?.charSum?.let { charSum ->

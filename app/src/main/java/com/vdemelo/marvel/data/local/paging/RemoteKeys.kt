@@ -1,4 +1,4 @@
-package com.vdemelo.marvel.data.local.entity
+package com.vdemelo.marvel.data.local.paging
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

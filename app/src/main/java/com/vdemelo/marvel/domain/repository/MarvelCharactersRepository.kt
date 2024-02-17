@@ -1,13 +1,12 @@
 package com.vdemelo.marvel.domain.repository
 
 import androidx.paging.PagingData
-import com.vdemelo.marvel.domain.model.MarvelCharacter
+import com.vdemelo.marvel.domain.entity.MarvelCharacterEntity
 import kotlinx.coroutines.flow.Flow
 
 interface MarvelCharactersRepository {
-    fun getMarvelCharactersPager(searchName: String?): Flow<PagingData<MarvelCharacter>>
-    suspend fun upsert(marvelCharacter: MarvelCharacter)
-    suspend fun addFavorite(marvelCharacter: MarvelCharacter)
-    suspend fun removeFavorite(marvelCharacter: MarvelCharacter)
-    suspend fun getAllFavorites(): List<MarvelCharacter>
+    fun getMarvelCharactersPager(searchName: String?): Flow<PagingData<MarvelCharacterEntity>>
+    suspend fun addFavorite(marvelCharacter: MarvelCharacterEntity)
+    suspend fun removeFavorite(marvelCharacter: MarvelCharacterEntity)
+    suspend fun getAllFavorites(): List<MarvelCharacterEntity>
 }
