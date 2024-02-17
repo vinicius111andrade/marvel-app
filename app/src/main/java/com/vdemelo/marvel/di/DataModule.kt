@@ -49,5 +49,5 @@ val dataModule = module {
             MarvelFavoritesDataBase::class.java, "db-marvel-favorites"
         ).build()
     }
-    single<MarvelCharactersRepository> { MarvelCharactersRepositoryImpl(get(), get()) }
+    single<MarvelCharactersRepository> { MarvelCharactersRepositoryImpl(get(), get(), get()) }
 }
