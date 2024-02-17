@@ -67,3 +67,6 @@ I was looking for a pattern and a name for a class that would receive data from 
 
 ## UI
 ### Why not use compose?
+
+## Why Entity is sent to view model?
+Entity to domain, removed old domain model, due to need of paging data source of getting data from database and sending it directly to view model. The model at the data base needs to be the one received at the view model paging source. It is a limitation of paging 3.
