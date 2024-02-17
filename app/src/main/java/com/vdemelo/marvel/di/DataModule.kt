@@ -2,6 +2,7 @@ package com.vdemelo.marvel.di
 
 import androidx.room.Room
 import com.vdemelo.marvel.data.local.db.MarvelCharactersDataBase
+import com.vdemelo.marvel.data.local.db.MarvelFavoritesDataBase
 import com.vdemelo.marvel.data.remote.api.MarvelApi
 import com.vdemelo.marvel.data.remote.interceptor.AuthInterceptor
 import com.vdemelo.marvel.data.repository.MarvelCharactersRepositoryImpl
@@ -40,6 +41,12 @@ val dataModule = module {
         Room.databaseBuilder(
             androidApplication().baseContext,
             MarvelCharactersDataBase::class.java, "db-marvel-characters"
+        ).build()
+    }
+    single {
+        Room.databaseBuilder(
+            androidApplication().baseContext,
+            MarvelFavoritesDataBase::class.java, "db-marvel-favorites"
         ).build()
     }
     single<MarvelCharactersRepository> { MarvelCharactersRepositoryImpl(get(), get()) }

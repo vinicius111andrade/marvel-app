@@ -6,6 +6,8 @@ import kotlinx.coroutines.flow.Flow
 
 interface MarvelCharactersRepository {
     fun getMarvelCharactersPager(searchName: String?): Flow<PagingData<MarvelCharacter>>
-
     suspend fun upsert(marvelCharacter: MarvelCharacter)
+    suspend fun addFavorite(marvelCharacter: MarvelCharacter)
+    suspend fun removeFavorite(marvelCharacter: MarvelCharacter)
+    suspend fun getAllFavorites(): List<MarvelCharacter>
 }

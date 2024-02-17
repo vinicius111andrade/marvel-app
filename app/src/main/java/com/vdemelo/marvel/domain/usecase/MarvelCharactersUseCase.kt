@@ -18,15 +18,13 @@ class MarvelCharactersUseCase(
 
     suspend fun addFavorite(marvelCharacter: MarvelCharacter) {
         withContext(Dispatchers.IO) {
-            marvelCharacter.isFavorite = true
-            repository.upsert(marvelCharacter)
+            repository.addFavorite(marvelCharacter)
         }
     }
 
     suspend fun removeFavorite(marvelCharacter: MarvelCharacter) {
         withContext(Dispatchers.IO) {
-            marvelCharacter.isFavorite = false
-            repository.upsert(marvelCharacter)
+            repository.removeFavorite(marvelCharacter)
         }
     }
 }
