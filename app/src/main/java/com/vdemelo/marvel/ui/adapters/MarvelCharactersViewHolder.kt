@@ -1,9 +1,9 @@
 package com.vdemelo.marvel.ui.adapters
 
-import android.graphics.drawable.Drawable
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.Picasso
+import com.vdemelo.common.extensions.ifNullOrEmpty
 import com.vdemelo.marvel.R
 import com.vdemelo.marvel.databinding.ItemMarvelCharacterBinding
 import com.vdemelo.marvel.ui.model.MarvelCharacterUi
@@ -17,28 +17,24 @@ class MarvelCharactersViewHolder(
     fun bind(character: MarvelCharacterUi) = with(itemBinding) {
         val context = characterName.context
 
-        characterName.text = character.name ?: context.getString(R.string.unknown_name)
+        characterName.text = character.name
+            .ifNullOrEmpty(placeholder = context.getString(R.string.unknown_name))
 
-        //TODO see if i should add a loading animation or if it exists by default
         Picasso.get()
             .load(character.thumbnailUrl)
-            .placeholder(R.drawable.ic_person) //TODO ver se: se eu n setar, ele mostra loading?
+            .placeholder(R.drawable.ic_person)
             .error(R.drawable.ic_image_error)
             .into(characterImage)
 
-        val favDrawable: Drawable? =
+        val favDrawableRes: Int =
             if (character.isFavorite) {
-                AppCompatResources.getDrawable(
-                    context,
-                    R.drawable.ic_favorite_selected
-                )
+                R.drawable.ic_favorite_selected
             } else {
-                AppCompatResources.getDrawable(
-                    context,
-                    R.drawable.ic_favorite_unselected
-                )
+                R.drawable.ic_favorite_unselected
             }
-        favoriteButton.setImageDrawable(favDrawable)
+        favoriteButton.setImageDrawable(
+            AppCompatResources.getDrawable(context, favDrawableRes)
+        )
         favoriteButton.setOnClickListener { favoriteAction(character, !character.isFavorite) }
         openCardClickableArea.setOnClickListener { openCardAction(character) }
     }

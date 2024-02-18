@@ -13,6 +13,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.navArgs
 import com.squareup.picasso.Picasso
+import com.vdemelo.common.extensions.ifNullOrEmpty
 import com.vdemelo.marvel.R
 import com.vdemelo.marvel.databinding.FragmentCharacterBinding
 import com.vdemelo.marvel.ui.model.MarvelCharacterUi
@@ -46,8 +47,10 @@ class CharacterFragment : Fragment() {
         viewModel.setFavoriteState(characterUi.isFavorite)
         setupFavoriteButton(characterUi)
         with(binding) {
-            characterName.text = characterUi.name ?: getString(R.string.unknown_name)
-            characterBio.text = characterUi.description ?: getString(R.string.character_bio_unknown)
+            characterName.text = characterUi.name
+                .ifNullOrEmpty(placeholder = getString(R.string.unknown_name))
+            characterBio.text = characterUi.description
+                .ifNullOrEmpty(placeholder = getString(R.string.character_bio_unknown))
             setupCharacterImage(characterUi.thumbnailUrl)
         }
         setupShareImageButton()

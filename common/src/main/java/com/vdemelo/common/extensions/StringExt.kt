@@ -16,3 +16,11 @@ fun List<String?>.toCharSum(): Long { //TODO create unit test for these :)
     }
     return sum
 }
+
+fun String?.ifNullOrEmpty(placeholder: String): String {
+    return if (this.isNullOrEmpty()) {
+        placeholder
+    } else {
+        this
+    }
+}

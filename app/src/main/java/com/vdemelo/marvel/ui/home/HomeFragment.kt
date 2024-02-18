@@ -1,6 +1,7 @@
 package com.vdemelo.marvel.ui.home
 
 import android.os.Bundle
+import android.text.Editable
 import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
