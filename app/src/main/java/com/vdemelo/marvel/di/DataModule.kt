@@ -40,14 +40,19 @@ val dataModule = module {
     single {
         Room.databaseBuilder(
             androidApplication().baseContext,
-            MarvelCharactersDataBase::class.java, "db-marvel-characters"
-        ).build()
+            MarvelCharactersDataBase::class.java,
+            "db-marvel-characters"
+        )
+            .fallbackToDestructiveMigration()
+            .build()
     }
     single {
         Room.databaseBuilder(
             androidApplication().baseContext,
-            MarvelFavoritesDataBase::class.java, "db-marvel-favorites"
-        ).build()
+            MarvelFavoritesDataBase::class.java,
+            "db-marvel-favorites"
+        )
+            .build()
     }
     single<MarvelCharactersRepository> { MarvelCharactersRepositoryImpl(get(), get(), get()) }
 }

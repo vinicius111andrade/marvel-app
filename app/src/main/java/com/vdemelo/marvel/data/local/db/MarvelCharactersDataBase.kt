@@ -9,7 +9,7 @@ import com.vdemelo.marvel.domain.entity.MarvelCharacterEntity
 
 @Database(
     entities = [MarvelCharacterEntity::class, RemoteKeys::class],
-    version = 6
+    version = 8
 )
 abstract class MarvelCharactersDataBase: RoomDatabase() {
     abstract val itemsDao: MarvelCharactersDao

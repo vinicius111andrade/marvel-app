@@ -67,7 +67,8 @@ class HomeViewModel(
         ).map { (search, scroll) ->
             UiState(
                 query = search.query,
-                lastQueryScrolled = scroll.currentQuery,
+//                lastQueryScrolled = scroll.currentQuery, //TODO acho q nem vou usar
+                // If the search query matches the scroll query, the user has scrolled
                 hasNotScrolledForCurrentSearch = search.query != scroll.currentQuery
             )
         }

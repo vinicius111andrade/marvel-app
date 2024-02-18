@@ -71,7 +71,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     }
 
     /**
-     * Binds the [UiState] provided  by the [SearchRepositoriesViewModel] to the UI,
+     * Binds the [UiState] provided  by the [ViewModel] to the UI,
      * and allows the UI to feed back user actions to it.
      */
     private fun FragmentHomeBinding.bindState(
@@ -132,10 +132,8 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
     private fun FragmentHomeBinding.updateListWithNewInput(onQueryChanged: (UiAction.Search) -> Unit) {
         searchField.text.trim().let {
-            if (it.isNotEmpty()) {
-                list.scrollToPosition(0)
-                onQueryChanged(UiAction.Search(query = it.toString()))
-            }
+            list.scrollToPosition(0)
+            onQueryChanged(UiAction.Search(query = it.toString()))
         }
     }
 
@@ -206,7 +204,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                     ?: loadState.append as? LoadState.Error
                     ?: loadState.prepend as? LoadState.Error
                 errorState?.let {
-                    showErrorToast(loadStateError = it) //TODO preciso de uma tela de erro? ou toast ta com ja?
+                    showErrorToast(loadStateError = it)
                 }
             }
         }
@@ -220,5 +218,4 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             Toast.LENGTH_LONG
         ).show()
     }
-
 }
