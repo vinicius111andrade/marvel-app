@@ -1,21 +1,22 @@
 package com.vdemelo.marvel.data.local.dao
 
 import androidx.room.Dao
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import androidx.room.Upsert
 import com.vdemelo.marvel.domain.entity.MarvelCharacterEntity
 import kotlinx.coroutines.flow.Flow
 
-//TODO ver quais estou usando de fato
 @Dao
 interface MarvelFavoritesDao {
-    @Upsert
-    suspend fun upsert(marvelCharacterEntity: MarvelCharacterEntity)
 
-    @Query("SELECT * FROM marvelcharacterentity")
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insert(marvelCharacterEntity: MarvelCharacterEntity)
+
+    @Query("SELECT * FROM marvelcharacterentity ORDER BY name ASC")
     fun selectAll(): List<MarvelCharacterEntity>
 
-    @Query("SELECT * FROM marvelcharacterentity")
+    @Query("SELECT * FROM marvelcharacterentity ORDER BY name ASC")
     fun allFavoritesFlow(): Flow<List<MarvelCharacterEntity>>
 
     @Query("DELETE FROM marvelcharacterentity WHERE charSum = :charSum")

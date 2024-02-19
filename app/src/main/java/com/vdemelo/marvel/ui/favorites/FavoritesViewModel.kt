@@ -8,6 +8,8 @@ import com.vdemelo.marvel.domain.repository.MarvelCharactersRepository
 import com.vdemelo.marvel.ui.model.MarvelCharacterUi
 import com.vdemelo.marvel.ui.model.toEntity
 import com.vdemelo.marvel.ui.state.UiState
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
@@ -17,10 +19,26 @@ class FavoritesViewModel(
     private val repository: MarvelCharactersRepository
 ) : ViewModel() {
 
+    private var job: Job? = null
+
     private val _uiState = MutableLiveData<UiState>(UiState.Loading())
     val uiState: LiveData<UiState> get() = _uiState
 
-    suspend fun getFavoritesFlow(): Flow<List<MarvelCharacterUi>> {
+    private val _favorites = MutableLiveData<List<MarvelCharacterUi>>(listOf())
+    val favorites: LiveData<List<MarvelCharacterUi>> get() = _favorites
+
+    fun getFavorites() {
+        job?.cancel()
+        job = viewModelScope.launch(Dispatchers.IO) {
+            getFavoritesFlow().collect { newList ->
+                val state = if (newList.isEmpty()) UiState.Empty() else UiState.Success()
+                _uiState.postValue(state)
+                _favorites.postValue(newList)
+            }
+        }
+    }
+
+    private suspend fun getFavoritesFlow(): Flow<List<MarvelCharacterUi>> {
         _uiState.postValue(UiState.Loading())
         val flow: Flow<List<MarvelCharacterUi>> = try {
             val result = repository.getAllFavoritesFlow().map { newList ->

@@ -58,7 +58,7 @@ class MarvelCharactersRepositoryImpl(
     override suspend fun addFavorite(marvelCharacter: MarvelCharacterEntity) {
         withContext(Dispatchers.IO) {
             marvelCharacter.isFavorite = true
-            favoritesDb.favoritesDao.upsert(marvelCharacter)
+            favoritesDb.favoritesDao.insert(marvelCharacter)
             pagingDb.itemsDao.insert(marvelCharacter)
         }
     }

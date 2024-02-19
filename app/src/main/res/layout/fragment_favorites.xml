@@ -50,10 +50,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/common_retry"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:visibility="visible" />
 
     <TextView
         android:id="@+id/error_msg"
@@ -73,7 +75,7 @@
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:gravity="center"
-        android:text="@string/list_empty_list"
+        android:text="@string/favorites_empty_list"
         android:textSize="@dimen/text_size_empty_list"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"

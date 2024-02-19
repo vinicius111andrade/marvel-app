@@ -18,9 +18,6 @@ interface MarvelCharactersDao {
     @Query("DELETE FROM marvelcharacterentity")
     suspend fun clearAll()
 
-    @Query("DELETE FROM marvelcharacterentity WHERE isFavorite=0")
-    suspend fun clearAllExceptFavorites() //TODO ta certo?
-
     @Query("SELECT * FROM marvelcharacterentity ORDER BY name ASC")
     fun pageAll(): PagingSource<Int, MarvelCharacterEntity>
 
@@ -29,5 +26,4 @@ interface MarvelCharactersDao {
                 "name LIKE :queryString ORDER BY name ASC"
     )
     fun pageByName(queryString: String): PagingSource<Int, MarvelCharacterEntity>
-
 }
