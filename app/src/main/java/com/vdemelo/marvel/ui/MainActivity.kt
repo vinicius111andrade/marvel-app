@@ -1,26 +1,16 @@
 package com.vdemelo.marvel.ui
 
 import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.navigation.compose.rememberNavController
-import com.vdemelo.marvel.ui.navigation.AppNavHost
-import com.vdemelo.marvel.ui.navigation.NavItem
-import com.vdemelo.marvel.ui.theme.ComposeMarvelTheme
+import androidx.appcompat.app.AppCompatActivity
+import com.vdemelo.marvel.databinding.ActivityMainBinding
 
-class MainActivity : ComponentActivity() {
+class MainActivity : AppCompatActivity() {
+
+    private lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContent {
-            ComposeMarvelTheme {
-                val navController = rememberNavController()
-
-                AppNavHost(
-                    navController = navController,
-                    startDestination = NavItem.Home.route
-                )
-            }
-        }
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
     }
 }

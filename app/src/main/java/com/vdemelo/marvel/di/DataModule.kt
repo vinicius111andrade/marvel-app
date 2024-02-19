@@ -1,9 +1,15 @@
 package com.vdemelo.marvel.di
 
+import androidx.room.Room
+import com.vdemelo.marvel.data.local.db.MarvelCharactersDataBase
+import com.vdemelo.marvel.data.local.db.MarvelFavoritesDataBase
 import com.vdemelo.marvel.data.remote.api.MarvelApi
-import com.vdemelo.marvel.data.remote.network.interceptor.AuthInterceptor
+import com.vdemelo.marvel.data.remote.interceptor.AuthInterceptor
+import com.vdemelo.marvel.data.repository.MarvelCharactersRepositoryImpl
+import com.vdemelo.marvel.domain.repository.MarvelCharactersRepository
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
+import org.koin.android.ext.koin.androidApplication
 import org.koin.dsl.module
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -31,4 +37,22 @@ val dataModule = module {
             .build()
             .create(MarvelApi::class.java)
     }
+    single {
+        Room.databaseBuilder(
+            androidApplication().baseContext,
+            MarvelCharactersDataBase::class.java,
+            "db-marvel-characters"
+        )
+            .fallbackToDestructiveMigration()
+            .build()
+    }
+    single {
+        Room.databaseBuilder(
+            androidApplication().baseContext,
+            MarvelFavoritesDataBase::class.java,
+            "db-marvel-favorites"
+        )
+            .build()
+    }
+    single<MarvelCharactersRepository> { MarvelCharactersRepositoryImpl(get(), get(), get()) }
 }

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Spacing -->
+    <dimen name="spacing_8dp">8dp</dimen>
+    <dimen name="spacing_12dp">12dp</dimen>
+    <dimen name="spacing_16dp">16dp</dimen>
+    <dimen name="spacing_24dp">24dp</dimen>
+    <dimen name="spacing_32dp">32dp</dimen>
+
+    <!-- Size -->
+    <dimen name="size_item_image">64dp</dimen>
+    <dimen name="size_details_image">260dp</dimen>
+    <dimen name="size_item_fav_button">64dp</dimen>
+
+    <!-- Text Size-->
+    <dimen name="text_size_error">24sp</dimen>
+    <dimen name="text_size_empty_list">24sp</dimen>
+    <dimen name="text_size_char_name_title">32sp</dimen>
+    <dimen name="text_size_char_bio_label">24sp</dimen>
+    <dimen name="text_size_favorites_list_title">32sp</dimen>
+
+</resources>

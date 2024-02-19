@@ -61,5 +61,12 @@ OkHttp is another standard for Android, it is a HTTP client that is efficient by
 ### Gson
 Gson is a Java serialization and deserialization library. It converts objects into JSON and converts JSON into objects.
 
+## Patterns
+### Orchestrator Pattern
+I was looking for a pattern and a name for a class that would receive data from two use cases and have some business logic in it to decide how the data should be delivered to the ViewModel, I didn't want to use another use case, just due to the naming differentiation. After some research found this Orchestrator Pattern usually used in the backend, but I found it fit quite well in this case. Article: https://medium.com/gbtech/orchestration-pattern-3d8f5abc3be3
+
 ## UI
-### Why use compose?
+### Why not use compose?
+
+## Why Entity is sent to view model?
+Entity to domain, removed old domain model, due to need of paging data source of getting data from database and sending it directly to view model. The model at the data base needs to be the one received at the view model paging source. It is a limitation of paging 3.
