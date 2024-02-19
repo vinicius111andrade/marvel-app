@@ -18,5 +18,6 @@
     <dimen name="text_size_empty_list">24sp</dimen>
     <dimen name="text_size_char_name_title">32sp</dimen>
     <dimen name="text_size_char_bio_label">24sp</dimen>
+    <dimen name="text_size_favorites_list_title">32sp</dimen>
 
 </resources>

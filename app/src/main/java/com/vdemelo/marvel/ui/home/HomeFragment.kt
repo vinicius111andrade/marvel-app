@@ -50,6 +50,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setFavoritesButtonClickListener()
         binding.bindState(
             uiState = viewModel.state,
             pagingData = viewModel.pagingDataFlow,
@@ -69,6 +70,13 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
     private fun favoriteCharacter(characterUi: MarvelCharacterUi, isFavorite: Boolean) {
         viewModel.favoriteCharacter(characterUi, isFavorite)
+    }
+
+    private fun setFavoritesButtonClickListener() {
+        binding.navToFavoritesButton.setOnClickListener {
+            val action = HomeFragmentDirections.actionHomeToFavorites()
+            findNavController().navigate(action)
+        }
     }
 
     /**

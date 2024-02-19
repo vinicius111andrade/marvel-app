@@ -6,6 +6,7 @@
 
     <string name="list_screen_home_title">Marvel Characters</string>
     <string name="list_screen_favorites_title">Marvel Favorites</string>
+    <string name="list_screen_nav_to_favorites_button">Show Marvel Favorites</string>
     <string name="list_empty_list">No results</string>
     <string name="list_error_toast">An error occurred: </string>
 
