@@ -19,9 +19,9 @@ import com.vdemelo.marvel.databinding.FragmentHomeBinding
 import com.vdemelo.marvel.ui.adapters.FooterLoadStateAdapter
 import com.vdemelo.marvel.ui.home.adapter.MarvelCharactersAdapter
 import com.vdemelo.marvel.ui.model.MarvelCharacterUi
-import com.vdemelo.marvel.ui.state.RemotePresentationState
 import com.vdemelo.marvel.ui.state.ListAction
 import com.vdemelo.marvel.ui.state.ListState
+import com.vdemelo.marvel.ui.state.RemotePresentationState
 import com.vdemelo.marvel.ui.state.asRemotePresentationState
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.StateFlow

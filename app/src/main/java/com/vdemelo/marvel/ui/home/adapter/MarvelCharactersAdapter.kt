@@ -11,11 +11,14 @@ import com.vdemelo.marvel.ui.model.MarvelCharacterUi
 class MarvelCharactersAdapter(
     private val openCardAction: (MarvelCharacterUi) -> Unit,
     private val favoriteAction: (MarvelCharacterUi, Boolean) -> Unit
-): PagingDataAdapter<MarvelCharacterUi, MarvelCharactersViewHolder>(UI_MODEL_COMPARATOR) {
+) : PagingDataAdapter<MarvelCharacterUi, MarvelCharactersViewHolder>(UI_MODEL_COMPARATOR) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MarvelCharactersViewHolder {
-        val binding =
-            ItemMarvelCharacterBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val binding = ItemMarvelCharacterBinding.inflate(
+            LayoutInflater.from(parent.context),
+            parent,
+            false
+        )
         return MarvelCharactersViewHolder(binding, openCardAction, favoriteAction)
     }
 

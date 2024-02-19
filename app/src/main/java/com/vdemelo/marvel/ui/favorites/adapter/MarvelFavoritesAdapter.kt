@@ -12,11 +12,14 @@ class MarvelFavoritesAdapter(
     private var itemsList: List<MarvelCharacterUi>,
     private val openCardAction: (MarvelCharacterUi) -> Unit,
     private val favoriteAction: (MarvelCharacterUi, Boolean) -> Unit
-): RecyclerView.Adapter<MarvelCharactersViewHolder>() {
+) : RecyclerView.Adapter<MarvelCharactersViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MarvelCharactersViewHolder {
-        val binding =
-            ItemMarvelCharacterBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val binding = ItemMarvelCharacterBinding.inflate(
+            LayoutInflater.from(parent.context),
+            parent,
+            false
+        )
         return MarvelCharactersViewHolder(binding, openCardAction, favoriteAction)
     }
 

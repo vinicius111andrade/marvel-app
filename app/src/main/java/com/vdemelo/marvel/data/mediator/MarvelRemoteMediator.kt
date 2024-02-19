@@ -40,7 +40,7 @@ class MarvelCharactersRemoteMediator(
     ): MediatorResult {
         val page = when (loadType) {
             LoadType.REFRESH -> {
-                val remoteKeys = getClosestRemoteKey(state) //TODO o erro pode estar aqui
+                val remoteKeys = getClosestRemoteKey(state)
                 remoteKeys?.nextKey?.minus(1) ?: PagingConstants.STARTING_PAGE
             }
             LoadType.PREPEND -> {

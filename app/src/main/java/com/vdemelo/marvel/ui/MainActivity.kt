@@ -2,7 +2,6 @@ package com.vdemelo.marvel.ui
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.vdemelo.marvel.R
 import com.vdemelo.marvel.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {

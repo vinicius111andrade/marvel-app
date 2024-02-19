@@ -8,6 +8,5 @@ class CharacterDataWrapperDto(
     @SerializedName("copyright") val copyright : String?,
     @SerializedName("attributionText") val attributionText : String?,
     @SerializedName("attributionHTML") val attributionHTML : String?,
-    @SerializedName("data") val data : CharactersDataContainerDto?,
-    @SerializedName("etag") val etag : String?,
+    @SerializedName("data") val data : CharactersDataContainerDto?
 )
