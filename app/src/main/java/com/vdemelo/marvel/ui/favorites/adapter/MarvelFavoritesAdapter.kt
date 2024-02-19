@@ -1,10 +1,11 @@
-package com.vdemelo.marvel.ui.adapters
+package com.vdemelo.marvel.ui.favorites.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.vdemelo.marvel.databinding.ItemMarvelCharacterBinding
+import com.vdemelo.marvel.ui.adapters.MarvelCharactersViewHolder
 import com.vdemelo.marvel.ui.model.MarvelCharacterUi
 
 class MarvelFavoritesAdapter(

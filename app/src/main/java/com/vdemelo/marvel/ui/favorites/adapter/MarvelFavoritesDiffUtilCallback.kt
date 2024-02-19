@@ -1,4 +1,4 @@
-package com.vdemelo.marvel.ui.adapters
+package com.vdemelo.marvel.ui.favorites.adapter
 
 import androidx.recyclerview.widget.DiffUtil
 import com.vdemelo.marvel.ui.model.MarvelCharacterUi

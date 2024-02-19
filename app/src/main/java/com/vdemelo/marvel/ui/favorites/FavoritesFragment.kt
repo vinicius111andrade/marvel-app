@@ -9,7 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.vdemelo.marvel.R
 import com.vdemelo.marvel.databinding.FragmentFavoritesBinding
-import com.vdemelo.marvel.ui.adapters.MarvelFavoritesAdapter
+import com.vdemelo.marvel.ui.favorites.adapter.MarvelFavoritesAdapter
 import com.vdemelo.marvel.ui.model.MarvelCharacterUi
 import com.vdemelo.marvel.ui.state.UiState
 import org.koin.androidx.viewmodel.ext.android.viewModel

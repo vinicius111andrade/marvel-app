@@ -17,7 +17,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.vdemelo.marvel.R
 import com.vdemelo.marvel.databinding.FragmentHomeBinding
 import com.vdemelo.marvel.ui.adapters.FooterLoadStateAdapter
-import com.vdemelo.marvel.ui.adapters.MarvelCharactersAdapter
+import com.vdemelo.marvel.ui.home.adapter.MarvelCharactersAdapter
 import com.vdemelo.marvel.ui.model.MarvelCharacterUi
 import com.vdemelo.marvel.ui.state.RemotePresentationState
 import com.vdemelo.marvel.ui.state.ListAction

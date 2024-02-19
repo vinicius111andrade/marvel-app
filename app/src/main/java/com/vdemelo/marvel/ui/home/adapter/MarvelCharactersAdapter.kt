@@ -1,10 +1,11 @@
-package com.vdemelo.marvel.ui.adapters
+package com.vdemelo.marvel.ui.home.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import com.vdemelo.marvel.databinding.ItemMarvelCharacterBinding
+import com.vdemelo.marvel.ui.adapters.MarvelCharactersViewHolder
 import com.vdemelo.marvel.ui.model.MarvelCharacterUi
 
 class MarvelCharactersAdapter(
