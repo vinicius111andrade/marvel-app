@@ -20,8 +20,8 @@ import com.vdemelo.marvel.ui.adapters.FooterLoadStateAdapter
 import com.vdemelo.marvel.ui.adapters.MarvelCharactersAdapter
 import com.vdemelo.marvel.ui.model.MarvelCharacterUi
 import com.vdemelo.marvel.ui.state.RemotePresentationState
-import com.vdemelo.marvel.ui.state.PagingAction
-import com.vdemelo.marvel.ui.state.PagingState
+import com.vdemelo.marvel.ui.state.ListAction
+import com.vdemelo.marvel.ui.state.ListState
 import com.vdemelo.marvel.ui.state.asRemotePresentationState
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.StateFlow
@@ -51,7 +51,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         super.onViewCreated(view, savedInstanceState)
         setFavoritesButtonClickListener()
         binding.bindState(
-            pagingState = viewModel.state,
+            listState = viewModel.state,
             pagingData = viewModel.pagingDataFlow,
             uiActions = viewModel.action
         )
@@ -79,13 +79,13 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     }
 
     /**
-     * Binds the [PagingState] provided  by the [ViewModel] to the UI,
+     * Binds the [ListState] provided  by the [ViewModel] to the UI,
      * and allows the UI to feed back user actions to it.
      */
     private fun FragmentHomeBinding.bindState(
-        pagingState: StateFlow<PagingState>,
+        listState: StateFlow<ListState>,
         pagingData: Flow<PagingData<MarvelCharacterUi>>,
-        uiActions: (PagingAction) -> Unit
+        uiActions: (ListAction) -> Unit
     ) {
         val adapter = MarvelCharactersAdapter(
             openCardAction = ::openCharacterCard,
@@ -97,21 +97,21 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             footer = FooterLoadStateAdapter { adapter.retry() }
         )
         bindSearch(
-            pagingState = pagingState,
+            listState = listState,
             onQueryChanged = uiActions
         )
         bindList(
             header = header,
             itemsAdapter = adapter,
-            pagingState = pagingState,
+            listState = listState,
             pagingData = pagingData,
             onScrollChanged = uiActions
         )
     }
 
     private fun FragmentHomeBinding.bindSearch(
-        pagingState: StateFlow<PagingState>,
-        onQueryChanged: (PagingAction.Search) -> Unit
+        listState: StateFlow<ListState>,
+        onQueryChanged: (ListAction.Search) -> Unit
     ) {
         searchField.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_GO) {
@@ -131,38 +131,38 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         }
 
         lifecycleScope.launch {
-            pagingState
+            listState
                 .map { it.query }
                 .distinctUntilChanged()
                 .collect(searchField::setText)
         }
     }
 
-    private fun FragmentHomeBinding.updateListWithNewInput(onQueryChanged: (PagingAction.Search) -> Unit) {
+    private fun FragmentHomeBinding.updateListWithNewInput(onQueryChanged: (ListAction.Search) -> Unit) {
         searchField.text.trim().let {
             list.scrollToPosition(0)
-            onQueryChanged(PagingAction.Search(query = it.toString()))
+            onQueryChanged(ListAction.Search(query = it.toString()))
         }
     }
 
     private fun FragmentHomeBinding.bindList(
         header: FooterLoadStateAdapter,
         itemsAdapter: MarvelCharactersAdapter,
-        pagingState: StateFlow<PagingState>,
+        listState: StateFlow<ListState>,
         pagingData: Flow<PagingData<MarvelCharacterUi>>,
-        onScrollChanged: (PagingAction.Scroll) -> Unit
+        onScrollChanged: (ListAction.Scroll) -> Unit
     ) {
         retryButton.setOnClickListener { itemsAdapter.retry() }
         list.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                if (dy != 0) onScrollChanged(PagingAction.Scroll(currentQuery = pagingState.value.query))
+                if (dy != 0) onScrollChanged(ListAction.Scroll(currentQuery = listState.value.query))
             }
         })
         val notLoading = itemsAdapter.loadStateFlow
             .asRemotePresentationState()
             .map { it == RemotePresentationState.PRESENTED }
 
-        val hasNotScrolledForCurrentSearch = pagingState
+        val hasNotScrolledForCurrentSearch = listState
             .map { it.hasNotScrolledForCurrentSearch }
             .distinctUntilChanged()
 
