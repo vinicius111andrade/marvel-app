@@ -1,6 +1,7 @@
 package com.vdemelo.marvel.ui.state
 
-class UiState(
-    val query: String? = null,
-    val hasNotScrolledForCurrentSearch: Boolean = false
-)
+sealed class UiState {
+    class Success() : UiState()
+    class Loading() : UiState()
+    class Error(val message: String?) : UiState()
+}

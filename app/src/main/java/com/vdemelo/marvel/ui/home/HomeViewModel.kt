@@ -8,8 +8,8 @@ import androidx.paging.map
 import com.vdemelo.marvel.domain.repository.MarvelCharactersRepository
 import com.vdemelo.marvel.ui.model.MarvelCharacterUi
 import com.vdemelo.marvel.ui.model.toEntity
-import com.vdemelo.marvel.ui.state.UiAction
-import com.vdemelo.marvel.ui.state.UiState
+import com.vdemelo.marvel.ui.state.PagingAction
+import com.vdemelo.marvel.ui.state.PagingState
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -30,22 +30,22 @@ class HomeViewModel(
     private val repository: MarvelCharactersRepository
 ) : ViewModel() {
 
-    val state: StateFlow<UiState>
-    val action: (UiAction) -> Unit
+    val state: StateFlow<PagingState>
+    val action: (PagingAction) -> Unit
 
     val pagingDataFlow: Flow<PagingData<MarvelCharacterUi>>
 
     init {
         val defaultQuery = null
-        val actionStateFlow = MutableSharedFlow<UiAction>()
+        val actionStateFlow = MutableSharedFlow<PagingAction>()
 
         val searches = actionStateFlow
-            .filterIsInstance<UiAction.Search>()
+            .filterIsInstance<PagingAction.Search>()
             .distinctUntilChanged()
-            .onStart { emit(UiAction.Search(query = defaultQuery)) }
+            .onStart { emit(PagingAction.Search(query = defaultQuery)) }
 
         val queriesScrolled = actionStateFlow
-            .filterIsInstance<UiAction.Scroll>()
+            .filterIsInstance<PagingAction.Scroll>()
             .distinctUntilChanged()
             // This is shared to keep the flow "hot" while caching the last query scrolled,
             // otherwise each flatMapLatest invocation would lose the last query scrolled.
@@ -54,7 +54,7 @@ class HomeViewModel(
                 started = SharingStarted.WhileSubscribed(stopTimeoutMillis = 5000),
                 replay = 1
             )
-            .onStart { emit(UiAction.Scroll(currentQuery = defaultQuery)) }
+            .onStart { emit(PagingAction.Scroll(currentQuery = defaultQuery)) }
 
         pagingDataFlow = searches
             .flatMapLatest { searchMarvelCharacters(queryString = it.query) }
@@ -65,7 +65,7 @@ class HomeViewModel(
             queriesScrolled,
             ::Pair
         ).map { (search, scroll) ->
-            UiState(
+            PagingState(
                 query = search.query,
 //                lastQueryScrolled = scroll.currentQuery, //TODO acho q nem vou usar
                 // If the search query matches the scroll query, the user has scrolled
@@ -75,7 +75,7 @@ class HomeViewModel(
             .stateIn(
                 scope = viewModelScope,
                 started = SharingStarted.WhileSubscribed(stopTimeoutMillis = 5000),
-                initialValue = UiState()
+                initialValue = PagingState()
             )
 
         action = { uiAction ->

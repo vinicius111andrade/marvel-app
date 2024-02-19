@@ -7,10 +7,10 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import com.vdemelo.marvel.data.local.db.MarvelCharactersDataBase
 import com.vdemelo.marvel.data.local.db.MarvelFavoritesDataBase
-import com.vdemelo.marvel.domain.entity.MarvelCharacterEntity
 import com.vdemelo.marvel.data.mediator.MarvelCharactersRemoteMediator
 import com.vdemelo.marvel.data.remote.PagingConstants
 import com.vdemelo.marvel.data.remote.api.MarvelApi
+import com.vdemelo.marvel.domain.entity.MarvelCharacterEntity
 import com.vdemelo.marvel.domain.repository.MarvelCharactersRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -71,9 +71,9 @@ class MarvelCharactersRepositoryImpl(
         }
     }
 
-    override suspend fun getAllFavorites(): List<MarvelCharacterEntity> {
+    override suspend fun getAllFavoritesFlow(): Flow<List<MarvelCharacterEntity>> {
         return withContext(Dispatchers.IO) {
-            favoritesDb.favoritesDao.selectAll()
+            favoritesDb.favoritesDao.allFavoritesFlow()
         }
     }
 }

@@ -1,7 +1,6 @@
 package com.vdemelo.marvel.ui.home
 
 import android.os.Bundle
-import android.text.Editable
 import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
@@ -21,8 +20,8 @@ import com.vdemelo.marvel.ui.adapters.FooterLoadStateAdapter
 import com.vdemelo.marvel.ui.adapters.MarvelCharactersAdapter
 import com.vdemelo.marvel.ui.model.MarvelCharacterUi
 import com.vdemelo.marvel.ui.state.RemotePresentationState
-import com.vdemelo.marvel.ui.state.UiAction
-import com.vdemelo.marvel.ui.state.UiState
+import com.vdemelo.marvel.ui.state.PagingAction
+import com.vdemelo.marvel.ui.state.PagingState
 import com.vdemelo.marvel.ui.state.asRemotePresentationState
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.StateFlow
@@ -52,7 +51,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         super.onViewCreated(view, savedInstanceState)
         setFavoritesButtonClickListener()
         binding.bindState(
-            uiState = viewModel.state,
+            pagingState = viewModel.state,
             pagingData = viewModel.pagingDataFlow,
             uiActions = viewModel.action
         )
@@ -80,13 +79,13 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     }
 
     /**
-     * Binds the [UiState] provided  by the [ViewModel] to the UI,
+     * Binds the [PagingState] provided  by the [ViewModel] to the UI,
      * and allows the UI to feed back user actions to it.
      */
     private fun FragmentHomeBinding.bindState(
-        uiState: StateFlow<UiState>,
+        pagingState: StateFlow<PagingState>,
         pagingData: Flow<PagingData<MarvelCharacterUi>>,
-        uiActions: (UiAction) -> Unit
+        uiActions: (PagingAction) -> Unit
     ) {
         val adapter = MarvelCharactersAdapter(
             openCardAction = ::openCharacterCard,
@@ -98,21 +97,21 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             footer = FooterLoadStateAdapter { adapter.retry() }
         )
         bindSearch(
-            uiState = uiState,
+            pagingState = pagingState,
             onQueryChanged = uiActions
         )
         bindList(
             header = header,
             itemsAdapter = adapter,
-            uiState = uiState,
+            pagingState = pagingState,
             pagingData = pagingData,
             onScrollChanged = uiActions
         )
     }
 
     private fun FragmentHomeBinding.bindSearch(
-        uiState: StateFlow<UiState>,
-        onQueryChanged: (UiAction.Search) -> Unit
+        pagingState: StateFlow<PagingState>,
+        onQueryChanged: (PagingAction.Search) -> Unit
     ) {
         searchField.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_GO) {
@@ -132,38 +131,38 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         }
 
         lifecycleScope.launch {
-            uiState
+            pagingState
                 .map { it.query }
                 .distinctUntilChanged()
                 .collect(searchField::setText)
         }
     }
 
-    private fun FragmentHomeBinding.updateListWithNewInput(onQueryChanged: (UiAction.Search) -> Unit) {
+    private fun FragmentHomeBinding.updateListWithNewInput(onQueryChanged: (PagingAction.Search) -> Unit) {
         searchField.text.trim().let {
             list.scrollToPosition(0)
-            onQueryChanged(UiAction.Search(query = it.toString()))
+            onQueryChanged(PagingAction.Search(query = it.toString()))
         }
     }
 
     private fun FragmentHomeBinding.bindList(
         header: FooterLoadStateAdapter,
         itemsAdapter: MarvelCharactersAdapter,
-        uiState: StateFlow<UiState>,
+        pagingState: StateFlow<PagingState>,
         pagingData: Flow<PagingData<MarvelCharacterUi>>,
-        onScrollChanged: (UiAction.Scroll) -> Unit
+        onScrollChanged: (PagingAction.Scroll) -> Unit
     ) {
         retryButton.setOnClickListener { itemsAdapter.retry() }
         list.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                if (dy != 0) onScrollChanged(UiAction.Scroll(currentQuery = uiState.value.query))
+                if (dy != 0) onScrollChanged(PagingAction.Scroll(currentQuery = pagingState.value.query))
             }
         })
         val notLoading = itemsAdapter.loadStateFlow
             .asRemotePresentationState()
             .map { it == RemotePresentationState.PRESENTED }
 
-        val hasNotScrolledForCurrentSearch = uiState
+        val hasNotScrolledForCurrentSearch = pagingState
             .map { it.hasNotScrolledForCurrentSearch }
             .distinctUntilChanged()
 

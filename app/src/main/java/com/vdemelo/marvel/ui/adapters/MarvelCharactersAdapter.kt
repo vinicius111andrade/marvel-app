@@ -18,7 +18,6 @@ class MarvelCharactersAdapter(
         return MarvelCharactersViewHolder(binding, openCardAction, favoriteAction)
     }
 
-    //TODO ou seja, posso mandar uns nulls na lista, e ai ele n mostra
     override fun onBindViewHolder(holder: MarvelCharactersViewHolder, position: Int) {
         getItem(position)?.let { holder.bind(it) }
     }

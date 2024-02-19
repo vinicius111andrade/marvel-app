@@ -8,5 +8,5 @@ interface MarvelCharactersRepository {
     fun getMarvelCharactersPager(searchName: String?): Flow<PagingData<MarvelCharacterEntity>>
     suspend fun addFavorite(marvelCharacter: MarvelCharacterEntity)
     suspend fun removeFavorite(marvelCharacter: MarvelCharacterEntity)
-    suspend fun getAllFavorites(): List<MarvelCharacterEntity>
+    suspend fun getAllFavoritesFlow(): Flow<List<MarvelCharacterEntity>>
 }
