@@ -51,9 +51,9 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         super.onViewCreated(view, savedInstanceState)
         setFavoritesButtonClickListener()
         binding.bindState(
-            listState = viewModel.state,
+            listState = viewModel.listStateFlow,
             pagingData = viewModel.pagingDataFlow,
-            uiActions = viewModel.action
+            uiActions = viewModel.listAction
         )
     }
 
@@ -87,6 +87,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         pagingData: Flow<PagingData<MarvelCharacterUi>>,
         uiActions: (ListAction) -> Unit
     ) {
+        //TODO cria o adapter, seta o adapter, e chama o bindSearch e o bindList.
         val adapter = MarvelCharactersAdapter(
             openCardAction = ::openCharacterCard,
             favoriteAction = ::favoriteCharacter
@@ -96,21 +97,18 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             header = header,
             footer = FooterLoadStateAdapter { adapter.retry() }
         )
-        bindSearch(
-            listState = listState,
-            onQueryChanged = uiActions
-        )
+        setupSearchFieldListeners(onQueryChanged = uiActions)
+        setupListStateCollector(listState = listState)
         bindList(
             header = header,
             itemsAdapter = adapter,
             listState = listState,
-            pagingData = pagingData,
+            pagingDataFlow = pagingData,
             onScrollChanged = uiActions
         )
     }
 
-    private fun FragmentHomeBinding.bindSearch(
-        listState: StateFlow<ListState>,
+    private fun FragmentHomeBinding.setupSearchFieldListeners(
         onQueryChanged: (ListAction.Search) -> Unit
     ) {
         searchField.setOnEditorActionListener { _, actionId, _ ->
@@ -129,15 +127,21 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                 false
             }
         }
+    }
 
+    private fun FragmentHomeBinding.setupListStateCollector(listState: StateFlow<ListState>) {
+        //TODO da pra mandar isso aqui pra view model, criar um LiveData e observar ele, e quando mudar setar na view
         lifecycleScope.launch {
             listState
                 .map { it.query }
                 .distinctUntilChanged()
-                .collect(searchField::setText)
+                .collect {
+                    searchField.setText(it)
+                }
         }
     }
 
+    //TODO ele dá um trim no text, scrolla pro inicio, e atualiza o hot flow listAction
     private fun FragmentHomeBinding.updateListWithNewInput(onQueryChanged: (ListAction.Search) -> Unit) {
         searchField.text.trim().let {
             list.scrollToPosition(0)
@@ -149,40 +153,49 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         header: FooterLoadStateAdapter,
         itemsAdapter: MarvelCharactersAdapter,
         listState: StateFlow<ListState>,
-        pagingData: Flow<PagingData<MarvelCharacterUi>>,
+        pagingDataFlow: Flow<PagingData<MarvelCharacterUi>>,
         onScrollChanged: (ListAction.Scroll) -> Unit
     ) {
+        //TODO seta retry button, usando o adapter
         retryButton.setOnClickListener { itemsAdapter.retry() }
+
+        //TODO seta o scroll listener
         list.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 if (dy != 0) onScrollChanged(ListAction.Scroll(currentQuery = listState.value.query))
             }
         })
-        val notLoading = itemsAdapter.loadStateFlow
+
+        //TODO cria um flow de bool com o loadStateFlow do adapter para saber se está in loading
+        val notLoading: Flow<Boolean> = itemsAdapter.loadStateFlow
             .asRemotePresentationState()
             .map { it == RemotePresentationState.PRESENTED }
 
-        val hasNotScrolledForCurrentSearch = listState
+        //TODO cria um flow de Bool que le do listState se já foi ou não scrollada a lista na query atual
+        val hasNotScrolledForCurrentSearch: Flow<Boolean> = listState
             .map { it.hasNotScrolledForCurrentSearch }
             .distinctUntilChanged()
 
-        val shouldScrollToTop = combine(
+        //TODO cria um flow de bool para servir de trigger para scrollar para o topo
+        val shouldScrollToTop: Flow<Boolean> = combine(
             notLoading,
             hasNotScrolledForCurrentSearch,
             Boolean::and
-        )
-            .distinctUntilChanged()
+        ).distinctUntilChanged()
 
+        //TODO collect no flow com o paging data para setar no adapter
         lifecycleScope.launch {
-            pagingData.collectLatest(itemsAdapter::submitData)
+            pagingDataFlow.collectLatest(itemsAdapter::submitData)
         }
 
+        //TODO collect no flow shouldScrollToTop e execução da ação de scroll
         lifecycleScope.launch {
             shouldScrollToTop.collect { shouldScroll ->
                 if (shouldScroll) list.scrollToPosition(0)
             }
         }
 
+        //TODO tratando diversos comportamentos da lista
         lifecycleScope.launch {
             itemsAdapter.loadStateFlow.collect { loadState ->
                 // Show a retry header if there was an error refreshing, and items were previously
