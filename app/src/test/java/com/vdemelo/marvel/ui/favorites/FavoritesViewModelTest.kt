@@ -5,7 +5,6 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.vdemelo.marvel.domain.entity.MarvelCharacterEntity
 import com.vdemelo.marvel.domain.repository.MarvelCharactersRepository
 import com.vdemelo.marvel.mocks.MarvelCharacterFactory
-import com.vdemelo.marvel.ui.model.MarvelCharacterUi
 import com.vdemelo.marvel.ui.model.toEntity
 import com.vdemelo.marvel.ui.state.UiState
 import io.mockk.clearAllMocks
@@ -47,7 +46,7 @@ class FavoritesViewModelTest {
         viewModel.getFavorites()
         coVerify { repository.getAllFavoritesFlow() }
         assertEquals(list, viewModel.favorites.value)
-        assertEquals(UiState.Success ,viewModel.uiState.value)
+        assertEquals(UiState.Success, viewModel.uiState.value)
     }
 
     @Test
@@ -60,7 +59,7 @@ class FavoritesViewModelTest {
         val isEmpty = viewModel.favorites.value?.isEmpty() == true
         assertEquals(true, isEmpty)
         val viewModelUiState: UiState.Error = viewModel.uiState.value as UiState.Error
-        assertEquals(UiState.Error(errorMsg).message ,viewModelUiState.message)
+        assertEquals(UiState.Error(errorMsg).message, viewModelUiState.message)
     }
 
     @Test

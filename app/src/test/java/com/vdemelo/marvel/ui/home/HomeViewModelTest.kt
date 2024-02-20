@@ -30,13 +30,7 @@ class HomeViewModelTest {
         clearAllMocks()
     }
 
-    @Test //TODO
-    fun getState() {
-    }
-
-    @Test //TODO
-    fun getAction() {
-    }
+    //TODO test more
 
     @Test
     fun `When Is Favorite True Should Call Add Favorite Method`() {

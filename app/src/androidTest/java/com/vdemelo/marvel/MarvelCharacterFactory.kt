@@ -4,7 +4,7 @@ import com.vdemelo.marvel.domain.entity.MarvelCharacterEntity
 
 class MarvelCharacterFactory {
     private var counter: Long = 0
-
+//TODO
     fun createCharacter(
         charSum: Long? = null,
         isFavorite: Boolean = false
