@@ -79,14 +79,7 @@ class FavoritesViewModelTest {
     @Test
     fun `When Is Favorite True Should Call Add Favorite Method`() {
         val isFavorite = true
-        val character = MarvelCharacterUi(
-            12L,
-            null,
-            null,
-            null,
-            null,
-            isFavorite
-        )
+        val character = MarvelCharacterFactory().createCharacter(isFavorite = isFavorite)
         val entity = character.toEntity()
         viewModel = FavoritesViewModel(repository)
         coEvery { repository.addFavorite(entity) } returns Unit
@@ -97,14 +90,7 @@ class FavoritesViewModelTest {
     @Test
     fun `When Is Favorite False Should Call Remove Favorite Method`() {
         val isFavorite = false
-        val character = MarvelCharacterUi(
-            12L,
-            null,
-            null,
-            null,
-            null,
-            isFavorite
-        )
+        val character = MarvelCharacterFactory().createCharacter(isFavorite = isFavorite)
         val entity = character.toEntity()
         viewModel = FavoritesViewModel(repository)
         coEvery { repository.addFavorite(entity) } returns Unit
