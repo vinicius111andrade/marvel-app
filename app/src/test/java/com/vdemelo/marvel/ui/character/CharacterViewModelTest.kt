@@ -3,7 +3,7 @@ package com.vdemelo.marvel.ui.character
 import MainDispatcherRule
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.vdemelo.marvel.domain.repository.MarvelCharactersRepository
-import com.vdemelo.marvel.ui.model.MarvelCharacterUi
+import com.vdemelo.marvel.mocks.MarvelCharacterFactory
 import com.vdemelo.marvel.ui.model.toEntity
 import io.mockk.clearAllMocks
 import io.mockk.coEvery
@@ -43,33 +43,18 @@ class CharacterViewModelTest {
     @Test
     fun `When Is Favorite True Should Call Add Favorite Method`() {
         val isFavorite = true
-        val character = MarvelCharacterUi(
-            12L,
-            null,
-            null,
-            null,
-            null,
-            isFavorite
-        )
+        val character = MarvelCharacterFactory().createCharacter(isFavorite = isFavorite)
         val entity = character.toEntity()
         viewModel = CharacterViewModel(repository)
         coEvery { repository.addFavorite(entity) } returns Unit
         viewModel.favoriteCharacter(character, isFavorite)
         coVerify { repository.addFavorite(any()) }
-
     }
 
     @Test
     fun `When Is Favorite False Should Call Remove Favorite Method`() {
         val isFavorite = false
-        val character = MarvelCharacterUi(
-            12L,
-            null,
-            null,
-            null,
-            null,
-            isFavorite
-        )
+        val character = MarvelCharacterFactory().createCharacter(isFavorite = isFavorite)
         val entity = character.toEntity()
         viewModel = CharacterViewModel(repository)
         coEvery { repository.addFavorite(entity) } returns Unit
