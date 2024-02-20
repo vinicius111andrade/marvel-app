@@ -73,11 +73,12 @@ class MarvelCharactersRemoteMediator(
 
         try {
             val offset: Int = page * state.config.pageSize
-            val response: List<MarvelCharacterDto> = api.getCharacters(
-                nameStartsWith = query,
-                limit = state.config.pageSize,
-                offset = offset
-            ).data?.charactersList.nonNullOrEmpty()
+            val response: List<MarvelCharacterDto> = listOf() //TODO só pra n ficar fazendo mil requests
+//            val response: List<MarvelCharacterDto> = api.getCharacters(
+//                nameStartsWith = query,
+//                limit = state.config.pageSize,
+//                offset = offset
+//            ).data?.charactersList.nonNullOrEmpty()
             val endOfPaginationReached: Boolean = response.isEmpty()
             val newEntities: List<MarvelCharacterEntity> = response.map { it.dtoToEntity() }
             val newEntitiesUpdated: List<MarvelCharacterEntity> = checkForFavoritesAndUpdate(newEntities)

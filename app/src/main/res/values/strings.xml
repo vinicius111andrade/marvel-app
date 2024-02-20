@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Marvel</string>
+    <string name="app_name">Marvel App</string>
 
     // Lists
     <string name="list_screen_search_hint">Marvel Characters by Name</string>
@@ -28,6 +28,8 @@
     <string name="button_favorite">Favorite Button</string>
 
     //Common
+    <string name="common_online">Online</string>
+    <string name="common_offline">Offline</string>
     <string name="common_share">Share</string>
     <string name="common_retry">Retry</string>
     <string name="common_back">Go Back</string>
