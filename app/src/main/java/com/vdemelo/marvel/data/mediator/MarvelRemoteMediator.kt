@@ -25,7 +25,6 @@ class MarvelCharactersRemoteMediator(
     private val favoritesDb: MarvelFavoritesDataBase,
 ) : RemoteMediator<Int, MarvelCharacterEntity>() {
 
-    //TODO atualizar comentario, mudei para o skip
     override suspend fun initialize(): InitializeAction {
         // Launch remote refresh as soon as paging starts and do not trigger remote prepend or
         // append until refresh has succeeded. In cases where we don't mind showing out-of-date,
