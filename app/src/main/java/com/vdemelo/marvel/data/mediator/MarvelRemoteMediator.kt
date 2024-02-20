@@ -8,12 +8,12 @@ import androidx.room.withTransaction
 import com.vdemelo.common.extensions.nonNullOrEmpty
 import com.vdemelo.marvel.data.local.db.MarvelCharactersDataBase
 import com.vdemelo.marvel.data.local.db.MarvelFavoritesDataBase
-import com.vdemelo.marvel.domain.entity.MarvelCharacterEntity
 import com.vdemelo.marvel.data.local.paging.RemoteKeys
 import com.vdemelo.marvel.data.mappers.dtoToEntity
 import com.vdemelo.marvel.data.remote.PagingConstants
 import com.vdemelo.marvel.data.remote.api.MarvelApi
 import com.vdemelo.marvel.data.remote.dto.MarvelCharacterDto
+import com.vdemelo.marvel.domain.entity.MarvelCharacterEntity
 import retrofit2.HttpException
 import java.io.IOException
 
@@ -31,7 +31,7 @@ class MarvelCharactersRemoteMediator(
         // append until refresh has succeeded. In cases where we don't mind showing out-of-date,
         // cached offline data, we can return SKIP_INITIAL_REFRESH instead to prevent paging
         // triggering remote refresh.
-        return InitializeAction.SKIP_INITIAL_REFRESH
+        return InitializeAction.LAUNCH_INITIAL_REFRESH
     }
 
     override suspend fun load(
@@ -43,45 +43,43 @@ class MarvelCharactersRemoteMediator(
                 val remoteKeys = getClosestRemoteKey(state)
                 remoteKeys?.nextKey?.minus(1) ?: PagingConstants.STARTING_PAGE
             }
+
             LoadType.PREPEND -> {
-                val remoteKeys = getLastRemoteKey(state)
+                val remoteKeys = getFirstRemoteKey(state)
                 // If remoteKeys is null, that means the refresh result is not in the database yet.
                 // We can return Success with `endOfPaginationReached = false` because Paging
                 // will call this method again if RemoteKeys becomes non-null.
                 // If remoteKeys is NOT NULL but its prevKey is null, that means we've reached
                 // the end of pagination for prepend.
                 val prevKey = remoteKeys?.prevKey
-                if (prevKey == null) {
-                    return MediatorResult.Success(endOfPaginationReached = remoteKeys != null)
-                }
+                    ?: return MediatorResult.Success(endOfPaginationReached = remoteKeys != null)
                 prevKey
             }
+
             LoadType.APPEND -> {
-                val remoteKeys = getFirstRemoteKey(state)
+                val remoteKeys = getLastRemoteKey(state)
                 // If remoteKeys is null, that means the refresh result is not in the database yet.
                 // We can return Success with `endOfPaginationReached = false` because Paging
                 // will call this method again if RemoteKeys becomes non-null.
                 // If remoteKeys is NOT NULL but its nextKey is null, that means we've reached
                 // the end of pagination for append.
                 val nextKey = remoteKeys?.nextKey
-                if (nextKey == null) {
-                    return MediatorResult.Success(endOfPaginationReached = remoteKeys != null)
-                }
+                    ?: return MediatorResult.Success(endOfPaginationReached = remoteKeys != null)
                 nextKey
             }
         }
 
         try {
             val offset: Int = page * state.config.pageSize
-            val response: List<MarvelCharacterDto> = listOf() //TODO só pra n ficar fazendo mil requests
-//            val response: List<MarvelCharacterDto> = api.getCharacters(
-//                nameStartsWith = query,
-//                limit = state.config.pageSize,
-//                offset = offset
-//            ).data?.charactersList.nonNullOrEmpty()
+            val response: List<MarvelCharacterDto> = api.getCharacters(
+                nameStartsWith = query,
+                limit = state.config.pageSize,
+                offset = offset
+            ).data?.charactersList.nonNullOrEmpty()
             val endOfPaginationReached: Boolean = response.isEmpty()
             val newEntities: List<MarvelCharacterEntity> = response.map { it.dtoToEntity() }
-            val newEntitiesUpdated: List<MarvelCharacterEntity> = checkForFavoritesAndUpdate(newEntities)
+            val newEntitiesUpdated: List<MarvelCharacterEntity> =
+                checkForFavoritesAndUpdate(newEntities)
 
             pagingDb.withTransaction {
                 if (loadType == LoadType.REFRESH) {
@@ -116,7 +114,9 @@ class MarvelCharactersRemoteMediator(
                     val isFavorite = allFavorites.find { favorite ->
                         entity.charSum == favorite.charSum
                     } != null
-                    if (isFavorite) { entity.isFavorite = true }
+                    if (isFavorite) {
+                        entity.isFavorite = true
+                    }
                     entity
                 }.nonNullOrEmpty()
             )
