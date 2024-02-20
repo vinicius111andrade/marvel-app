@@ -7,6 +7,8 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
+private const val TEN_SECONDS = 10000L
+
 class MainViewModel : ViewModel() {
 
     private val _triggerCheckConnection = MutableLiveData<Boolean>(false)
@@ -19,7 +21,7 @@ class MainViewModel : ViewModel() {
         viewModelScope.launch {
             while (true) {
                 _triggerCheckConnection.postValue(true)
-                delay(10000L)
+                delay(TEN_SECONDS)
             }
         }
     }
