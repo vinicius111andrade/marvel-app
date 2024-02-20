@@ -4,11 +4,9 @@ import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.navigation.findNavController
 import com.vdemelo.marvel.R
 import com.vdemelo.marvel.databinding.ActivityMainBinding
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.runBlocking
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
@@ -22,6 +20,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
+        setupToolbarBackButton()
         observeInternetConnectionStatus()
         setContentView(binding.root)
     }
@@ -35,6 +34,12 @@ class MainActivity : AppCompatActivity() {
     override fun onPause() {
         super.onPause()
         checkForInternetConnection = false
+    }
+
+    private fun setupToolbarBackButton() {
+        binding.toolbarBackButton.setOnClickListener {
+            onBackPressedDispatcher.onBackPressed()
+        }
     }
 
     private fun checkForInternetConnectionLoop() {
