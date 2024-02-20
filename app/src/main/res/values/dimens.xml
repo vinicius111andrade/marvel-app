@@ -12,6 +12,8 @@
     <dimen name="size_item_image">64dp</dimen>
     <dimen name="size_details_image">260dp</dimen>
     <dimen name="size_item_fav_button">64dp</dimen>
+    <dimen name="size_back_button">40dp</dimen>
+    <dimen name="size_internet_icon">16dp</dimen>
 
     <!-- Text Size-->
     <dimen name="text_size_error">24sp</dimen>
