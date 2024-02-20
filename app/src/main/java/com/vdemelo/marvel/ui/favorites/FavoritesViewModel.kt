@@ -21,7 +21,7 @@ class FavoritesViewModel(
 
     private var job: Job? = null
 
-    private val _uiState = MutableLiveData<UiState>(UiState.Loading())
+    private val _uiState = MutableLiveData<UiState>(UiState.Loading)
     val uiState: LiveData<UiState> get() = _uiState
 
     private val _favorites = MutableLiveData<List<MarvelCharacterUi>>(listOf())
@@ -31,7 +31,7 @@ class FavoritesViewModel(
         job?.cancel()
         job = viewModelScope.launch(Dispatchers.IO) {
             getFavoritesFlow().collect { newList ->
-                val state = if (newList.isEmpty()) UiState.Empty() else UiState.Success()
+                val state = if (newList.isEmpty()) UiState.Empty else UiState.Success
                 _uiState.postValue(state)
                 _favorites.postValue(newList)
             }
@@ -39,12 +39,12 @@ class FavoritesViewModel(
     }
 
     private suspend fun getFavoritesFlow(): Flow<List<MarvelCharacterUi>> {
-        _uiState.postValue(UiState.Loading())
+        _uiState.postValue(UiState.Loading)
         val flow: Flow<List<MarvelCharacterUi>> = try {
             val result = repository.getAllFavoritesFlow().map { newList ->
                 newList.map { MarvelCharacterUi(it) }
             }
-            _uiState.postValue(UiState.Success())
+            _uiState.postValue(UiState.Success)
             result
         } catch (e: Exception) {
             _uiState.postValue(UiState.Error(e.message))
