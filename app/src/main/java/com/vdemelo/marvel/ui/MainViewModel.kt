@@ -15,7 +15,6 @@ class MainViewModel : ViewModel() {
     private val _connectedToTheInternet = MutableLiveData<Boolean>(true)
     val connectedToTheInternet: LiveData<Boolean> get() = _connectedToTheInternet
 
-
     init {
         viewModelScope.launch {
             while (true) {
