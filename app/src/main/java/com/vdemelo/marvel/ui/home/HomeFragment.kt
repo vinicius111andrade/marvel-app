@@ -25,6 +25,7 @@ import com.vdemelo.marvel.ui.state.RemotePresentationState
 import com.vdemelo.marvel.ui.state.asRemotePresentationState
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -36,6 +37,10 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
     private var _binding: FragmentHomeBinding? = null
     private val binding: FragmentHomeBinding get() = _binding!!
+
+    private lateinit var itemsAdapter: MarvelCharactersAdapter
+    private lateinit var headerAdapter: FooterLoadStateAdapter
+    private lateinit var footerAdapter: FooterLoadStateAdapter
 
     private val viewModel: HomeViewModel by viewModel()
 
@@ -52,6 +57,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setFavoritesButtonClickListener()
+        initListAdapters()
         binding.bindState(
             listState = viewModel.listStateFlow,
             pagingData = viewModel.pagingDataFlow,
@@ -62,6 +68,15 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    private fun initListAdapters() {
+        itemsAdapter = MarvelCharactersAdapter(
+            openCardAction = ::openCharacterCard,
+            favoriteAction = ::favoriteCharacter
+        )
+        headerAdapter = FooterLoadStateAdapter { itemsAdapter.retry() }
+        footerAdapter = FooterLoadStateAdapter { itemsAdapter.retry() }
     }
 
     private fun openCharacterCard(characterUi: MarvelCharacterUi) {
@@ -84,32 +99,25 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
      * Binds the [ListState] provided  by the [ViewModel] to the UI,
      * and allows the UI to feed back user actions to it.
      */
-    private fun FragmentHomeBinding.bindState(
+    private fun FragmentHomeBinding.bindState( //TODO melhorar nome
         listState: StateFlow<ListState>,
         pagingData: Flow<PagingData<MarvelCharacterUi>>,
         uiActions: (ListAction) -> Unit
     ) {
-        //TODO cria o adapter, seta o adapter, e chama o bindSearch e o bindList.
-        val itemsAdapter = MarvelCharactersAdapter(
-            openCardAction = ::openCharacterCard,
-            favoriteAction = ::favoriteCharacter
-        )
-        val headerAdapter = FooterLoadStateAdapter { itemsAdapter.retry() }
-        list.adapter = itemsAdapter.withLoadStateHeaderAndFooter(
-            header = headerAdapter,
-            footer = FooterLoadStateAdapter { itemsAdapter.retry() }
-        )
-
-
+        setupListAdapters()
         setupSearchFieldListeners(onQueryChanged = uiActions)
         setupListStateCollector(listState = listState)
-        setupRetryButton(itemsAdapter)
+        setupRetryButton()
         setupScrollListener(listState = listState, onScrollChanged = uiActions)
-        pagingData.collectLatestIntoAdapter(itemsAdapter)
-        setupShouldScrollToTopCollection(itemsAdapter, listState)
-        bindList(
+        pagingData.collectLatestIntoItemsAdapter()
+        setupShouldScrollToTopCollection(listState)
+        bindList()
+    }
+
+    private fun FragmentHomeBinding.setupListAdapters() {
+        list.adapter = itemsAdapter.withLoadStateHeaderAndFooter(
             header = headerAdapter,
-            itemsAdapter = itemsAdapter
+            footer = footerAdapter
         )
     }
 
@@ -156,7 +164,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         }
     }
 
-    private fun FragmentHomeBinding.setupRetryButton(itemsAdapter: MarvelCharactersAdapter) {
+    private fun FragmentHomeBinding.setupRetryButton() {
         retryButton.setOnClickListener { itemsAdapter.retry() }
     }
 
@@ -172,11 +180,9 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         })
     }
 
-    private fun Flow<PagingData<MarvelCharacterUi>>.collectLatestIntoAdapter(
-        adapter: MarvelCharactersAdapter
-    ) {
+    private fun Flow<PagingData<MarvelCharacterUi>>.collectLatestIntoItemsAdapter() {
         lifecycleScope.launch {
-            this@collectLatestIntoAdapter.collectLatest(adapter::submitData)
+            this@collectLatestIntoItemsAdapter.collectLatest(itemsAdapter::submitData)
         }
     }
 
@@ -199,10 +205,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         ).distinctUntilChanged()
     }
 
-    private fun setupShouldScrollToTopCollection(
-        itemsAdapter: MarvelCharactersAdapter,
-        listState: StateFlow<ListState>
-    ) {
+    private fun setupShouldScrollToTopCollection(listState: StateFlow<ListState>) {
         val shouldScrollToTop: Flow<Boolean> = createShouldScrollToTopFlow(itemsAdapter, listState)
         lifecycleScope.launch {
             shouldScrollToTop.collect { shouldScroll ->
@@ -211,16 +214,13 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         }
     }
 
-    private fun FragmentHomeBinding.bindList(
-        header: FooterLoadStateAdapter,
-        itemsAdapter: MarvelCharactersAdapter
-    ) {
-        //TODO tratando diversos comportamentos da lista
+    //TODO tratando diversos comportamentos da lista
+    private fun FragmentHomeBinding.bindList() {
         lifecycleScope.launch {
             itemsAdapter.loadStateFlow.collect { loadState ->
                 // Show a retry header if there was an error refreshing, and items were previously
                 // cached OR default to the default prepend state
-                header.loadState = loadState.mediator
+                headerAdapter.loadState = loadState.mediator
                     ?.refresh
                     ?.takeIf { it is LoadState.Error && itemsAdapter.itemCount > 0 }
                     ?: loadState.prepend
