@@ -4,7 +4,6 @@ import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.navigation.findNavController
 import com.vdemelo.marvel.R
 import com.vdemelo.marvel.databinding.ActivityMainBinding
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -13,7 +12,6 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
-    private var checkForInternetConnection = false
 
     private val viewModel: MainViewModel by viewModel()
 
@@ -22,18 +20,8 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setupToolbarBackButton()
         observeInternetConnectionStatus()
+        observeCheckConnectionTrigger()
         setContentView(binding.root)
-    }
-
-    override fun onResume() {
-        super.onResume()
-        checkForInternetConnection = true
-        checkForInternetConnectionLoop()
-    }
-
-    override fun onPause() {
-        super.onPause()
-        checkForInternetConnection = false
     }
 
     private fun setupToolbarBackButton() {
@@ -42,15 +30,15 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun checkForInternetConnectionLoop() {
-        //TODO esse while true tá travando a UI thread, ver pq
-//        runBlocking(Dispatchers.IO) {
-//            while (checkForInternetConnection) {
-//                val isConnected: Boolean = isInternetConnected()
-//                viewModel.updateInternetStatus(isConnected)
-//                delay(3000L)
-//            }
-//        }
+    private fun observeCheckConnectionTrigger() {
+        viewModel.triggerCheckConnection.observe(this) { shouldTrigger ->
+            if (shouldTrigger) checkForInternetConnection()
+        }
+    }
+
+    private fun checkForInternetConnection() {
+        val isConnected: Boolean = isInternetConnected()
+        viewModel.updateInternetStatus(isConnected)
     }
 
     private fun isInternetConnected(): Boolean {
