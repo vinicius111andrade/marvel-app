@@ -88,23 +88,26 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         uiActions: (ListAction) -> Unit
     ) {
         //TODO cria o adapter, seta o adapter, e chama o bindSearch e o bindList.
-        val adapter = MarvelCharactersAdapter(
+        val itemsAdapter = MarvelCharactersAdapter(
             openCardAction = ::openCharacterCard,
             favoriteAction = ::favoriteCharacter
         )
-        val header = FooterLoadStateAdapter { adapter.retry() }
-        list.adapter = adapter.withLoadStateHeaderAndFooter(
-            header = header,
-            footer = FooterLoadStateAdapter { adapter.retry() }
+        val headerAdapter = FooterLoadStateAdapter { itemsAdapter.retry() }
+        list.adapter = itemsAdapter.withLoadStateHeaderAndFooter(
+            header = headerAdapter,
+            footer = FooterLoadStateAdapter { itemsAdapter.retry() }
         )
+
+
         setupSearchFieldListeners(onQueryChanged = uiActions)
         setupListStateCollector(listState = listState)
+        setupRetryButton(itemsAdapter)
+        setupScrollListener(listState = listState, onScrollChanged = uiActions)
         bindList(
-            header = header,
-            itemsAdapter = adapter,
+            header = headerAdapter,
+            itemsAdapter = itemsAdapter,
             listState = listState,
-            pagingDataFlow = pagingData,
-            onScrollChanged = uiActions
+            pagingDataFlow = pagingData
         )
     }
 
@@ -149,22 +152,28 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         }
     }
 
+    private fun FragmentHomeBinding.setupRetryButton(itemsAdapter: MarvelCharactersAdapter) {
+        retryButton.setOnClickListener { itemsAdapter.retry() }
+    }
+
+    private fun FragmentHomeBinding.setupScrollListener(
+        listState: StateFlow<ListState>,
+        onScrollChanged: (ListAction.Scroll) -> Unit
+    ) {
+        list.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                if (dy != 0)
+                    onScrollChanged(ListAction.Scroll(currentQuery = listState.value.query))
+            }
+        })
+    }
+
     private fun FragmentHomeBinding.bindList(
         header: FooterLoadStateAdapter,
         itemsAdapter: MarvelCharactersAdapter,
         listState: StateFlow<ListState>,
-        pagingDataFlow: Flow<PagingData<MarvelCharacterUi>>,
-        onScrollChanged: (ListAction.Scroll) -> Unit
+        pagingDataFlow: Flow<PagingData<MarvelCharacterUi>>
     ) {
-        //TODO seta retry button, usando o adapter
-        retryButton.setOnClickListener { itemsAdapter.retry() }
-
-        //TODO seta o scroll listener
-        list.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                if (dy != 0) onScrollChanged(ListAction.Scroll(currentQuery = listState.value.query))
-            }
-        })
 
         //TODO cria um flow de bool com o loadStateFlow do adapter para saber se está in loading
         val notLoading: Flow<Boolean> = itemsAdapter.loadStateFlow
