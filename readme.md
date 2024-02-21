@@ -97,5 +97,12 @@ To share an image from an URL we need to first download it, then generate a file
 The internet connection status is monitored in the MainActivity using the MainViewModel to store a LiveData with the connection status which is observed to update the UI. OnResume I register a callback to the ConnectivityManager, this callback updates my ViewModel.
 Then, onPaused I unregister the callback.
 ## Tests
+I've written unit tests for every ViewModel I have, covering most of it's logic. I used JUnit and Mockk. It was need to add a MainDispatcherRule in order to the coroutines inside the ViewModels to run properly.
+
+The Repository was mocked with Mockk, with relaxed set to true, which means the object created has no specific behaviour and its unstubbed methods (methods with no behaviour specified) won't throw when called.
+
+I had to use coEvery and coVerify on some tests in order to stub and check for calls of some repository methods. These are the every and verify variations used for suspend functions, it is its "coroutines version".
+
+For testing pagination I did not add anything for now, but in the future I will add UI tests, mocking the api call and the DB, in order to test the behaviour of the whole. And it would be nice to implement unit tests for the RemoteMediator.
 ## Patterns Used
 ### Adapter Pattern
