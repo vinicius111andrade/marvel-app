@@ -1,33 +1,72 @@
 # How to run the project
-## API Keys
-### Public API Key
+### API Keys
 You will need to configure your local.properties file with a valid pair of API Keys. It is easy to get one, just request it here: https://developer.marvel.com/
 
 Then, on your local.properties file you need to add these lines, where abcde is your Public Api Key and xyz is your Private Key:
 PUBLIC_API_KEY="abcde"
 PRIVATE_API_KEY="xyz"
 
-Afterwards just rebuild your project. You might need to resync, but probably not.
+Afterwards just rebuild your project.
+
+# Dependencies
+##### Personal Library
+- Common - Module inside project with some useful extensions and some unit tests for them.
+
+##### Dependency Injection
+- Koin - Very popular and efficient dependency injection manager.
+
+##### Network
+- Retrofit - Builds the service MarvelApi.
+- Gson - Parser for and from Json to Kotlin Objects.
+- OkHttp 3 - Builds the client used in Retrofit.
+
+##### Data Persistence
+- Room - Android Jetpack persistence library that provides an abstraction layer over SQLite. [Read more about it here.](https://developer.android.com/jetpack/androidx/releases/room)
+
+
+##### Pagination
+- Paging 3 - A library that helps you load and display pages of data from a larger dataset from local storage or over a network. I used with Room, so that all paginated data is persisted until refreshed. [Read more about it here.](https://developer.android.com/topic/libraries/architecture/paging/v3-overview)
+
+
+##### Image Loading
+- Picasso - A library for loading images, in this case from the internet using URLs.
+
+##### Testing
+- JUnit
+- Mockk
+
+##### Basic Functionalities
+- View Binding
+- Navigation
+
+# Problem Analysis
+
+
+# Solution
+### Architecture
+### Gradle and Build Configuration
+### Pagination
+### Favorites
+### Sharing Image
+### Checking Internet Status
 
 # Marvel App Decisions
-
 ## Creating App Project
 - Chose to use Views instead of Compose, because its much more common in companies currently.
 - Chose to use Kotlin DSL for the gradle configuration files, because its recommended by Google, and is the most recent one.
-
 
 ## Configuring App SDK Versions
 1. Minimum SDK: the minimum Android API level on which your app can run.
 2. Target SDK: is the SDK version that your app was created to run on. It is used to indicate awareness of specific behaviour changes introduced in newer Android versions. You make sure that your app behaves fine at this SDK level, considering its particular behaviour.
 3. Compile SDK: determines which API level your app will be compiled with. Using the latest API allows us developers to leverage the latest features.
 
-### Bonus:
-1. The compileSDK can not me lower than the targetSDK.
-2. The targetSDK can be lower than the compileSDK.
-3. You should always use the latest version for the compile and target SDKs.
-4. To choose the minimum SDK you should think about and balance: compatibility issues, user base size. Newer versions will have less compatibility issues but fewer users.
+##### To keep in mind:
+- The compileSDK can not be lower than the targetSDK.
+- The targetSDK can be lower than the compileSDK.
+- You should always use the latest version for the compile and target SDKs.
+- To choose the minimum SDK you should think about and balance: compatibility issues, user base size. Newer versions will have less compatibility issues but fewer users.
 
-### What did I do?
+##### What did I set?
 - Chose to set Minimum SDK to API 27, Oreo, Android 8.1, because its the most recent API that will run on more than 90% of devices.
 - Chose the Target SDK to be 34, since its the last one available.
 - Chose to use compile SDK 34 also, so it would be the same as the target SDK.
@@ -51,7 +90,7 @@ Why I did not create different modules for features? Because I have only 3 scree
 
 ## Dependency Injection
 ### Koin
-I chose to use Koin because it is the tool I have used the most, another possible choice would be Hilt. Koin is very easy to use and implement. The attention point is that if you mess up and do not inject a module correctly you will only discover it while running the application, and it will crash. That is one of the reasons it is a good idea to implement Koin Modules tests. If you use Hilt you won't have this problem, you will get an error during compilation time. But Hilt is more complex, I have less experience with it, and there's simply no good reason to use it in this project. 
+I chose to use Koin because it is the tool I have used the most, another possible choice would be Hilt. Koin is very easy to use and implement. The attention point is that if you mess up and do not inject a module correctly you will only discover it while running the application, and it will crash. That is one of the reasons it is a good idea to implement Koin Modules tests. If you use Hilt you won't have this problem, you will get an error during compilation time. But Hilt is more complex, I have less experience with it, and there's simply no good reason to use it in this project.
 
 ## Network
 ### Retrofit

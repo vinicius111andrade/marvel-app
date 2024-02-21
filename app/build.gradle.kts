@@ -67,16 +67,12 @@ dependencies {
     implementation("androidx.legacy:legacy-support-v4:1.0.0")
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.7.0")
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.7.0")
-    implementation("androidx.work:work-runtime-ktx:2.9.0")
 
     //Koin
     implementation("io.insert-koin:koin-android:3.5.0")
     implementation("io.insert-koin:koin-androidx-navigation:3.5.0")
     testImplementation("io.insert-koin:koin-test:3.5.0")
     testImplementation("io.insert-koin:koin-test-junit4:3.5.0")
-
-    // Gson
-    implementation("com.google.code.gson:gson:2.10")
 
     // Retrofit
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
