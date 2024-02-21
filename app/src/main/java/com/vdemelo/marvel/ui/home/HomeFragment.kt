@@ -43,8 +43,6 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
     private val viewModel: HomeViewModel by viewModel()
 
-    //TODO colocar adapters como lateinit vals aqui em cima?
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -57,11 +55,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         super.onViewCreated(view, savedInstanceState)
         setFavoritesButtonClickListener()
         initListAdapters()
-        binding.bindState(
-            listState = viewModel.listStateFlow,
-            pagingData = viewModel.pagingDataFlow,
-            uiActions = viewModel.listAction
-        )
+        binding.setupViews()
     }
 
     override fun onDestroyView() {
@@ -94,23 +88,26 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         }
     }
 
-    /**
-     * Binds the [ListState] provided  by the [ViewModel] to the UI,
-     * and allows the UI to feed back user actions to it.
-     */
-    private fun FragmentHomeBinding.bindState( //TODO melhorar nome
-        listState: StateFlow<ListState>,
-        pagingData: Flow<PagingData<MarvelCharacterUi>>,
-        uiActions: (ListAction) -> Unit
-    ) {
+    private fun FragmentHomeBinding.setupViews() {
         setupListAdapters()
-        setupSearchFieldListeners(onQueryChanged = uiActions)
-        setupListStateCollector(listState = listState)
         setupRetryButton()
+        setupListActionListeners()
+        viewModel.pagingDataFlow.collectLatestIntoItemsAdapter()
+        collectLoadStateFlow()
+        consumeListStateFlow()
+    }
+
+    private fun FragmentHomeBinding.setupListActionListeners() {
+        val listState = viewModel.listStateFlow
+        val uiActions = viewModel.listAction
+        setupSearchFieldListeners(onQueryChanged = uiActions)
         setupScrollListener(listState = listState, onScrollChanged = uiActions)
-        pagingData.collectLatestIntoItemsAdapter()
-        setupShouldScrollToTopCollection(listState)
-        bindList()
+    }
+
+    private fun FragmentHomeBinding.consumeListStateFlow() {
+        val listStateFlow = viewModel.listStateFlow
+        setupListStateCollector(listState = listStateFlow)
+        setupShouldScrollToTopCollection(listStateFlow)
     }
 
     private fun FragmentHomeBinding.setupListAdapters() {
@@ -142,7 +139,6 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     }
 
     private fun FragmentHomeBinding.setupListStateCollector(listState: StateFlow<ListState>) {
-        //TODO da pra mandar isso aqui pra view model, criar um LiveData e observar ele, e quando mudar setar na view
         lifecycleScope.launch {
             listState
                 .map { it.query }
@@ -153,7 +149,6 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         }
     }
 
-    //TODO ele dá um trim no text, scrolla pro inicio, e atualiza o hot flow listAction
     private fun FragmentHomeBinding.updateListActionWithNewQuery(
         onQueryChanged: (ListAction.Search) -> Unit
     ) {
@@ -213,8 +208,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         }
     }
 
-    //TODO tratando diversos comportamentos da lista
-    private fun FragmentHomeBinding.bindList() {
+    private fun FragmentHomeBinding.collectLoadStateFlow() {
         lifecycleScope.launch {
             itemsAdapter.loadStateFlow.collect { loadState ->
                 // Show a retry header if there was an error refreshing, and items were previously
