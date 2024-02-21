@@ -96,6 +96,8 @@ To share an image from an URL we need to first download it, then generate a file
 ## Checking Internet Status
 The internet connection status is monitored in the MainActivity using the MainViewModel to store a LiveData with the connection status which is observed to update the UI. OnResume I register a callback to the ConnectivityManager, this callback updates my ViewModel.
 Then, onPaused I unregister the callback.
+- [Monitor connectivity status](https://developer.android.com/training/monitoring-device-state/connectivity-status-type)
+- [UnregisteringNetworkCallbacks](https://developer.android.com/develop/connectivity/network-ops/reading-network-state#additional-networks)
 ## Tests
 I've written unit tests for every ViewModel I have, covering most of it's logic. I used JUnit and Mockk. It was need to add a MainDispatcherRule in order to the coroutines inside the ViewModels to run properly.
 
