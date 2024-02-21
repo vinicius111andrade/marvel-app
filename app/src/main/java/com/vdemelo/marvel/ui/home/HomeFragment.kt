@@ -16,7 +16,7 @@ import androidx.paging.PagingData
 import androidx.recyclerview.widget.RecyclerView
 import com.vdemelo.marvel.R
 import com.vdemelo.marvel.databinding.FragmentHomeBinding
-import com.vdemelo.marvel.ui.adapters.FooterLoadStateAdapter
+import com.vdemelo.marvel.ui.adapters.ListLoadStateAdapter
 import com.vdemelo.marvel.ui.home.adapter.MarvelCharactersAdapter
 import com.vdemelo.marvel.ui.model.MarvelCharacterUi
 import com.vdemelo.marvel.ui.state.ListAction
@@ -37,6 +37,10 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     private var _binding: FragmentHomeBinding? = null
     private val binding: FragmentHomeBinding get() = _binding!!
 
+    private lateinit var itemsAdapter: MarvelCharactersAdapter
+    private lateinit var headerAdapter: ListLoadStateAdapter
+    private lateinit var footerAdapter: ListLoadStateAdapter
+
     private val viewModel: HomeViewModel by viewModel()
 
     override fun onCreateView(
@@ -50,16 +54,22 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setFavoritesButtonClickListener()
-        binding.bindState(
-            listState = viewModel.state,
-            pagingData = viewModel.pagingDataFlow,
-            uiActions = viewModel.action
-        )
+        initListAdapters()
+        binding.setupViews()
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    private fun initListAdapters() {
+        itemsAdapter = MarvelCharactersAdapter(
+            openCardAction = ::openCharacterCard,
+            favoriteAction = ::favoriteCharacter
+        )
+        headerAdapter = ListLoadStateAdapter { itemsAdapter.retry() }
+        footerAdapter = ListLoadStateAdapter { itemsAdapter.retry() }
     }
 
     private fun openCharacterCard(characterUi: MarvelCharacterUi) {
@@ -78,44 +88,41 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         }
     }
 
-    /**
-     * Binds the [ListState] provided  by the [ViewModel] to the UI,
-     * and allows the UI to feed back user actions to it.
-     */
-    private fun FragmentHomeBinding.bindState(
-        listState: StateFlow<ListState>,
-        pagingData: Flow<PagingData<MarvelCharacterUi>>,
-        uiActions: (ListAction) -> Unit
-    ) {
-        val adapter = MarvelCharactersAdapter(
-            openCardAction = ::openCharacterCard,
-            favoriteAction = ::favoriteCharacter
-        )
-        val header = FooterLoadStateAdapter { adapter.retry() }
-        list.adapter = adapter.withLoadStateHeaderAndFooter(
-            header = header,
-            footer = FooterLoadStateAdapter { adapter.retry() }
-        )
-        bindSearch(
-            listState = listState,
-            onQueryChanged = uiActions
-        )
-        bindList(
-            header = header,
-            itemsAdapter = adapter,
-            listState = listState,
-            pagingData = pagingData,
-            onScrollChanged = uiActions
+    private fun FragmentHomeBinding.setupViews() {
+        setupListAdapters()
+        setupRetryButton()
+        setupListActionListeners()
+        viewModel.pagingDataFlow.collectLatestIntoItemsAdapter()
+        collectLoadStateFlow()
+        consumeListStateFlow()
+    }
+
+    private fun FragmentHomeBinding.setupListActionListeners() {
+        val listState = viewModel.listStateFlow
+        val uiActions = viewModel.listAction
+        setupSearchFieldListeners(onQueryChanged = uiActions)
+        setupScrollListener(listState = listState, onScrollChanged = uiActions)
+    }
+
+    private fun FragmentHomeBinding.consumeListStateFlow() {
+        val listStateFlow = viewModel.listStateFlow
+        setupListStateCollector(listState = listStateFlow)
+        setupShouldScrollToTopCollection(listStateFlow)
+    }
+
+    private fun FragmentHomeBinding.setupListAdapters() {
+        list.adapter = itemsAdapter.withLoadStateHeaderAndFooter(
+            header = headerAdapter,
+            footer = footerAdapter
         )
     }
 
-    private fun FragmentHomeBinding.bindSearch(
-        listState: StateFlow<ListState>,
+    private fun FragmentHomeBinding.setupSearchFieldListeners(
         onQueryChanged: (ListAction.Search) -> Unit
     ) {
         searchField.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_GO) {
-                updateListWithNewInput(onQueryChanged)
+                updateListActionWithNewQuery(onQueryChanged)
                 true
             } else {
                 false
@@ -123,71 +130,90 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         }
         searchField.setOnKeyListener { _, keyCode, event ->
             if (event.action == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
-                updateListWithNewInput(onQueryChanged)
+                updateListActionWithNewQuery(onQueryChanged)
                 true
             } else {
                 false
             }
         }
+    }
 
+    private fun FragmentHomeBinding.setupListStateCollector(listState: StateFlow<ListState>) {
         lifecycleScope.launch {
             listState
                 .map { it.query }
                 .distinctUntilChanged()
-                .collect(searchField::setText)
+                .collect {
+                    searchField.setText(it)
+                }
         }
     }
 
-    private fun FragmentHomeBinding.updateListWithNewInput(onQueryChanged: (ListAction.Search) -> Unit) {
+    private fun FragmentHomeBinding.updateListActionWithNewQuery(
+        onQueryChanged: (ListAction.Search) -> Unit
+    ) {
         searchField.text.trim().let {
             list.scrollToPosition(0)
             onQueryChanged(ListAction.Search(query = it.toString()))
         }
     }
 
-    private fun FragmentHomeBinding.bindList(
-        header: FooterLoadStateAdapter,
-        itemsAdapter: MarvelCharactersAdapter,
+    private fun FragmentHomeBinding.setupRetryButton() {
+        retryButton.setOnClickListener { itemsAdapter.retry() }
+    }
+
+    private fun FragmentHomeBinding.setupScrollListener(
         listState: StateFlow<ListState>,
-        pagingData: Flow<PagingData<MarvelCharacterUi>>,
         onScrollChanged: (ListAction.Scroll) -> Unit
     ) {
-        retryButton.setOnClickListener { itemsAdapter.retry() }
         list.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                if (dy != 0) onScrollChanged(ListAction.Scroll(currentQuery = listState.value.query))
+                if (dy != 0)
+                    onScrollChanged(ListAction.Scroll(currentQuery = listState.value.query))
             }
         })
-        val notLoading = itemsAdapter.loadStateFlow
+    }
+
+    private fun Flow<PagingData<MarvelCharacterUi>>.collectLatestIntoItemsAdapter() {
+        lifecycleScope.launch {
+            this@collectLatestIntoItemsAdapter.collectLatest(itemsAdapter::submitData)
+        }
+    }
+
+    private fun createShouldScrollToTopFlow(
+        itemsAdapter: MarvelCharactersAdapter,
+        listState: StateFlow<ListState>
+    ): Flow<Boolean> {
+        val notLoading: Flow<Boolean> = itemsAdapter.loadStateFlow
             .asRemotePresentationState()
             .map { it == RemotePresentationState.PRESENTED }
 
-        val hasNotScrolledForCurrentSearch = listState
+        val hasNotScrolledForCurrentSearch: Flow<Boolean> = listState
             .map { it.hasNotScrolledForCurrentSearch }
             .distinctUntilChanged()
 
-        val shouldScrollToTop = combine(
+        return combine(
             notLoading,
             hasNotScrolledForCurrentSearch,
             Boolean::and
-        )
-            .distinctUntilChanged()
+        ).distinctUntilChanged()
+    }
 
-        lifecycleScope.launch {
-            pagingData.collectLatest(itemsAdapter::submitData)
-        }
-
+    private fun setupShouldScrollToTopCollection(listState: StateFlow<ListState>) {
+        val shouldScrollToTop: Flow<Boolean> = createShouldScrollToTopFlow(itemsAdapter, listState)
         lifecycleScope.launch {
             shouldScrollToTop.collect { shouldScroll ->
-                if (shouldScroll) list.scrollToPosition(0)
+                if (shouldScroll) binding.list.scrollToPosition(0)
             }
         }
+    }
 
+    private fun FragmentHomeBinding.collectLoadStateFlow() {
         lifecycleScope.launch {
             itemsAdapter.loadStateFlow.collect { loadState ->
                 // Show a retry header if there was an error refreshing, and items were previously
                 // cached OR default to the default prepend state
-                header.loadState = loadState.mediator
+                headerAdapter.loadState = loadState.mediator
                     ?.refresh
                     ?.takeIf { it is LoadState.Error && itemsAdapter.itemCount > 0 }
                     ?: loadState.prepend

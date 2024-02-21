@@ -6,7 +6,7 @@ import com.vdemelo.marvel.di.presentationModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.GlobalContext
 
-class Application: Application() {
+class Application : Application() {
 
     companion object {
         lateinit var instance: Application

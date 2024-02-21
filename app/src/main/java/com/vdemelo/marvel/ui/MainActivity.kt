@@ -1,7 +1,9 @@
 package com.vdemelo.marvel.ui
 
 import android.net.ConnectivityManager
+import android.net.Network
 import android.net.NetworkCapabilities
+import android.net.NetworkRequest
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.vdemelo.marvel.R
@@ -20,19 +22,14 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setupToolbarBackButton()
         observeInternetConnectionStatus()
-        observeCheckConnectionTrigger()
         setContentView(binding.root)
+        checkForInternetConnection()
+        setConnectivityManagerCallbacks()
     }
 
     private fun setupToolbarBackButton() {
         binding.toolbarBackButton.setOnClickListener {
             onBackPressedDispatcher.onBackPressed()
-        }
-    }
-
-    private fun observeCheckConnectionTrigger() {
-        viewModel.triggerCheckConnection.observe(this) { shouldTrigger ->
-            if (shouldTrigger) checkForInternetConnection()
         }
     }
 
@@ -64,6 +61,31 @@ class MainActivity : AppCompatActivity() {
                     internetStatusText.text = getString(R.string.common_offline)
                 }
             }
+        }
+    }
+
+    private fun setConnectivityManagerCallbacks() {
+        val networkRequest = NetworkRequest.Builder()
+            .addCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+            .addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
+            .addTransportType(NetworkCapabilities.TRANSPORT_CELLULAR)
+            .build()
+        val connectivityManager =
+            getSystemService(ConnectivityManager::class.java) as ConnectivityManager
+        connectivityManager.requestNetwork(networkRequest, networkCallback)
+    }
+
+    private val networkCallback = object : ConnectivityManager.NetworkCallback() {
+        // network is available for use
+        override fun onAvailable(network: Network) {
+            super.onAvailable(network)
+            viewModel.updateInternetStatus(true)
+        }
+
+        // lost network connection
+        override fun onLost(network: Network) {
+            super.onLost(network)
+            viewModel.updateInternetStatus(false)
         }
     }
 }

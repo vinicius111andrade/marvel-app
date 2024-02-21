@@ -30,21 +30,21 @@ class HomeViewModel(
     private val repository: MarvelCharactersRepository
 ) : ViewModel() {
 
-    val state: StateFlow<ListState>
-    val action: (ListAction) -> Unit
+    val listStateFlow: StateFlow<ListState>
+    val listAction: (ListAction) -> Unit
 
     val pagingDataFlow: Flow<PagingData<MarvelCharacterUi>>
 
     init {
         val defaultQuery = null
-        val actionStateFlow = MutableSharedFlow<ListAction>()
+        val listActionMutableSharedFlow = MutableSharedFlow<ListAction>()
 
-        val searches = actionStateFlow
+        val searchActionFlow: Flow<ListAction.Search> = listActionMutableSharedFlow
             .filterIsInstance<ListAction.Search>()
             .distinctUntilChanged()
             .onStart { emit(ListAction.Search(query = defaultQuery)) }
 
-        val queriesScrolled = actionStateFlow
+        val scrollActionFlow: Flow<ListAction.Scroll> = listActionMutableSharedFlow
             .filterIsInstance<ListAction.Scroll>()
             .distinctUntilChanged()
             // This is shared to keep the flow "hot" while caching the last query scrolled,
@@ -56,30 +56,28 @@ class HomeViewModel(
             )
             .onStart { emit(ListAction.Scroll(currentQuery = defaultQuery)) }
 
-        pagingDataFlow = searches
-            .flatMapLatest { searchMarvelCharacters(queryString = it.query) }
-            .cachedIn(viewModelScope)
+        pagingDataFlow = searchActionFlow
+            .flatMapLatest {
+                searchMarvelCharacters(queryString = it.query)
+            }.cachedIn(viewModelScope)
 
-        state = combine(
-            searches,
-            queriesScrolled,
+        listStateFlow = combine(
+            searchActionFlow,
+            scrollActionFlow,
             ::Pair
         ).map { (search, scroll) ->
             ListState(
                 query = search.query,
-//                lastQueryScrolled = scroll.currentQuery, //TODO acho q nem vou usar
-                // If the search query matches the scroll query, the user has scrolled
                 hasNotScrolledForCurrentSearch = search.query != scroll.currentQuery
             )
-        }
-            .stateIn(
-                scope = viewModelScope,
-                started = SharingStarted.WhileSubscribed(stopTimeoutMillis = 5000),
-                initialValue = ListState()
-            )
+        }.stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(stopTimeoutMillis = 5000),
+            initialValue = ListState()
+        )
 
-        action = { uiAction ->
-            viewModelScope.launch { actionStateFlow.emit(uiAction) }
+        listAction = { uiAction ->
+            viewModelScope.launch { listActionMutableSharedFlow.emit(uiAction) }
         }
     }
 

@@ -12,7 +12,7 @@ data class MarvelCharacterUi(
     val description: String?,
     val thumbnailUrl: String?,
     val isFavorite: Boolean
-): Parcelable {
+) : Parcelable {
     constructor(entity: MarvelCharacterEntity) : this(
         charSum = entity.charSum,
         id = entity.id,
