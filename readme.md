@@ -62,7 +62,7 @@ Clean Archtecture on the other hand allows us to have clear separation between d
 - [MVVM with Clean](https://medium.com/@ami0275/mvvm-clean-architecture-pattern-in-android-with-use-cases-eff7edc2ef76)
 - [Google guide for app architecture](https://developer.android.com/topic/architecture)
 ## Modularization
-I created a single module apart from the app module, it is called Common, it has reusable code, like string extensions, and can be used in any other Android project. It is currently local, so its code is in the project, but it could have its own git repository, just like it's done in many companies. I could have created modules for each feature, a module for network, but I didn't since this a very small project and it would add unecessary complexity. We as software engineers should add complexity when needed and not just for the sake of adding it.
+I created a single module apart from the app module, it is called Common, it has reusable code, like string extensions, and can be used in any other Android project. It is currently local, so its code is in the project, but it could have its own git repository, just like it's done in many companies. I could have created modules for each feature, a module for network, but I didn't since this a very small project and it would add unnecessary complexity. We as software engineers should add complexity when needed and not just for the sake of adding it.
 ## Gradle and Build Configuration
 I chose to use the API 27, Oreo, Android 8.1 as the Minimum SDK, since it's the most recent API that will run on more than 90% of devices. For the Target SDK and the Compile SDK I chose the API 34, since it's the latest one available. In general we should use the latest one for Target and Compile SDK. For the Minimum SDK we have to consider our user base, and choose the version that allows the bigger number of users to install and run our app.
 
@@ -82,29 +82,20 @@ Here we have a documentation about the [Marvel API authorization process](https:
 
 I stored both my public and private API keys on the local.properties files and exposed it in the code using build variables. This allowed me to include the local.properties files on the .gitignore file, resulting in my keys not being tracked by Git and being hidden from the internet. An attacker could still find these files if he had my apk, but this was not an issue for this project. The attacker job could be made harder by allowing obfuscation of the code, by setting isMinifyEnabled to true on the build.gradle from the app module.
 ## Pagination
-I decided to used Paging 3 for implementing paginantion. It's designed to be able to consume both from remote and local sources, so it made perfect sense to use it. I implemented a RemoteMediator which make the remote requests as needed and stores data on the device using Room. Inside the RemoteMediator I also checked if a specific item was a favorite or not, alredy flagging it and enabling my paginated list to be updated. I will talk more about this on the next section. A very simple DataSource was implemented, consuming data from Room. This meant that I had a single source of truth for my paginated data.
+I decided to used Paging 3 for implementing pagination. It's designed to be able to consume both from remote and local sources, so it made perfect sense to use it. I implemented a RemoteMediator which make the remote requests as needed and stores data on the device using Room. Inside the RemoteMediator I also checked if a specific item was a favorite or not, already flagging it and enabling my paginated list to be updated. I will talk more about this on the next section. A very simple DataSource was implemented, consuming data from Room. This meant that I had a single source of truth for my paginated data.
 
 For the view layer I used three instances of adapters, one items adapters for the paginated data, and two adapters for displaying error and loading states at the top and the bottom of the list. The data layer sent to the presentation layer a Flow of PagingData. A series of Flows were used to control the screen state and request triggering.
 
-There is still work that can be done here to improve the separation of responsabilities from the HomeActivity and the HomeViewModel, I followed the [Paging 3 Code Lab implementation](https://developer.android.com/codelabs/android-paging#0) and it made really hard to decouple it. I will work on it in the future, because it's a great challenge for handling Flows.
+There is still work that can be done here to improve the separation of responsibilities from the HomeActivity and the HomeViewModel, I followed the [Paging 3 Code Lab implementation](https://developer.android.com/codelabs/android-paging#0) and it made really hard to decouple it. I will work on it in the future, because it's a great challenge for handling Flows.
 ## Favorites
-The design I chose allowed me to add and remove favorites from anywhere in the app, and anywhere else would be notified and updated accordingly. I created a exclusive database for favorite characters, allowing me to clean the database for the paginated data without losing my favorites. If I were to maintain only one database I would be forced to paginate the data loacally since the RemoteKeys would become a mess when I cleared the database partially. Another solution would be to not clean the paginated data from my database unless the user requested it, which would also get rid of the favorites, but then my data would never be in sync with the remote data. So the best solution I found was to create two databases, never clean the favorites database and use it to set the isFavorite variable on each of the paginated items.
+The design I chose allowed me to add and remove favorites from anywhere in the app, and anywhere else would be notified and updated accordingly. I created a exclusive database for favorite characters, allowing me to clean the database for the paginated data without losing my favorites. If I were to maintain only one database I would be forced to paginate the data locally since the RemoteKeys would become a mess when I cleared the database partially. Another solution would be to not clean the paginated data from my database unless the user requested it, which would also get rid of the favorites, but then my data would never be in sync with the remote data. So the best solution I found was to create two databases, never clean the favorites database and use it to set the isFavorite variable on each of the paginated items.
 
 In the end I'm able to add and remove favorites from every screen, the UI updates accordingly and I am able to persist my favorites and access them offline. The favorites screen does not need paginated data, so it access the favorites database directly to populate its list.
 ## Sharing Image
+To share an image from an URL we need to first download it, then generate a file, and then call an Android Intent. I was already using Picasso to download the image from the internet. So I just used the downloaded image that was set to the ImageView. I used the MediaStore to create a sharable file, and then created an Intent that allows the used to pick which app to use to open the file.
 ## Checking Internet Status
-
-# Marvel App Decisions
-## Creating App Project
-- Chose to use Views instead of Compose, because its much more common in companies currently.
-- Chose to use Kotlin DSL for the gradle configuration files, because its recommended by Google, and is the most recent one.
-
-
-## Patterns
-### Orchestrator Pattern
-I was looking for a pattern and a name for a class that would receive data from two use cases and have some business logic in it to decide how the data should be delivered to the ViewModel, I didn't want to use another use case, just due to the naming differentiation. After some research found this Orchestrator Pattern usually used in the backend, but I found it fit quite well in this case. Article: https://medium.com/gbtech/orchestration-pattern-3d8f5abc3be3
-
-## UI
-
-## Why Entity is sent to view model?
-Entity to domain, removed old domain model, due to need of paging data source of getting data from database and sending it directly to view model. The model at the data base needs to be the one received at the view model paging source. It is a limitation of paging 3.
+The internet connection status is monitored in the MainActivity using the MainViewModel to store a LiveData with the connection status which is observed to update the UI. OnResume I register a callback to the ConnectivityManager, this callback updates my ViewModel.
+Then, onPaused I unregister the callback.
+## Tests
+## Patterns Used
+### Adapter Pattern
