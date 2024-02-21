@@ -14,6 +14,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
+    private lateinit var connectivityManager: ConnectivityManager
 
     private val viewModel: MainViewModel by viewModel()
 
@@ -24,7 +25,16 @@ class MainActivity : AppCompatActivity() {
         observeInternetConnectionStatus()
         setContentView(binding.root)
         checkForInternetConnection()
-        setConnectivityManagerCallbacks()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        registerConnectivityManagerCallback()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        unregisterConnectivityManagerCallback()
     }
 
     private fun setupToolbarBackButton() {
@@ -64,13 +74,17 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun setConnectivityManagerCallbacks() {
+    private fun unregisterConnectivityManagerCallback() {
+        connectivityManager.unregisterNetworkCallback(networkCallback)
+    }
+
+    private fun registerConnectivityManagerCallback() {
         val networkRequest = NetworkRequest.Builder()
             .addCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
             .addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
             .addTransportType(NetworkCapabilities.TRANSPORT_CELLULAR)
             .build()
-        val connectivityManager =
+        connectivityManager =
             getSystemService(ConnectivityManager::class.java) as ConnectivityManager
         connectivityManager.requestNetwork(networkRequest, networkCallback)
     }
