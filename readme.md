@@ -46,19 +46,28 @@ Afterwards just rebuild your project.
 - The characters must be able to flagged as a favorite, either on the list or in the details screen
 - Favorite characters must be persisted on the device in order to be accessed offline, and shown in a exclusive screen
 - There must be an search bar to search characters by name.
-- Use the charcters endpoint from the Marvel API: [documentation](https://developer.marvel.com/docs).
+- Use the characters endpoint from the Marvel API: [documentation](https://developer.marvel.com/docs).
 #### Analysis
 1. The most obvious solution is to use a paginated infinite scroll list. This way all characters will be displayed.
 2. Must find a way to persist the favorites in the device, it must be able to notify me everytime the data set is changed, by a new favorite being added or another one being removed. It should not be cleared. I must be able to access and modify it from any fragment or activity.
 3. I must have at least 3 screens, one for the main characters list, one exclusive list for favorites, and one for characters details.
 
 # Solution
-### Architecture
-### Gradle and Build Configuration
-### Pagination
-### Favorites
-### Sharing Image
-### Checking Internet Status
+## Architecture
+I chose to use MVVM coupled with Clean, the industry standard for Native Android development. MVVM, the recommended view architecture by Google, allow us to decouple business logic from the view, keeping it inside the view model and exposing observables to the view. One interesting point to make is that ViewModels are aware of the Views lifecycle, which make it a lot easier to handle it.
+
+Clean Archtecture on the other hand allows us to have clear separation between data, domain, and presentation layers. Making it easier to change each of these layers. I used dependency injection and dependency inversion in order to keep the correct dependency graph, and in order to allow easier testing.
+
+- [Clean Architecture](https://proandroiddev.com/clean-architecture-data-flow-dependency-rule-615ffdd79e29)
+- [MVVM with Clean](https://medium.com/@ami0275/mvvm-clean-architecture-pattern-in-android-with-use-cases-eff7edc2ef76)
+- [Google guide for app architecture](https://developer.android.com/topic/architecture)
+## Modularization
+I created a single module apart from the app module, it is called Common, it has reusable code, like string extensions, and can be used in any other Android project. It is currently local, so its code is in the project, but it could have its own git repository, just like it's done in many companies. I could have created modules for each feature, a module for network, but I didn't since this a very small project and it would add unecessary complexity. We as software engineers should add complexity when needed and not just for the sake of adding it.
+## Gradle and Build Configuration
+## Pagination
+## Favorites
+## Sharing Image
+## Checking Internet Status
 
 # Marvel App Decisions
 ## Creating App Project
@@ -80,20 +89,6 @@ Afterwards just rebuild your project.
 - Chose to set Minimum SDK to API 27, Oreo, Android 8.1, because its the most recent API that will run on more than 90% of devices.
 - Chose the Target SDK to be 34, since its the last one available.
 - Chose to use compile SDK 34 also, so it would be the same as the target SDK.
-
-## Project Architecture
-### MVVM
-I will use MVVM, because its the recommended architecture by Google and it is used in most companies.
-
-The main advantage of MVVM is its ease to preserve states, which is perfect for mobile where the OS can choose to kill the activity at anytime when it is on background, and also because rotating the screen kills the activity to rebuild it. MVVM uses the Observable design pattern, in which when an object changes its subscribers updte accordingly.
-
-It makes use of the ViewModel which is lifecycle aware, meaning it responds to changes in Views lifecycle states, making it easier to preserve its state.
-
-### Clean Architecture
-I will also follow the Clean Architecture principles, in order to showcase its power, even though it wouldn't be needed in an app so small that has no intent on growing to a giant. Clean Architecture is most useful on applications that intend to last many many years and be really really big, it has the trade off of making the development process slower at first, to make it faster to make change to the code base later on. If your app is small and it wont be maintained for long, you may go without using it. If your app is intended to be a big and long project, you will need to use it, or some other architecture with a similar goal. For Android apps the standard is MVVM + Clean, and that is what I will showcase.
-
-### Modularization
-Why I did not create different modules for features? Because I have only 3 screens. I did create modules for code that don't have any buissiness logic, one for Commons, and one for Network //TODO
 
 ## Patterns
 ### Orchestrator Pattern
