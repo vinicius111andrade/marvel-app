@@ -64,6 +64,14 @@ Clean Archtecture on the other hand allows us to have clear separation between d
 ## Modularization
 I created a single module apart from the app module, it is called Common, it has reusable code, like string extensions, and can be used in any other Android project. It is currently local, so its code is in the project, but it could have its own git repository, just like it's done in many companies. I could have created modules for each feature, a module for network, but I didn't since this a very small project and it would add unecessary complexity. We as software engineers should add complexity when needed and not just for the sake of adding it.
 ## Gradle and Build Configuration
+I chose to use the API 27, Oreo, Android 8.1 as the Minimum SDK, since it's the most recent API that will run on more than 90% of devices. For the Target SDK and the Compile SDK I chose the API 34, since it's the latest one available. In general we should use the latest one for Target and Compile SDK. For the Minimum SDK we have to consider our user base, and choose the version that allows the bigger number of users to install and run our app.
+
+Just as a reminder:
+1. Minimum SDK: the minimum Android API level on which your app can run.
+2. Target SDK: is the SDK version that your app was created to run on. It is used to indicate awareness of specific behaviour changes introduced in newer Android versions. You make sure that your app behaves fine at this SDK level, considering its particular behaviour.
+3. Compile SDK: determines which API level your app will be compiled with. Using the latest API allows us developers to leverage the latest features.
+- The compileSDK can not be lower than the targetSDK.
+- The targetSDK can be lower than the compileSDK.
 ## Pagination
 ## Favorites
 ## Sharing Image
@@ -74,21 +82,6 @@ I created a single module apart from the app module, it is called Common, it has
 - Chose to use Views instead of Compose, because its much more common in companies currently.
 - Chose to use Kotlin DSL for the gradle configuration files, because its recommended by Google, and is the most recent one.
 
-## Configuring App SDK Versions
-1. Minimum SDK: the minimum Android API level on which your app can run.
-2. Target SDK: is the SDK version that your app was created to run on. It is used to indicate awareness of specific behaviour changes introduced in newer Android versions. You make sure that your app behaves fine at this SDK level, considering its particular behaviour.
-3. Compile SDK: determines which API level your app will be compiled with. Using the latest API allows us developers to leverage the latest features.
-
-##### To keep in mind:
-- The compileSDK can not be lower than the targetSDK.
-- The targetSDK can be lower than the compileSDK.
-- You should always use the latest version for the compile and target SDKs.
-- To choose the minimum SDK you should think about and balance: compatibility issues, user base size. Newer versions will have less compatibility issues but fewer users.
-
-##### What did I set?
-- Chose to set Minimum SDK to API 27, Oreo, Android 8.1, because its the most recent API that will run on more than 90% of devices.
-- Chose the Target SDK to be 34, since its the last one available.
-- Chose to use compile SDK 34 also, so it would be the same as the target SDK.
 
 ## Patterns
 ### Orchestrator Pattern
