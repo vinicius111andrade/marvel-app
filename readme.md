@@ -106,5 +106,3 @@ The Repository was mocked with Mockk, with relaxed set to true, which means the 
 I had to use coEvery and coVerify on some tests in order to stub and check for calls of some repository methods. These are the every and verify variations used for suspend functions, it is its "coroutines version".
 
 For testing pagination I did not add anything for now, but in the future I will add UI tests, mocking the api call and the DB, in order to test the behaviour of the whole. And it would be nice to implement unit tests for the RemoteMediator.
-## Patterns Used
-### Adapter Pattern
