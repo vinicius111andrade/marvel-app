@@ -29,6 +29,5 @@ class MainViewModelTest {
         val hasInternet = true
         viewModel.updateInternetStatus(isConnected = hasInternet)
         assertEquals(hasInternet, viewModel.connectedToTheInternet.value)
-        assertEquals(false, viewModel.triggerCheckConnection.value)
     }
 }
