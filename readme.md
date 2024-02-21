@@ -82,7 +82,15 @@ Here we have a documentation about the [Marvel API authorization process](https:
 
 I stored both my public and private API keys on the local.properties files and exposed it in the code using build variables. This allowed me to include the local.properties files on the .gitignore file, resulting in my keys not being tracked by Git and being hidden from the internet. An attacker could still find these files if he had my apk, but this was not an issue for this project. The attacker job could be made harder by allowing obfuscation of the code, by setting isMinifyEnabled to true on the build.gradle from the app module.
 ## Pagination
+I decided to used Paging 3 for implementing paginantion. It's designed to be able to consume both from remote and local sources, so it made perfect sense to use it. I implemented a RemoteMediator which make the remote requests as needed and stores data on the device using Room. Inside the RemoteMediator I also checked if a specific item was a favorite or not, alredy flagging it and enabling my paginated list to be updated. I will talk more about this on the next section. A very simple DataSource was implemented, consuming data from Room. This meant that I had a single source of truth for my paginated data.
+
+For the view layer I used three instances of adapters, one items adapters for the paginated data, and two adapters for displaying error and loading states at the top and the bottom of the list. The data layer sent to the presentation layer a Flow of PagingData. A series of Flows were used to control the screen state and request triggering.
+
+There is still work that can be done here to improve the separation of responsabilities from the HomeActivity and the HomeViewModel, I followed the [Paging 3 Code Lab implementation](https://developer.android.com/codelabs/android-paging#0) and it made really hard to decouple it. I will work on it in the future, because it's a great challenge for handling Flows.
 ## Favorites
+The design I chose allowed me to add and remove favorites from anywhere in the app, and anywhere else would be notified and updated accordingly. I created a exclusive database for favorite characters, allowing me to clean the database for the paginated data without losing my favorites. If I were to maintain only one database I would be forced to paginate the data loacally since the RemoteKeys would become a mess when I cleared the database partially. Another solution would be to not clean the paginated data from my database unless the user requested it, which would also get rid of the favorites, but then my data would never be in sync with the remote data. So the best solution I found was to create two databases, never clean the favorites database and use it to set the isFavorite variable on each of the paginated items.
+
+In the end I'm able to add and remove favorites from every screen, the UI updates accordingly and I am able to persist my favorites and access them offline. The favorites screen does not need paginated data, so it access the favorites database directly to populate its list.
 ## Sharing Image
 ## Checking Internet Status
 
