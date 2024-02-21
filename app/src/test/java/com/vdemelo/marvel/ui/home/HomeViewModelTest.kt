@@ -30,8 +30,6 @@ class HomeViewModelTest {
         clearAllMocks()
     }
 
-    //TODO test more
-
     @Test
     fun `When Is Favorite True Should Call Add Favorite Method`() {
         val isFavorite = true
