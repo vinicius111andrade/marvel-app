@@ -1,7 +1,6 @@
 package com.vdemelo.marvel.ui.character
 
 import android.content.Intent
-import android.graphics.BitmapFactory
 import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
 import android.os.Bundle
@@ -9,7 +8,6 @@ import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.navArgs
 import com.squareup.picasso.Picasso
@@ -18,11 +16,6 @@ import com.vdemelo.marvel.R
 import com.vdemelo.marvel.databinding.FragmentCharacterBinding
 import com.vdemelo.marvel.ui.model.MarvelCharacterUi
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import java.io.IOException
-import java.io.InputStream
-import java.net.HttpURLConnection
-import kotlin.concurrent.thread
-import kotlin.random.Random
 
 class CharacterFragment : Fragment() {
 

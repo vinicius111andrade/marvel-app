@@ -14,10 +14,10 @@
 
         <androidx.appcompat.widget.AppCompatImageButton
             android:id="@+id/toolbar_back_button"
-            android:background="@color/see_through"
             android:layout_width="@dimen/size_back_button"
             android:layout_height="@dimen/size_back_button"
             android:layout_marginStart="@dimen/spacing_12dp"
+            android:background="@color/see_through"
             android:clickable="true"
             android:focusable="true"
             android:src="@drawable/ic_arrow_back"

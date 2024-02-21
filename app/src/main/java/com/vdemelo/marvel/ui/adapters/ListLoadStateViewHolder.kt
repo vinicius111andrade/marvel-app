@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.vdemelo.marvel.R
 import com.vdemelo.marvel.databinding.ItemLoadStateFooterBinding
 
-class FooterLoadStateViewHolder(
+class ListLoadStateViewHolder(
     private val binding: ItemLoadStateFooterBinding,
     retry: () -> Unit
 ) : RecyclerView.ViewHolder(binding.root) {
@@ -27,11 +27,11 @@ class FooterLoadStateViewHolder(
     }
 
     companion object {
-        fun create(parent: ViewGroup, retry: () -> Unit): FooterLoadStateViewHolder {
+        fun create(parent: ViewGroup, retry: () -> Unit): ListLoadStateViewHolder {
             val view = LayoutInflater.from(parent.context)
-                .inflate(R.layout.item_load_state_footer, parent, false)
+                .inflate(R.layout.item_load_state, parent, false)
             val binding = ItemLoadStateFooterBinding.bind(view)
-            return FooterLoadStateViewHolder(binding, retry)
+            return ListLoadStateViewHolder(binding, retry)
         }
     }
 }

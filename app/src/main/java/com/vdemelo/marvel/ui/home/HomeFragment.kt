@@ -16,7 +16,7 @@ import androidx.paging.PagingData
 import androidx.recyclerview.widget.RecyclerView
 import com.vdemelo.marvel.R
 import com.vdemelo.marvel.databinding.FragmentHomeBinding
-import com.vdemelo.marvel.ui.adapters.FooterLoadStateAdapter
+import com.vdemelo.marvel.ui.adapters.ListLoadStateAdapter
 import com.vdemelo.marvel.ui.home.adapter.MarvelCharactersAdapter
 import com.vdemelo.marvel.ui.model.MarvelCharacterUi
 import com.vdemelo.marvel.ui.state.ListAction
@@ -25,7 +25,6 @@ import com.vdemelo.marvel.ui.state.RemotePresentationState
 import com.vdemelo.marvel.ui.state.asRemotePresentationState
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -39,8 +38,8 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     private val binding: FragmentHomeBinding get() = _binding!!
 
     private lateinit var itemsAdapter: MarvelCharactersAdapter
-    private lateinit var headerAdapter: FooterLoadStateAdapter
-    private lateinit var footerAdapter: FooterLoadStateAdapter
+    private lateinit var headerAdapter: ListLoadStateAdapter
+    private lateinit var footerAdapter: ListLoadStateAdapter
 
     private val viewModel: HomeViewModel by viewModel()
 
@@ -75,8 +74,8 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             openCardAction = ::openCharacterCard,
             favoriteAction = ::favoriteCharacter
         )
-        headerAdapter = FooterLoadStateAdapter { itemsAdapter.retry() }
-        footerAdapter = FooterLoadStateAdapter { itemsAdapter.retry() }
+        headerAdapter = ListLoadStateAdapter { itemsAdapter.retry() }
+        footerAdapter = ListLoadStateAdapter { itemsAdapter.retry() }
     }
 
     private fun openCharacterCard(characterUi: MarvelCharacterUi) {
