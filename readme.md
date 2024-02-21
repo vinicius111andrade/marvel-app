@@ -72,6 +72,15 @@ Just as a reminder:
 3. Compile SDK: determines which API level your app will be compiled with. Using the latest API allows us developers to leverage the latest features.
 - The compileSDK can not be lower than the targetSDK.
 - The targetSDK can be lower than the compileSDK.
+## Network - API and Interceptor
+I used OkHttp to build my client and Retrofit to build the service. The base URL for this Marvel API is "https://gateway.marvel.com/". I had to create an account on their web site and was provided a pair of API keys in order to consume the API, a public and a private one. They are a requirement for this API. Then, on my http request, I had to pass 3 values as query parameters.
+1. Public API Key - provided by Marvel
+2. Time Stamp - generated in run time, using the System clock
+3. Hash - generated from a string composed of the time stamp, the private key and the public key. To generate the hash the [MD5 message-digest algorithm](https://en.wikipedia.org/wiki/MD5) is used, which produces a 128-bit hash and can be used as a checksum.
+
+Here we have a documentation about the [Marvel API authorization process](https://developer.marvel.com/documentation/authorization).
+
+I stored both my public and private API keys on the local.properties files and exposed it in the code using build variables. This allowed me to include the local.properties files on the .gitignore file, resulting in my keys not being tracked by Git and being hidden from the internet. An attacker could still find these files if he had my apk, but this was not an issue for this project. The attacker job could be made harder by allowing obfuscation of the code, by setting isMinifyEnabled to true on the build.gradle from the app module.
 ## Pagination
 ## Favorites
 ## Sharing Image
